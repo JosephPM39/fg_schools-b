@@ -5,7 +5,7 @@ import { AppDataSource, EntitiesADS } from './data-source';
 
 interface IConnection {
   init(): Promise<boolean | Error>;
-  getRepo<T>(entity: EntityTarget<T>): Promise<Repository<T>>;
+  getRepo<T extends {}>(entity: EntityTarget<T>): Promise<Repository<T>>;
   quit(): Promise<void>;
 }
 
@@ -43,7 +43,7 @@ export class Connection implements IConnection {
     }
   }
 
-  async getRepo<T>(entity: EntityTarget<T>) {
+  async getRepo<T extends {}>(entity: EntityTarget<T>) {
     if (!this.source) {
       this.source = await this.initSource();
     }
