@@ -1,5 +1,6 @@
 import { Connection } from './connection-orm';
 import config from '../config';
+import {EntitiesORM} from '../components/'
 
 if (config.env !== 'test') {
   throw Error(`Current env isn't test, current env: ${config.env}`);
@@ -8,7 +9,7 @@ if (config.env !== 'test') {
 describe('ORM', () => {
   let con: Connection;
   beforeAll(async () => {
-    con = new Connection();
+    con = new Connection(EntitiesORM);
     await con.init();
   });
   test('Test ORM connection to DB, to return now number day of week', async () => {
