@@ -1,34 +1,35 @@
-import { IsInt, IsDate, IsOptional } from 'class-validator';
-import { Exclude, Expose } from 'class-transformer';
+import { IsInt, IsDate, IsOptional } from 'class-validator'
+import { Expose, Exclude } from 'class-transformer'
 import {
-  BaseEntity, Column, Entity, PrimaryGeneratedColumn,
-} from 'typeorm';
+  BaseEntity, Column, Entity, PrimaryGeneratedColumn
+} from 'typeorm'
+import { EXPOSE_VERSIONS } from '../types'
 
 @Entity()
 @Exclude()
 export abstract class BaseModel extends BaseEntity {
+  @Expose({ since: EXPOSE_VERSIONS.CREATE })
   @PrimaryGeneratedColumn()
   @IsInt()
-  @Expose()
-    id: number;
+    id: number
 
+  @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()
   @Column()
   @IsDate()
-  @Expose()
-    createAt: Date;
+    createAt: Date
 
+  @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()
   @Column()
   @IsDate()
-  @Expose()
-    updateAt: Date;
+    updateAt: Date
 
+  @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()
   @Column()
   @IsDate()
-  @Expose()
-    deletedAt: Date;
+    deletedAt: Date
 }
 
-export default { BaseModel };
+export default { BaseModel }

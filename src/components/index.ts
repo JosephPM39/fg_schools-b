@@ -1,16 +1,17 @@
-export { BaseModel, BaseController, IController } from './base';
-import { GroupModel, TitleModel, SchoolModel, PromModel, PositionModel, EmployeeModel, EmployeePositionModel} from './schools/models/'
+import { Group, Title, School, Prom, Position, Employee, EmployeePosition } from './schools/models/'
+export { BaseModel, BaseController, IController, EXPOSE_VERSIONS } from './base'
+export { DB } from '../db'
 
 export const AllEntities = {
-  GroupModel,
-  TitleModel,
-  SchoolModel,
-  PromModel,
-  PositionModel,
-  EmployeeModel,
-  EmployeePositionModel
+  Group,
+  Title,
+  School,
+  Prom,
+  Position,
+  Employee,
+  EmployeePosition
 }
 
 export const EntitiesORM = [
-  ...Object.values(AllEntities),
+  ...Object.values(AllEntities)
 ]

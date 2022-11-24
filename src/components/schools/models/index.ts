@@ -1,87 +1,136 @@
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
-import { BaseModel } from '../../';
+import { Exclude, Expose } from 'class-transformer'
+import { BaseModel, EXPOSE_VERSIONS } from '../../'
+import { IsInt, IsString, Length, Max, Min } from 'class-validator'
+import { School } from './school.model'
 
 @Entity()
-export class GroupModel extends BaseModel {
-  @Column('varchar', { length: 30})
-  name: string;
-  @OneToMany(() => PromModel, (proms) => proms.group)
-  proms: PromModel[]
+@Exclude()
+export class Group extends BaseModel {
+  @Expose({
+    since: EXPOSE_VERSIONS.UPDATE,
+    until: EXPOSE_VERSIONS.DELETE_GET
+  })
+  @IsString()
+  @Length(1, 30)
+  @Column('varchar', { length: 30 })
+    name: string
+
+  @OneToMany(() => Prom, (proms) => proms.group)
+    proms: Prom[]
 }
 
 @Entity()
-export class TitleModel extends BaseModel {
-  @Column('varchar', { length: 100})
-  name: string;
-  @OneToMany(() => PromModel, (proms) => proms.group)
-  proms: PromModel[]
+@Exclude()
+export class Title extends BaseModel {
+  @Expose({
+    since: EXPOSE_VERSIONS.UPDATE,
+    until: EXPOSE_VERSIONS.DELETE_GET
+  })
+  @IsString()
+  @Length(1, 100)
+  @Column('varchar', { length: 100 })
+    name: string
+
+  @OneToMany(() => Prom, (proms) => proms.group)
+    proms: Prom[]
 }
 
 @Entity()
-export class SchoolModel extends BaseModel {
-  @Column('varchar', {length: 100})
-  name: string
-  @Column('varchar', {length: 254})
-  location: string
-  @Column('varchar', {length: 30})
-  code: string
-  @Column('varchar', {length: 100})
-  icon: string
-  @OneToMany(() => PromModel, (proms) => proms.group)
-  proms: PromModel[]
+@Exclude()
+export class Position extends BaseModel {
+  @Expose({
+    since: EXPOSE_VERSIONS.UPDATE,
+    until: EXPOSE_VERSIONS.DELETE_GET
+  })
+  @IsString()
+  @Length(1, 30)
+  @Column('varchar', { length: 30 })
+    name: string
+
+  @OneToMany(() => EmployeePosition, (ep) => ep.position)
+    employeePositions: EmployeePosition[]
 }
 
 @Entity()
-export class PositionModel extends BaseModel {
-  @Column('varchar', { length: 30})
-  name: string;
+@Exclude()
+export class Employee extends BaseModel {
+  @Expose({
+    since: EXPOSE_VERSIONS.UPDATE,
+    until: EXPOSE_VERSIONS.DELETE_GET
+  })
+  @IsString()
+  @Length(1, 40)
+  @Column('varchar', { length: 40 })
+    firstName: string
 
-  @OneToMany(() => EmployeePositionModel, (ep) => ep.position)
-  employeePositions: EmployeePositionModel[];
+  @Expose({
+    since: EXPOSE_VERSIONS.UPDATE,
+    until: EXPOSE_VERSIONS.DELETE_GET
+  })
+  @IsString()
+  @Length(1, 40)
+  @Column('varchar', { length: 40 })
+    lastName: string
+
+  @Expose({
+    since: EXPOSE_VERSIONS.UPDATE,
+    until: EXPOSE_VERSIONS.DELETE_GET
+  })
+  @IsString()
+  @Length(1, 10)
+  @Column('varchar', { length: 10 })
+    profesion: string
+
+  @Expose({
+    since: EXPOSE_VERSIONS.UPDATE,
+    until: EXPOSE_VERSIONS.DELETE_GET
+  })
+  @IsString()
+  @Length(1, 55)
+  @Column('varchar', { length: 55 })
+    contact: string
+
+  @OneToMany(() => EmployeePosition, (ep) => ep.employee)
+    employeePositions: EmployeePosition[]
 }
 
 @Entity()
-export class EmployeeModel extends BaseModel {
-  @Column('varchar', {length: 40})
-  firstName: string
+@Exclude()
+export class EmployeePosition extends BaseModel {
+  @ManyToOne(() => Employee, (employee) => employee.employeePositions)
+    employee: Employee
 
-  @Column('varchar', {length: 40})
-  lastName: string
+  @ManyToOne(() => Position, (position) => position.employeePositions)
+    position: Position
 
-  @Column('varchar', {length: 10})
-  profesion: string
-
-  @Column('varchar', {length: 55})
-  contact: string
-
-  @OneToMany(() => EmployeePositionModel, (ep) => ep.employee)
-  employeePositions: EmployeePositionModel[];
+  @OneToMany(() => Prom, (proms) => proms.group)
+    proms: Prom[]
 }
 
 @Entity()
-export class EmployeePositionModel extends BaseModel {
-  @ManyToOne(() => EmployeeModel, (employee) => employee.employeePositions)
-  employee: EmployeeModel
+@Exclude()
+export class Prom extends BaseModel {
+  @ManyToOne(() => Group, (group) => group.proms)
+    group: Group
 
-  @ManyToOne(() => PositionModel, (position) => position.employeePositions)
-  position: PositionModel
- @OneToMany(() => PromModel, (proms) => proms.group)
-  proms: PromModel[]
+  @ManyToOne(() => Title, (title) => title.proms)
+    title: Title
 
+  @ManyToOne(() => EmployeePosition, (ep) => ep.proms)
+    profesor: EmployeePosition
+
+  @ManyToOne(() => EmployeePosition, (ep) => ep.proms)
+    principal: EmployeePosition
+
+  @ManyToOne(() => School, (school) => school.proms)
+    school: School
+
+  @IsInt()
+  @Max(9999)
+  @Min(1900)
+  @Column('smallint')
+    year: number
 }
 
-@Entity()
-export class PromModel extends BaseModel {
-  @ManyToOne(() => GroupModel, (group) => group.proms)
-  group: GroupModel
-  @ManyToOne(() => TitleModel, (title) => title.proms)
-  title: TitleModel
-  @ManyToOne(() => EmployeePositionModel, (ep) => ep.proms)
-  profesor: EmployeePositionModel
-  @ManyToOne(() => EmployeePositionModel, (ep) => ep.proms)
-  principal: EmployeePositionModel
-  @ManyToOne(() => SchoolModel, (school) => school.proms)
-  school: SchoolModel
-  @Column('date')
-  year: Date
-}
+export { School }

@@ -1,9 +1,9 @@
 import config from '../config/'
-import { BaseEntity, DataSource, EntitySchema, EntityTarget, MixedList } from 'typeorm';
+import { DataSource, EntitySchema, MixedList } from 'typeorm'
 
-export type EntitiesADS = MixedList<string | Function | EntitySchema<any>>;
+export type EntitiesADS = MixedList<string | Function | EntitySchema<any>>
 
-export const AppDataSource = (EntitiesORM?: EntitiesADS) => new DataSource({
+export const AppDataSource = (EntitiesORM?: EntitiesADS): DataSource => new DataSource({
   type: 'postgres',
   host: config.dbHost,
   port: config.dbPort,
@@ -12,5 +12,5 @@ export const AppDataSource = (EntitiesORM?: EntitiesADS) => new DataSource({
   database: config.dbName,
   entities: EntitiesORM,
   synchronize: true,
-  logging: config.env === 'dev',
-});
+  logging: config.env === 'dev'
+})

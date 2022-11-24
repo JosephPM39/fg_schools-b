@@ -6,10 +6,11 @@ const config = {
   dbName: process.env.DB_NAME,
   dbUser: process.env.DB_USER ?? '',
   dbPass: process.env.DB_PASS ?? '',
-  dbPort: process.env.DB_PORT
+  dbPort: (process.env.DB_PORT !== undefined)
     ? parseInt(process.env.DB_PORT, 10)
     : undefined,
   dbHost: process.env.DB_HOST,
-};
+  allowedOrigins: process.env.ALLOWED_ORIGINS?.split(' ')
+}
 
-export default { ...config };
+export default { ...config }

@@ -1,33 +1,33 @@
-import express, { Request, Response } from 'express';
-import cors, {CorsOptions} from 'cors';
-import 'reflect-metadata';
-import config from './config';
+import express, { Request, Response } from 'express'
+import cors, { CorsOptions } from 'cors'
+import 'reflect-metadata'
+import config from './config'
 
-const createApp = () => {
-  const app = express();
-  const port = config.apiPort;
-  const whiteList = ['http://localhost:*'];
+const createApp = (): void => {
+  const app = express()
+  const port = config.apiPort
+  const whiteList = config.allowedOrigins
   const corsOptions: CorsOptions = {
     origin: (origin: any, callback: CallableFunction) => {
-      if (!whiteList) {
-        throw new Error('White list empty');
+      if (whiteList === undefined) {
+        throw new Error('White list empty')
       }
-      if (whiteList.includes(origin) || !origin) {
-        callback(null, true);
+      if (whiteList.includes(origin)) {
+        callback(null, true)
       } else {
-        callback(new Error('Not found'));
+        callback(new Error('Not found'))
       }
-    },
-  };
+    }
+  }
 
-  app.use(cors(corsOptions));
-  app.use(express.json());
+  app.use(cors(corsOptions))
+  app.use(express.json())
 
   app.get('/', (req: Request, res: Response) => {
-    res.send(`It's works ${req}`);
-  });
+    res.send(`It's works ${req.ip}`)
+  })
 
-  app.listen(port);
-};
+  app.listen(port)
+}
 
-createApp();
+createApp()
