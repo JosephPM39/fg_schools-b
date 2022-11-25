@@ -1,3 +1,5 @@
+export {}
+/*
 import { FindOptionsWhere } from 'typeorm'
 import { plainToInstance } from 'class-transformer'
 import { validate } from 'class-validator'
@@ -26,7 +28,6 @@ const validateData = async (dto: object) => {
     }`)
   }
 }
-
 export class SchoolController extends BaseController<School>
   implements IController<
   School,
@@ -92,3 +93,5 @@ export class SchoolController extends BaseController<School>
     return (res?.affected ?? -1) > 0
   }
 }
+
+*/

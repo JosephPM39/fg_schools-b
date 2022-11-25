@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
-import { BaseModel, EXPOSE_VERSIONS as EV } from '../../'
+import { BaseModel, EXPOSE_VERSIONS as EV } from '../../base'
 import { IsString, Length } from 'class-validator'
 import { Prom } from '.'
 

@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
-import { BaseModel, EXPOSE_VERSIONS } from '../../'
+import { BaseModel, EXPOSE_VERSIONS } from '../../base'
 import { IsInt, IsString, Length, Max, Min } from 'class-validator'
 import { School } from './school.model'
 
@@ -9,7 +9,7 @@ import { School } from './school.model'
 export class Group extends BaseModel {
   @Expose({
     since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.DELETE_GET
+    until: EXPOSE_VERSIONS.GET
   })
   @IsString()
   @Length(1, 30)
@@ -25,7 +25,7 @@ export class Group extends BaseModel {
 export class Title extends BaseModel {
   @Expose({
     since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.DELETE_GET
+    until: EXPOSE_VERSIONS.GET
   })
   @IsString()
   @Length(1, 100)
@@ -41,7 +41,7 @@ export class Title extends BaseModel {
 export class Position extends BaseModel {
   @Expose({
     since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.DELETE_GET
+    until: EXPOSE_VERSIONS.GET
   })
   @IsString()
   @Length(1, 30)
@@ -57,7 +57,7 @@ export class Position extends BaseModel {
 export class Employee extends BaseModel {
   @Expose({
     since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.DELETE_GET
+    until: EXPOSE_VERSIONS.GET
   })
   @IsString()
   @Length(1, 40)
@@ -66,7 +66,7 @@ export class Employee extends BaseModel {
 
   @Expose({
     since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.DELETE_GET
+    until: EXPOSE_VERSIONS.GET
   })
   @IsString()
   @Length(1, 40)
@@ -75,7 +75,7 @@ export class Employee extends BaseModel {
 
   @Expose({
     since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.DELETE_GET
+    until: EXPOSE_VERSIONS.GET
   })
   @IsString()
   @Length(1, 10)
@@ -84,7 +84,7 @@ export class Employee extends BaseModel {
 
   @Expose({
     since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.DELETE_GET
+    until: EXPOSE_VERSIONS.GET
   })
   @IsString()
   @Length(1, 55)
@@ -132,5 +132,3 @@ export class Prom extends BaseModel {
   @Column('smallint')
     year: number
 }
-
-export { School }

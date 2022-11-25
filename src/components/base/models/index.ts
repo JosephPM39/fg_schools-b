@@ -7,7 +7,7 @@ import { EXPOSE_VERSIONS } from '../types'
 
 @Entity()
 @Exclude()
-export abstract class BaseModel extends BaseEntity {
+export class BaseModel extends BaseEntity {
   @Expose({ since: EXPOSE_VERSIONS.CREATE })
   @PrimaryGeneratedColumn()
   @IsInt()
