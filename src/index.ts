@@ -39,7 +39,7 @@ const createApp = async () => {
 
   app.use('/api/v1', router)
 
-  // getRoutes(router, connection)
+  getRoutes(router, connection)
 
   app.listen(port)
 }

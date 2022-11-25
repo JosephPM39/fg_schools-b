@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 const config = {
   env: process.env.NODE_ENV,
   apiPort: process.env.API_PORT ?? 3000,
@@ -13,4 +16,4 @@ const config = {
   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(' ')
 }
 
-export default { ...config }
+export default config
