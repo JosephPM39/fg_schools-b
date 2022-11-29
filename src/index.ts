@@ -1,11 +1,9 @@
-import * as dotenv from 'dotenv'
 import express, { Request, Response, Router } from 'express'
 import cors, { CorsOptions } from 'cors'
 import 'reflect-metadata'
 import config from './config'
 import { getRoutes, EntitiesORM } from './components'
 import { DB } from './db'
-dotenv.config()
 
 const createApp = async () => {
   console.log(process.env)
@@ -15,15 +13,17 @@ const createApp = async () => {
   const app = express()
   const port = config.apiPort
   const whiteList = config.allowedOrigins
+  console.log(whiteList)
   const corsOptions: CorsOptions = {
     origin: (origin: any, callback: CallableFunction) => {
       if (whiteList === undefined) {
         throw new Error('White list empty')
       }
-      if (whiteList.includes(origin)) {
+      console.log(origin, 'origin')
+      if (whiteList.includes(origin) || !origin) {
         callback(null, true)
       } else {
-        callback(new Error('Not found'))
+        callback(new Error('Not Allowed'))
       }
     }
   }
@@ -44,4 +44,4 @@ const createApp = async () => {
   app.listen(port)
 }
 
-createApp()
+void createApp()

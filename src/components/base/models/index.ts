@@ -1,4 +1,4 @@
-import { IsInt, IsDate, IsOptional } from 'class-validator'
+import { IsDate, IsOptional, IsUUID } from 'class-validator'
 import { Expose, Exclude } from 'class-transformer'
 import {
   BaseEntity, Column, Entity, PrimaryGeneratedColumn
@@ -9,9 +9,9 @@ import { EXPOSE_VERSIONS } from '../types'
 @Exclude()
 export class BaseModel extends BaseEntity {
   @Expose({ since: EXPOSE_VERSIONS.CREATE })
-  @PrimaryGeneratedColumn()
-  @IsInt()
-    id: number
+  @PrimaryGeneratedColumn('uuid')
+  @IsUUID()
+    id: string
 
   @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()
