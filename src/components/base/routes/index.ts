@@ -39,9 +39,23 @@ export const endpointsCrud = (params: options) => {
     }
   }
 
+  const create = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { body: data } = req
+      const newData = await controller.create(data)
+      res.status(201).json(newData)
+    } catch (err) {
+      next(err)
+    }
+  }
+
   if (!excludeEndpoints?.read) {
     router.get('/', checkRole(roles?.read), getAll)
     router.get('/:id', checkRole(roles?.read), getOne)
+  }
+
+  if (!excludeEndpoints?.create) {
+    router.post('/', checkRole(roles?.create), create)
   }
 
   return router

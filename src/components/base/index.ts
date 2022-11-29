@@ -1,4 +1,4 @@
 export { BaseModel } from './models'
-export { BaseController, IController } from './controller'
-export { EXPOSE_VERSIONS } from './types'
+export { BaseController } from './controller'
+export { EXPOSE_VERSIONS, IController } from './types'
 export { endpointsCrud } from './routes'
