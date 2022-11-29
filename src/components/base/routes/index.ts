@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import { BaseController } from '../controller'
+import { checkRole } from '../middlewares'
 
 interface options {
   router: Router
@@ -10,10 +11,16 @@ interface options {
     update?: boolean
     delete?: boolean
   }
+  rolesForEndpoints?: {
+    read?: string[]
+    create?: string[]
+    update?: string[]
+    delete?: string[]
+  }
 }
 
 export const endpointsCrud = (params: options) => {
-  const { router, controller, excludeEndpoints } = params
+  const { router, controller, excludeEndpoints, rolesForEndpoints: roles } = params
 
   const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -33,8 +40,8 @@ export const endpointsCrud = (params: options) => {
   }
 
   if (!excludeEndpoints?.read) {
-    router.get('/', getAll)
-    router.get('/:id', getOne)
+    router.get('/', checkRole(roles?.read), getAll)
+    router.get('/:id', checkRole(roles?.read), getOne)
   }
 
   return router

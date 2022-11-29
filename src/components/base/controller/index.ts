@@ -30,7 +30,6 @@ interface validateIdOptions<Model> {
 const validateId = async <Model extends {}>(params: validateIdOptions<Model>) => {
   const { id, version, model } = params
   if (typeof id === 'string') {
-    console.log({ id })
     await validateDto<Model>({
       dto: { id },
       model,
@@ -44,21 +43,6 @@ const validateId = async <Model extends {}>(params: validateIdOptions<Model>) =>
   if (typeof id === 'object') {
     return id
   }
-}
-
-const dataParse = (data: unknown) => {
-  if (typeof data === 'string') {
-    try {
-      const res = JSON.parse(data)
-      return res
-    } catch {
-      return { data }
-    }
-  }
-  if (typeof data === 'object') {
-    return data
-  }
-  return null
 }
 
 const validateDto = async <Model extends {}>(params: validateDtoOptions<Model>) => {
