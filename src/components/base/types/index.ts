@@ -13,8 +13,8 @@ export enum EXPOSE_VERSIONS {
 export interface IController<T, Create, Id, Get, Update > {
   create: (data: Create | object | Create[] | object[]) => Promise<boolean | T[]>
   read: (id?: Id | Get | string) => Promise<T | null | T[]>
-  update: (id: Id, data: Update | string) => Promise<boolean>
-  delete: (id: Id | string) => Promise<boolean>
+  update: (id: Id | string, data: Update | object) => Promise<boolean>
+  delete: (id: Id | string, softDelete?: boolean) => Promise<boolean>
 }
 
 export type ModelClassType<Model> = EntityTarget<Model> | ClassConstructor<Model>

@@ -39,6 +39,8 @@ export class BaseController<
         version: EV.CREATE
       })
     }
+    // I should study this save method, that this update if the
+    // data al ready exists
     const res: Model[] = await this.repo.save(dtos)
     if (!res) return false
     return res
@@ -62,7 +64,55 @@ export class BaseController<
     return res
   }
 
-  update: (id: Id, data: string | Update) => Promise<boolean>
+  async update (id: Id | string, data: object | Update) {
+    if (!this.repo) await this.init()
+    const idDto: object = typeof id === 'object' ? id : { id }
+    await validateDto<Model>({
+      dto: idDto,
+      model: this.model,
+      version: EV.GET
+    })
+    await validateDto<Model>({
+      dto: data,
+      model: this.model,
+      version: EV.UPDATE
+    })
 
-  delete: (id: string | Id) => Promise<boolean>
+    const findOptions: FindOptionsWhere<Model> = {
+      ...idDto
+    }
+
+    const res = await this.repo.update(
+      findOptions,
+      data
+    )
+
+    if (res.affected ?? 0 < 1) return false
+    return true
+  }
+
+  async delete (id: string | Id, softDelete?: boolean) {
+    if (!this.repo) await this.init()
+    const idDto: object = typeof id === 'object' ? id : { id }
+    await validateDto<Model>({
+      dto: idDto,
+      model: this.model,
+      version: EV.GET
+    })
+
+    const findOptions: FindOptionsWhere<Model> = {
+      ...idDto
+    }
+
+    let res
+
+    if (softDelete) {
+      res = await this.repo.softDelete(findOptions)
+    } else {
+      res = await this.repo.delete(findOptions)
+    }
+
+    if (res.affected ?? 0 < 1) return false
+    return true
+  }
 }
