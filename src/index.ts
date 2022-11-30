@@ -1,49 +1,13 @@
-import express, { Request, Response, Router } from 'express'
-import cors, { CorsOptions } from 'cors'
 import 'reflect-metadata'
 import config from './config'
-import { getRoutes, EntitiesORM } from './components'
-import { DB } from './db'
-import { boomErrorHandler, errorHandler, logErrors } from './middlewares'
+import { EntitiesORM } from './components'
+import { createDBConnection } from './db'
+import { createApp } from './app'
 
-const createApp = async () => {
-  const connection = new DB(EntitiesORM)
-  await connection.init()
-
-  const app = express()
-  const port = config.apiPort
-  const whiteList = config.allowedOrigins
-  const corsOptions: CorsOptions = {
-    origin: (origin: any, callback: CallableFunction) => {
-      if (whiteList === undefined) {
-        throw new Error('White list empty')
-      }
-      if (whiteList.includes(origin) || !origin) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not Allowed'))
-      }
-    }
-  }
-
-  app.use(cors(corsOptions))
-  app.use(express.json())
-
-  app.get('/', (req: Request, res: Response) => {
-    res.send(`It's works ${req.ip}`)
-  })
-
-  const router = Router()
-
-  app.use('/api/v1', router)
-
-  getRoutes(router, connection)
-
-  app.use(logErrors)
-  app.use(boomErrorHandler)
-  app.use(errorHandler)
-
-  app.listen(port)
+const init = async () => {
+  const connection = await createDBConnection(EntitiesORM)
+  const { apiPort: port, allowedOrigins } = config
+  createApp({ connection, port, allowedOrigins })
 }
 
-void createApp()
+void init()

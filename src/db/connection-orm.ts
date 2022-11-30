@@ -24,27 +24,17 @@ export class Connection implements IConnection {
   }
 
   async init () {
-    if (this.source == null) {
-      const res = await this.initSource()
-      if (res) {
-        return true
-      }
-    }
-    return true
+    if (!this.source) return true
+    this.source = await this.initSource()
+    return !!this.source
   }
 
-  async initSource () {
-    try {
-      const res = await AppDataSource(this.entities).initialize()
-      return res
-    } catch (err) {
-      const error = err
-      throw error
-    }
+  private async initSource () {
+    return await AppDataSource(this.entities).initialize()
   }
 
   async getRepo<T extends {}>(entity: EntityTarget<T>) {
-    if (this.source == null) {
+    if (!this.source) {
       this.source = await this.initSource()
     }
     return this.source.getRepository(entity)
@@ -58,10 +48,9 @@ export class Connection implements IConnection {
   }
 
   async quit () {
-    if (this.source == null) {
-      this.source = await this.initSource()
+    if (this.source) {
+      await this.source.destroy()
+      this.source = undefined
     }
-    await this.source.destroy()
-    this.source = undefined
   }
 }
