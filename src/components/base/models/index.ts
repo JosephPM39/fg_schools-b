@@ -1,7 +1,7 @@
 import { IsDate, IsOptional, IsUUID } from 'class-validator'
 import { Expose, Exclude } from 'class-transformer'
 import {
-  BaseEntity, Column, Entity, PrimaryGeneratedColumn
+  BaseEntity, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn
 } from 'typeorm'
 import { EXPOSE_VERSIONS } from '../types'
 
@@ -9,25 +9,26 @@ import { EXPOSE_VERSIONS } from '../types'
 @Exclude()
 export class BaseModel extends BaseEntity {
   @Expose({ since: EXPOSE_VERSIONS.CREATE })
+  @IsOptional()
   @PrimaryGeneratedColumn('uuid')
   @IsUUID()
     id: string
 
   @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()
-  @Column()
+  @CreateDateColumn()
   @IsDate()
     createAt: Date
 
   @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()
-  @Column()
+  @UpdateDateColumn()
   @IsDate()
     updateAt: Date
 
   @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()
-  @Column()
+  @DeleteDateColumn()
   @IsDate()
     deletedAt: Date
 }

@@ -6,11 +6,13 @@ import { createApp } from '../../app'
 import { Server } from 'http'
 import { Express } from 'express'
 import supertest from 'supertest'
+import { generateOneFake } from '../fakes/schools'
 
-describe('Test Schools Endpoints', () => {
+describe('Test Schools Component Endpoints', () => {
   let app: Express
   let server: Server
   let connection: DB
+  const componentPath = '/api/v1/schools/'
 
   beforeAll(async () => {
     connection = await createDBConnection(EntitiesORM)
@@ -25,13 +27,29 @@ describe('Test Schools Endpoints', () => {
     await server.close()
   })
 
-  describe('Test for school component', () => {
+  describe('Test for school', () => {
+    const basePath = componentPath + 'school/'
+
+    describe('Test for [POST]', () => {
+      const fake = generateOneFake()
+      test('Post one DTO', async () => await supertest(app)
+        .post(basePath)
+        .send(fake)
+        .expect('Content-Type', /json/)
+        // .expect((res: any) => res.body.details.map((c: any) => console.log(c, 'error')))
+        .expect(201)
+        .then((res) => {
+          expect(res.body).toBeTruthy()
+        })
+      )
+    })
+
     describe('Test for [GET]', () => {
-      test('should return "[]"', async () => await supertest(app)
-        .get('/api/v1/schools/school/')
+      test('should return "10 elements"', async () => await supertest(app)
+        .get(basePath)
         .expect(200)
         .then((res) => {
-          expect(res.body).toEqual([])
+          expect(res.body.length).toBeGreaterThan(0)
         })
       )
     })
