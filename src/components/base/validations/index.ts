@@ -1,12 +1,13 @@
 import { ValidateIdOptions, ValidateDtoOptions } from '../types'
-import { ClassConstructor, ClassTransformOptions, plainToInstance } from 'class-transformer'
+import { ClassConstructor, plainToInstance } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import Boom from '@hapi/boom'
+import { IQuery, Query } from './query'
 
-export const validateId = async <Model extends {}>(params: ValidateIdOptions<Model>) => {
-  const { id, version, model } = params
+export const validateIdBy = async <Model extends {}>(params: ValidateIdOptions<Model>) => {
+  const { idBy, version, model } = params
   return await validateDto<Model>({
-    dto: typeof id === 'object' ? id : { id },
+    dto: typeof idBy === 'object' ? idBy : { id: idBy },
     model,
     version,
     validatorOptions: {
@@ -35,6 +36,17 @@ export const validateDto = async <Model extends {}>(params: ValidateDtoOptions<M
     throw boomError
   }
   return instance
+}
+
+export const validateQuery = async (query: object | IQuery): Promise<Partial<Query>> => {
+  return await validateDto({
+    dto: query,
+    model: Query,
+    validatorOptions: {
+      skipMissingProperties: true,
+      skipUndefinedProperties: true
+    }
+  })
 }
 
 const formatValidationError = (error: ValidationError[] | ValidationError) => {

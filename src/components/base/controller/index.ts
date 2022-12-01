@@ -1,35 +1,21 @@
-import { EntityTarget, Repository, FindOptionsWhere, FindManyOptions } from 'typeorm'
+import { Repository, FindOptionsWhere, FindManyOptions } from 'typeorm'
 import { DB } from '../../../db/'
-import { ClassConstructor } from 'class-transformer'
-import { EXPOSE_VERSIONS as EV, IController, ModelClassType } from '../types'
-import { validateDto, validateId } from '../validations'
+import { CreateParams, DeleteParams, EXPOSE_VERSIONS as EV, IController, ModelClassType, ReadParams, UpdateParams } from '../types'
+import { validateDto, validateIdBy, validateQuery } from '../validations'
 
-export class BaseController<
-  Model extends {},
-  Create extends {},
-  Id extends {},
-  Get extends {},
-  Update extends {}
-> implements IController<Model, Create, Id, Get, Update> {
+export class BaseController<Model extends {}> implements IController<Model> {
   protected repo: Repository<Model>
 
-  protected model: EntityTarget<Model> | ClassConstructor<Model>
-
-  private readonly connection: DB
-
   constructor (
-    connection: DB,
-    model: ModelClassType<Model>
-  ) {
-    this.connection = connection
-    this.model = model
-  }
+    private readonly connection: DB,
+    protected model: ModelClassType<Model>
+  ) {}
 
   async init () {
     this.repo = await this.connection.getRepo(this.model)
   }
 
-  async create (data: object[] | Create[] | object | Create) {
+  async create ({ data }: CreateParams) {
     if (!this.repo) await this.init()
     const dtos: Model[] = Array.isArray(data) ? data : [data]
     const dtosValid: Model[] = []
@@ -48,20 +34,29 @@ export class BaseController<
     return res
   }
 
-  async read (id?: string | Id | Get) {
-    const { order, limit, offset } = params
-    const findOptions: FindManyOptions<Model> = {
-      order: {
-        createdAt: ''
-      } as object
-    }
-    if (!this.repo) await this.init()
-    if (!id) return await this.repo.find({})
+  async read (params: ReadParams) {
+    const { query, idBy } = params
 
-    const idValid = await validateId<Model>({ id, model: this.model, version: EV.GET })
+    const queryValid = await validateQuery(query)
+
+    const orderBy: object = { createdAt: queryValid.order }
+    const findOptions: FindManyOptions<Model> = {
+      order: orderBy,
+      take: queryValid.limit,
+      skip: queryValid.offset
+    }
+
+    if (!this.repo) await this.init()
+    if (!idBy) return await this.repo.find()
+
+    const idByValid = await validateIdBy<Model>({
+      idBy,
+      model: this.model,
+      version: EV.GET
+    })
 
     const findOptionsWhere: FindOptionsWhere<Model> = {
-      ...idValid
+      ...idByValid
     }
 
     findOptions.where = findOptionsWhere
@@ -72,10 +67,11 @@ export class BaseController<
     return res
   }
 
-  async update (id: Id | string, data: object | Update) {
+  async update (params: UpdateParams) {
+    const { idBy, data } = params
     if (!this.repo) await this.init()
-    const idValid = await validateId<Model>({
-      id,
+    const idByValid = await validateIdBy<Model>({
+      idBy,
       model: this.model,
       version: EV.GET
     })
@@ -90,7 +86,7 @@ export class BaseController<
     })
 
     const findOptions: FindOptionsWhere<Model> = {
-      ...idValid
+      ...idByValid
     }
 
     const res = await this.repo.update(
@@ -101,16 +97,17 @@ export class BaseController<
     return (res.affected ?? 0) > 0
   }
 
-  async delete (id: string | Id, softDelete?: boolean) {
+  async delete (params: DeleteParams) {
+    const { idBy, softDelete } = params
     if (!this.repo) await this.init()
-    const idValid = await validateId<Model>({
-      id,
+    const idByValid = await validateIdBy<Model>({
+      idBy,
       model: this.model,
       version: EV.GET
     })
 
     const findOptions: FindOptionsWhere<Model> = {
-      ...idValid
+      ...idByValid
     }
 
     let res

@@ -2,9 +2,9 @@ import { NextFunction, Request, Response, Router } from 'express'
 import { BaseController } from '../controller'
 import { checkRole } from '../middlewares'
 
-interface options {
+interface options<Model extends {}> {
   router: Router
-  controller: BaseController<{}, {}, {}, {}, {}>
+  controller: BaseController<Model>
   excludeEndpoints?: {
     read?: boolean
     create?: boolean
@@ -19,12 +19,20 @@ interface options {
   }
 }
 
-export const endpointsCrud = (params: options) => {
+const queryExtract = (req: Request): object => ({
+  order: req.query.order,
+  limit: req.query.limit,
+  offset: req.query.offset
+})
+
+export const endpointsCrud = <Model extends {}>(params: options<Model>) => {
   const { router, controller, excludeEndpoints, rolesForEndpoints: roles } = params
 
   const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.json(await controller.read())
+      const { body: idBy } = req
+      const query = queryExtract(req)
+      res.json(await controller.read({ idBy, query }))
     } catch (error) {
       next(error)
     }
@@ -32,8 +40,9 @@ export const endpointsCrud = (params: options) => {
 
   const getOne = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params
-      res.json(await controller.read(id))
+      const { id: idBy } = req.params
+      const query = queryExtract(req)
+      res.json(await controller.read({ idBy, query }))
     } catch (error) {
       next(error)
     }
@@ -42,7 +51,7 @@ export const endpointsCrud = (params: options) => {
   const create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { body: data } = req
-      const newData = await controller.create(data)
+      const newData = await controller.create({ data })
       res.status(201).json(newData)
     } catch (err) {
       next(err)
@@ -52,7 +61,7 @@ export const endpointsCrud = (params: options) => {
   const update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { body: data, params } = req
-      const updateRes = await controller.update(params.id, data)
+      const updateRes = await controller.update({ idBy: params.id, data })
       res.status(200).json(updateRes)
     } catch (err) {
       next(err)
@@ -61,8 +70,8 @@ export const endpointsCrud = (params: options) => {
 
   const remove = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params
-      const deleteRes = await controller.delete(id)
+      const { id: idBy } = req.params
+      const deleteRes = await controller.delete({ idBy })
       res.status(200).json(deleteRes)
     } catch (err) {
       next(err)

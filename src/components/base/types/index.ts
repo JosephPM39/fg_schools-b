@@ -1,6 +1,7 @@
 import { EntityTarget } from 'typeorm'
 import { ValidatorOptions } from 'class-validator'
 import { ClassConstructor } from 'class-transformer'
+import { IQuery } from '../validations/query'
 
 export enum EXPOSE_VERSIONS {
   UPDATE = 1,
@@ -10,33 +11,32 @@ export enum EXPOSE_VERSIONS {
   DELETE = 5,
 }
 
-type Id = string | object
+type IdBy = string | object
 
-interface CreateParams {
+export interface CreateParams {
   data: object[] | object
 }
 
-interface ReadParams {
-  id?: Id
-  order: 'DESC' | 'ASC' | string
-  limit: number
-  offset: number
+export interface ReadParams {
+  idBy: IdBy
+  query: IQuery
 }
 
-interface UpdateParams {
-  id: Id
+export interface UpdateParams {
+  idBy: IdBy
   data: object
 }
 
-interface DeleteParams {
-  id: Id
+export interface DeleteParams {
+  idBy: IdBy
+  softDelete?: boolean
 }
 
 export interface IController<Model> {
   create: (params: CreateParams) => Promise<boolean | Model[]>
-  read: (params: ReadParams) => Promise<Model | null | Model[]>
-  update: (params: ) => Promise<boolean>
-  delete: (id: Id | string, softDelete?: boolean) => Promise<boolean>
+  read: (params: ReadParams) => Promise<null | Model[]>
+  update: (params: UpdateParams) => Promise<boolean>
+  delete: (params: DeleteParams) => Promise<boolean>
 }
 
 export type ModelClassType<Model> = EntityTarget<Model> | ClassConstructor<Model>
@@ -44,12 +44,12 @@ export type ModelClassType<Model> = EntityTarget<Model> | ClassConstructor<Model
 export interface ValidateDtoOptions<Model> {
   dto: object
   model: ModelClassType<Model>
-  version: EXPOSE_VERSIONS
+  version?: EXPOSE_VERSIONS
   validatorOptions?: ValidatorOptions
 }
 
 export interface ValidateIdOptions<Model> {
-  id: string | object
+  idBy: IdBy
   model: ModelClassType<Model>
   version: EXPOSE_VERSIONS
 }
