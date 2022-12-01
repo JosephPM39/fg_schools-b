@@ -20,7 +20,7 @@ describe('Full e2e App Testing', () => {
   })
 
   afterAll(async () => {
-    // await mutableParams.connection?.dropDB('confirm')
+    await mutableParams.connection?.dropDB('confirm')
     await mutableParams.connection?.quit()
     mutableParams.server?.close()
   })

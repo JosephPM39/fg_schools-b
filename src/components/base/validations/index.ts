@@ -19,13 +19,11 @@ export const validateIdBy = async <Model extends {}>(params: ValidateIdOptions<M
 
 export const validateDto = async <Model extends {}>(params: ValidateDtoOptions<Model>) => {
   const { model, dto, version } = params
-  console.log(dto, 'dto')
   const instance = plainToInstance(
     model as ClassConstructor<Model>,
     dto,
     { version, excludeExtraneousValues: true, exposeUnsetFields: false }
   )
-  console.log(instance, 'instance')
   const errors = await validate(instance, params.validatorOptions)
   if (errors.length > 0) {
     const boomError = Boom.badRequest('Invalid data')
