@@ -13,6 +13,7 @@ const config = {
     ? parseInt(process.env.DB_PORT, 10)
     : undefined,
   dbHost: process.env.DB_HOST,
+  dbSync: process.env.DB_SYNC,
   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(' ')
 }
 

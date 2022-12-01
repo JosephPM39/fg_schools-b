@@ -10,10 +10,32 @@ export enum EXPOSE_VERSIONS {
   DELETE = 5,
 }
 
-export interface IController<T, Create, Id, Get, Update > {
-  create: (data: Create | object | Create[] | object[]) => Promise<boolean | T[]>
-  read: (id?: Id | Get | string) => Promise<T | null | T[]>
-  update: (id: Id | string, data: Update | object) => Promise<boolean>
+type Id = string | object
+
+interface CreateParams {
+  data: object[] | object
+}
+
+interface ReadParams {
+  id?: Id
+  order: 'DESC' | 'ASC' | string
+  limit: number
+  offset: number
+}
+
+interface UpdateParams {
+  id: Id
+  data: object
+}
+
+interface DeleteParams {
+  id: Id
+}
+
+export interface IController<Model> {
+  create: (params: CreateParams) => Promise<boolean | Model[]>
+  read: (params: ReadParams) => Promise<Model | null | Model[]>
+  update: (params: ) => Promise<boolean>
   delete: (id: Id | string, softDelete?: boolean) => Promise<boolean>
 }
 

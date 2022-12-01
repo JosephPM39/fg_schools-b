@@ -49,6 +49,26 @@ export const endpointsCrud = (params: options) => {
     }
   }
 
+  const update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { body: data, params } = req
+      const updateRes = await controller.update(params.id, data)
+      res.status(200).json(updateRes)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  const remove = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params
+      const deleteRes = await controller.delete(id)
+      res.status(200).json(deleteRes)
+    } catch (err) {
+      next(err)
+    }
+  }
+
   if (!excludeEndpoints?.read) {
     router.get('/', checkRole(roles?.read), getAll)
     router.get('/:id', checkRole(roles?.read), getOne)
@@ -56,6 +76,14 @@ export const endpointsCrud = (params: options) => {
 
   if (!excludeEndpoints?.create) {
     router.post('/', checkRole(roles?.create), create)
+  }
+
+  if (!excludeEndpoints?.update) {
+    router.patch('/:id', checkRole(roles?.update), update)
+  }
+
+  if (!excludeEndpoints?.delete) {
+    router.delete('/:id', checkRole(roles?.update), remove)
   }
 
   return router

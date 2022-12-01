@@ -9,11 +9,6 @@ interface IConnection {
   quit: () => Promise<void>
 }
 
-const errors = {
-  sourceUndefined: 'Data source not initialized',
-  sourceDefined: 'Data source is alredy initialized'
-}
-
 export class Connection implements IConnection {
   private source?: DataSource
 
@@ -45,6 +40,24 @@ export class Connection implements IConnection {
       this.source = await this.initSource()
     }
     return await this.source.query(query)
+  }
+
+  async dropDB (confirm: 'confirm') {
+    if (confirm === 'confirm') {
+      if (this.source == null) {
+        this.source = await this.initSource()
+      }
+      await this.source.dropDatabase()
+    }
+  }
+
+  async syncDB (confirm: 'confirm') {
+    if (confirm === 'confirm') {
+      if (this.source == null) {
+        this.source = await this.initSource()
+      }
+      await this.source.synchronize()
+    }
   }
 
   async quit () {

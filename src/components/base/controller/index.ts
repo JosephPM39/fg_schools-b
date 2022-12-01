@@ -1,4 +1,4 @@
-import { EntityTarget, Repository, FindOptionsWhere } from 'typeorm'
+import { EntityTarget, Repository, FindOptionsWhere, FindManyOptions } from 'typeorm'
 import { DB } from '../../../db/'
 import { ClassConstructor } from 'class-transformer'
 import { EXPOSE_VERSIONS as EV, IController, ModelClassType } from '../types'
@@ -32,33 +32,41 @@ export class BaseController<
   async create (data: object[] | Create[] | object | Create) {
     if (!this.repo) await this.init()
     const dtos: Model[] = Array.isArray(data) ? data : [data]
+    const dtosValid: Model[] = []
     for (let i = 0; i < dtos.length; i++) {
-      await validateDto<Model>({
+      const dtoValid = await validateDto<Model>({
         dto: dtos[i],
         model: this.model,
         version: EV.CREATE
       })
+      dtosValid.push(dtoValid)
     }
     // I should study this save method, that this update if the
     // data al ready exists
-    const res: Model[] = await this.repo.save(dtos)
+    const res: Model[] = await this.repo.save(dtosValid)
     if (!res) return false
     return res
   }
 
   async read (id?: string | Id | Get) {
+    const { order, limit, offset } = params
+    const findOptions: FindManyOptions<Model> = {
+      order: {
+        createdAt: ''
+      } as object
+    }
     if (!this.repo) await this.init()
-    if (!id) return await this.repo.find()
+    if (!id) return await this.repo.find({})
 
-    const data = await validateId<Model>({ id, model: this.model, version: EV.GET })
+    const idValid = await validateId<Model>({ id, model: this.model, version: EV.GET })
 
-    const findOptions: FindOptionsWhere<Model> = {
-      ...data
+    const findOptionsWhere: FindOptionsWhere<Model> = {
+      ...idValid
     }
 
-    const res = await this.repo.find({
-      where: findOptions
-    })
+    findOptions.where = findOptionsWhere
+
+    const res = await this.repo.find(findOptions)
 
     if (res.length < 1) return null
     return res
@@ -66,42 +74,43 @@ export class BaseController<
 
   async update (id: Id | string, data: object | Update) {
     if (!this.repo) await this.init()
-    const idDto: object = typeof id === 'object' ? id : { id }
-    await validateDto<Model>({
-      dto: idDto,
+    const idValid = await validateId<Model>({
+      id,
       model: this.model,
       version: EV.GET
     })
-    await validateDto<Model>({
+    const dataValid = await validateDto<Model>({
       dto: data,
       model: this.model,
-      version: EV.UPDATE
+      version: EV.UPDATE,
+      validatorOptions: {
+        skipMissingProperties: true,
+        skipUndefinedProperties: true
+      }
     })
 
     const findOptions: FindOptionsWhere<Model> = {
-      ...idDto
+      ...idValid
     }
 
     const res = await this.repo.update(
       findOptions,
-      data
+      dataValid
     )
 
-    if (res.affected ?? 0 < 1) return false
-    return true
+    return (res.affected ?? 0) > 0
   }
 
   async delete (id: string | Id, softDelete?: boolean) {
     if (!this.repo) await this.init()
-    const idDto: object = typeof id === 'object' ? id : { id }
-    await validateDto<Model>({
-      dto: idDto,
+    const idValid = await validateId<Model>({
+      id,
       model: this.model,
       version: EV.GET
     })
 
     const findOptions: FindOptionsWhere<Model> = {
-      ...idDto
+      ...idValid
     }
 
     let res
@@ -112,7 +121,6 @@ export class BaseController<
       res = await this.repo.delete(findOptions)
     }
 
-    if (res.affected ?? 0 < 1) return false
-    return true
+    return (res.affected ?? 0) > 0
   }
 }

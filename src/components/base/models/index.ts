@@ -18,13 +18,13 @@ export class BaseModel extends BaseEntity {
   @IsOptional()
   @CreateDateColumn()
   @IsDate()
-    createAt: Date
+    createdAt: Date
 
   @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()
   @UpdateDateColumn()
   @IsDate()
-    updateAt: Date
+    updatedAt: Date
 
   @Expose({ since: EXPOSE_VERSIONS.FULL })
   @IsOptional()

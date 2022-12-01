@@ -1,33 +1,30 @@
 import { ValidateIdOptions, ValidateDtoOptions } from '../types'
-import { ClassConstructor, plainToInstance } from 'class-transformer'
+import { ClassConstructor, ClassTransformOptions, plainToInstance } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import Boom from '@hapi/boom'
 
 export const validateId = async <Model extends {}>(params: ValidateIdOptions<Model>) => {
   const { id, version, model } = params
-  if (typeof id === 'string') {
-    await validateDto<Model>({
-      dto: { id },
-      model,
-      version,
-      validatorOptions: {
-        skipMissingProperties: true
-      }
-    })
-    return { id }
-  }
-  if (typeof id === 'object') {
-    return id
-  }
+  return await validateDto<Model>({
+    dto: typeof id === 'object' ? id : { id },
+    model,
+    version,
+    validatorOptions: {
+      skipMissingProperties: true,
+      skipUndefinedProperties: true
+    }
+  })
 }
 
 export const validateDto = async <Model extends {}>(params: ValidateDtoOptions<Model>) => {
   const { model, dto, version } = params
+  console.log(dto, 'dto')
   const instance = plainToInstance(
     model as ClassConstructor<Model>,
     dto,
-    { version }
+    { version, excludeExtraneousValues: true, exposeUnsetFields: false }
   )
+  console.log(instance, 'instance')
   const errors = await validate(instance, params.validatorOptions)
   if (errors.length > 0) {
     const boomError = Boom.badRequest('Invalid data')
@@ -37,6 +34,7 @@ export const validateDto = async <Model extends {}>(params: ValidateDtoOptions<M
     }
     throw boomError
   }
+  return instance
 }
 
 const formatValidationError = (error: ValidationError[] | ValidationError) => {

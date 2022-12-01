@@ -9,6 +9,8 @@ export const testSchool = (params: TestMutableParams, basePath: string) => {
     const fake = schoolFaker.generateOneFake(true)
     const fakes = schoolFaker.generateManyFakes()
 
+    const logResValitaionError = (res: any) => res.body.details.map((c: any) => console.log(c, 'error'))
+
     describe('[POST]', () => {
       test('Post one DTO', async () => await supertest(params.app)
         .post(path)
@@ -50,6 +52,7 @@ export const testSchool = (params: TestMutableParams, basePath: string) => {
 
     describe('[PATCH]', () => {
       const newFake = schoolFaker.generateOneFake()
+      console.log('Patch data', newFake)
       test('Update one element', async () => await supertest(params.app)
         .patch(`${path}${fake.id ?? ''}`)
         .send(newFake)

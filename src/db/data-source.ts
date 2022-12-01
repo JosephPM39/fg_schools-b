@@ -3,7 +3,7 @@ import { DataSource, EntitySchema, MixedList } from 'typeorm'
 
 export type EntitiesADS = MixedList<string | Function | EntitySchema<any>>
 
-export const AppDataSource = (EntitiesORM?: EntitiesADS): DataSource => new DataSource({
+export const AppDataSource = (EntitiesORM?: EntitiesADS, synchronize?: boolean): DataSource => new DataSource({
   type: 'postgres',
   host: config.dbHost,
   port: config.dbPort,
@@ -11,6 +11,6 @@ export const AppDataSource = (EntitiesORM?: EntitiesADS): DataSource => new Data
   password: config.dbPass,
   database: config.dbName,
   entities: EntitiesORM,
-  synchronize: true,
+  synchronize,
   logging: config.env === 'dev'
 })
