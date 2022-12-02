@@ -34,11 +34,11 @@ export const testSchool = (params: TestMutableParams, basePath: string) => {
     })
 
     describe('[GET]', () => {
-      test('Should return "11 elements"', async () => await supertest(params.app)
+      test('Should return "10 elements"', async () => await supertest(params.app)
         .get(path)
         .expect(200)
         .then((res) => {
-          expect(res.body.length).toBe(11)
+          expect(res.body.length).toBe(10)
         })
       )
       test('Get by ID', async () => await supertest(params.app)
@@ -46,6 +46,24 @@ export const testSchool = (params: TestMutableParams, basePath: string) => {
         .expect(200)
         .then((res) => {
           expect(res.body[0].id).toBe(fake.id)
+        })
+      )
+      const object = {}
+      test('Get by Object', async () => await supertest(params.app)
+        .get(path)
+        .send(object)
+        .expect(200)
+        .then((res) => {
+          expect(Object.values(res.body[0])).toContain(object)
+        })
+      )
+
+      test('Get with pagination', async () => await supertest(params.app)
+        .get(path)
+        .query({ limit: 2, offset: 4, order: 'DESC' })
+        .expect(200)
+        .then((res) => {
+          expect(res.body.length).toBe(2)
         })
       )
     })

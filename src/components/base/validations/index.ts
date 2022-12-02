@@ -37,7 +37,7 @@ export const validateDto = async <Model extends {}>(params: ValidateDtoOptions<M
 }
 
 export const validateQuery = async (query: object | IQuery): Promise<Partial<Query>> => {
-  return await validateDto({
+  return await validateDto<Query>({
     dto: query,
     model: Query,
     validatorOptions: {
