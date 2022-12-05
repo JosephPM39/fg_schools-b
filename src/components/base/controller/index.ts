@@ -39,7 +39,7 @@ export class BaseController<Model extends {}> implements IController<Model> {
 
     const queryValid = await validateQuery(query)
 
-    console.log(queryValid, 'queryValid', query, 'query')
+    // console.log(queryValid, 'queryValid', query, 'query')
 
     const orderBy: object = { createdAt: queryValid.order }
     const findOptions: FindManyOptions<Model> = {

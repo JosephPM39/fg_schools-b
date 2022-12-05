@@ -3,22 +3,7 @@ import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, EXPOSE_VERSIONS } from '../../base'
 import { IsInt, IsString, Length, Max, Min } from 'class-validator'
 import { School } from './school.model'
-
-@Entity()
-@Exclude()
-export class Group extends BaseModel {
-  @Expose({
-    since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.GET
-  })
-  @IsString()
-  @Length(1, 30)
-  @Column('varchar', { length: 30 })
-    name: string
-
-  @OneToMany(() => Prom, (proms) => proms.group)
-    proms: Prom[]
-}
+import { Group } from './group.model'
 
 @Entity()
 @Exclude()

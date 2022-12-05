@@ -64,7 +64,7 @@ export const basicCrudTests = <T extends { id: string }>(params: CrudTestsParams
     })
   )
   const newFake = params.entityFaker.generateOneFake()
-  console.log('Patch data', newFake)
+  // console.log('Patch data', newFake)
   test('[PATCH]: Update one element', async () => await supertest(params.mutable.app)
     .patch(`${params.path}${fake.id ?? ''}`)
     .send(newFake)
