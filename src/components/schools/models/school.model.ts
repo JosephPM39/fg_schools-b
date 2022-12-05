@@ -7,25 +7,25 @@ import { Prom } from '.'
 @Entity()
 @Exclude()
 export class School extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsString()
   @Length(1, 100)
   @Column('varchar', { length: 100 })
     name: string
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsString()
   @Length(1, 254)
   @Column('varchar', { length: 254 })
     location: string
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsString()
   @Length(1, 30)
   @Column('varchar', { length: 30 })
     code: string
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsString()
   @Length(1, 100)
   @Column('varchar', { length: 100 })

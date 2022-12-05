@@ -1,14 +1,15 @@
 import { faker } from '@faker-js/faker'
 import { ISchool } from '../../../components/schools/models/school.model'
 import { v4 as uuidv4 } from 'uuid'
+import { EntityFaker, gOneFakeParams, gManyFakesParams } from '../types'
 
 const name = () => faker.helpers.unique(faker.company.name)
 const location = () => faker.address.streetAddress()
 const code = () => faker.address.zipCode()
 const icon = () => faker.helpers.unique(faker.image.avatar)
 
-const generateOneFake = (withId?: boolean): Partial<ISchool> => {
-  const id = withId ? { id: uuidv4() } : {}
+const generateOneFake = (params?: gOneFakeParams): Partial<ISchool> => {
+  const id = params?.withId ? { id: uuidv4() } : {}
   return {
     ...id,
     name: name(),
@@ -18,15 +19,16 @@ const generateOneFake = (withId?: boolean): Partial<ISchool> => {
   }
 }
 
-const generateManyFakes = (quantity: number = 10, withId?: boolean) => {
+const generateManyFakes = (params?: gManyFakesParams) => {
   const fakes: Array<Partial<ISchool>> = []
+  const quantity = params?.quantity ?? 10
   for (let i = 0; i < quantity; i++) {
-    fakes.push(generateOneFake(withId))
+    fakes.push(generateOneFake({ withId: params?.withId }))
   }
   return fakes
 }
 
-export const schoolFaker = {
+export const schoolFaker: EntityFaker<ISchool> = {
   generateOneFake,
   generateManyFakes
 }
