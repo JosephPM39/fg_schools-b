@@ -10,10 +10,10 @@ export const logErrors = (err: Error, req: Request, res: Response, next: NextFun
   next(err)
 }
 
-export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   console.log('Error Handler:')
-  return res.status(500).json({
-    message: err.name
+  return res.status(err?.statusCode ?? 500).json({
+    message: `${String(err.name)}: ${String(err.message)}`
   })
 }
 

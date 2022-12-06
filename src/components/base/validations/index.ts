@@ -51,7 +51,7 @@ const formatValidationError = (error: ValidationError[] | ValidationError) => {
   const format = (error: ValidationError) => {
     const constraints = JSON.stringify(error.constraints ?? '')
 
-    return `{ "${error.property}": "${String(error.value)}", "constraints": ${constraints} }`
+    return `{ ${JSON.stringify(error.property)}: ${JSON.stringify(String(error.value))}, "constraints": ${constraints} }`
   }
 
   const reduceCB = (previous: string, current: ValidationError) => {
