@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import config from '../../config'
-import { EntitiesORM } from '../../components'
+import { EntitiesORM } from '../../models_school'
 import { createApp } from '../../app'
 import { testSchoolComponent } from './schools'
 import { TestMutableParams } from './types'

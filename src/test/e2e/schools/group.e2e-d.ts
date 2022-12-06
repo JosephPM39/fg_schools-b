@@ -1,4 +1,4 @@
-import { IGroup } from '../../../components/schools/models/group.model'
+import { IGroup } from '../../../models_school/schools/group.model'
 import { groupFaker } from '../../fakers/schools'
 import { basicCrudTests } from '../base/model.e2e-d'
 import { TestMutableParams } from '../types'

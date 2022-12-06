@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import config from './config'
-import { EntitiesORM } from './components'
+import { EntitiesORM } from './models_school'
 import { createApp } from './app'
 import { Connection } from './core_db'
 import { AppDataSource } from './db/data-source'

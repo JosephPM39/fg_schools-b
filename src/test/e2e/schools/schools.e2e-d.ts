@@ -1,4 +1,4 @@
-import { ISchool } from '../../../components/schools/models/school.model'
+import { ISchool } from '../../../models_school/schools/school.model'
 import { schoolFaker } from '../../fakers/schools'
 import { basicCrudTests } from '../base/model.e2e-d'
 import { TestMutableParams } from '../types'

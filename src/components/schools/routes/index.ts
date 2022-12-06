@@ -1,7 +1,7 @@
 import { endpointsCrud } from '../../base/'
 import { Router } from 'express'
-import { School } from '../models/school.model'
-import { Group } from '../models/group.model'
+import { School } from '../../../models_school/schools/school.model'
+import { Group } from '../../../models_school/schools/group.model'
 import { entitiesRoles } from '../auth'
 import { BaseController, Connection as DB } from '../../../core_db'
 
