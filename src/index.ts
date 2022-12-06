@@ -6,7 +6,7 @@ import { createApp } from './app'
 
 const init = async () => {
   const connection = await createDBConnection(EntitiesORM)
-  if (config.dbSync) {
+  if (config.dbSync === 'true') {
     await connection.syncDB('confirm')
   }
   const { apiPort: port, allowedOrigins } = config
