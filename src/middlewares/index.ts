@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { isBoom } from '@hapi/boom'
+import passport from 'passport'
+
+export const jwtPAuth = () => passport.authenticate('jwt', { session: false })
 
 export const logErrors = (err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log('LOGs:')

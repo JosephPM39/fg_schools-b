@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express'
+import { jwtPAuth } from '../../../middlewares'
 import { BaseController } from '../controller'
 import { checkRole } from '../middlewares'
 
@@ -79,20 +80,20 @@ export const endpointsCrud = <Model extends {}>(params: options<Model>) => {
   }
 
   if (!excludeEndpoints?.read) {
-    router.get('/', checkRole(roles?.read), getAll)
-    router.get('/:id', checkRole(roles?.read), getOne)
+    router.get('/', jwtPAuth(), checkRole(roles?.read), getAll)
+    router.get('/:id', jwtPAuth(), checkRole(roles?.read), getOne)
   }
 
   if (!excludeEndpoints?.create) {
-    router.post('/', checkRole(roles?.create), create)
+    router.post('/', jwtPAuth(), checkRole(roles?.create), create)
   }
 
   if (!excludeEndpoints?.update) {
-    router.patch('/:id', checkRole(roles?.update), update)
+    router.patch('/:id', jwtPAuth(), checkRole(roles?.update), update)
   }
 
   if (!excludeEndpoints?.delete) {
-    router.delete('/:id', checkRole(roles?.update), remove)
+    router.delete('/:id', jwtPAuth(), checkRole(roles?.update), remove)
   }
 
   return router

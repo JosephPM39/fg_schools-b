@@ -3,6 +3,8 @@ import cors, { CorsOptions } from 'cors'
 import { getRoutes } from './components'
 import { DB } from './db'
 import { boomErrorHandler, errorHandler, logErrors } from './middlewares'
+import passport from 'passport'
+import { JwtStrategy } from './auth'
 
 interface AppParams {
   connection: DB
@@ -32,6 +34,7 @@ export const createApp = (params: AppParams) => {
   const router = Router()
 
   app.use(cors(corsOptions))
+  passport.use(JwtStrategy)
   app.use(express.json())
 
   app.get('/', (req: Request, res: Response) => {

@@ -6,4 +6,7 @@ export interface TestMutableParams {
   app?: Express
   server?: Server
   connection?: DB
+  auth?: {
+    token?: string
+  }
 }

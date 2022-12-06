@@ -36,6 +36,3 @@ export class School extends BaseModel {
 }
 
 export interface ISchool extends School {}
-export interface ISchoolCreate extends Required<Pick<ISchool, 'name' | 'location' | 'code' | 'icon'>> {}
-export interface ISchoolUpdate extends Partial<ISchoolCreate> {}
-export interface ISchoolGet extends Pick<ISchool, 'id'> {}
