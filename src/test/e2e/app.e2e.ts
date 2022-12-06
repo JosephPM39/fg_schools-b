@@ -1,19 +1,20 @@
 import 'reflect-metadata'
 import config from '../../config'
 import { EntitiesORM } from '../../components'
-import { createDBConnection } from '../../db'
 import { createApp } from '../../app'
 import { testSchoolComponent } from './schools'
 import { TestMutableParams } from './types'
 import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
+import { Connection } from '../../core_db'
+import { AppDataSource } from '../../db/data-source'
 
 describe('Full e2e App Testing', () => {
   const mutableParams: TestMutableParams = {}
   const path = '/api/v1/'
 
   beforeAll(async () => {
-    mutableParams.connection = await createDBConnection(EntitiesORM)
+    mutableParams.connection = new Connection(await AppDataSource(EntitiesORM).initialize())
     await mutableParams.connection.syncDB('confirm')
 
     const { allowedOrigins } = config

@@ -1,9 +1,9 @@
-import { DB } from '../../'
-import { BaseController, endpointsCrud } from '../../base/'
+import { endpointsCrud } from '../../base/'
 import { Router } from 'express'
 import { School } from '../models/school.model'
 import { Group } from '../models/group.model'
 import { entitiesRoles } from '../auth'
+import { BaseController, Connection as DB } from '../../../core_db'
 
 export const SchoolsRoutes = (connection: DB) => {
   const router = Router()

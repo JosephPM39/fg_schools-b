@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express'
 import cors, { CorsOptions } from 'cors'
 import { getRoutes } from './components'
-import { DB } from './db'
+import { Connection as DB } from './core_db/'
 import { boomErrorHandler, errorHandler, logErrors } from './middlewares'
 import passport from 'passport'
 import { JwtStrategy } from './auth'

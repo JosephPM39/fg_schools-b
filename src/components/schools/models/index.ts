@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
-import { BaseModel, EXPOSE_VERSIONS } from '../../base'
+import { BaseModel } from '../../base'
+import { EXPOSE_VERSIONS } from '../../../core_db'
 import { IsInt, IsString, Length, Max, Min } from 'class-validator'
 import { School } from './school.model'
 import { Group } from './group.model'

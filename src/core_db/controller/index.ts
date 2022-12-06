@@ -1,5 +1,5 @@
 import { Repository, FindOptionsWhere, FindManyOptions } from 'typeorm'
-import { DB } from '../../../db/'
+import { Connection } from '../db/'
 import { CreateParams, DeleteParams, EXPOSE_VERSIONS as EV, IController, ModelClassType, ReadParams, UpdateParams } from '../types'
 import { validateDto, validateIdBy, validateQuery } from '../validations'
 
@@ -7,7 +7,7 @@ export class BaseController<Model extends {}> implements IController<Model> {
   protected repo: Repository<Model>
 
   constructor (
-    private readonly connection: DB,
+    private readonly connection: Connection,
     protected model: ModelClassType<Model>
   ) {}
 

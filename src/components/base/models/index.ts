@@ -3,7 +3,7 @@ import { Expose, Exclude } from 'class-transformer'
 import {
   BaseEntity, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn
 } from 'typeorm'
-import { EXPOSE_VERSIONS } from '../types'
+import { EXPOSE_VERSIONS } from '../../../core_db'
 
 @Entity()
 @Exclude()

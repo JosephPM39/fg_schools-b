@@ -1,10 +1,9 @@
 import { Router } from 'express'
 import { Title, Prom, Position, Employee, EmployeePosition } from './schools/models/'
 import { SchoolsRoutes } from './schools/routes'
-import { DB } from '../db'
+import { Connection as DB } from './../core_db'
 import { School } from './schools/models/school.model'
 import { Group } from './schools/models/group.model'
-export { DB } from '../db'
 
 export const AllEntities = {
   Group,

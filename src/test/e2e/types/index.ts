@@ -1,6 +1,6 @@
 import { Express } from 'express'
 import { Server } from 'http'
-import { DB } from '../../../db'
+import { Connection as DB } from '../../../core_db/'
 
 export interface TestMutableParams {
   app?: Express

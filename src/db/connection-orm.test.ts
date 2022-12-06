@@ -1,4 +1,4 @@
-import { Connection } from './connection-orm'
+import { Connection } from '../core_db'
 import config from '../config'
 import { EntitiesORM } from '../components/'
 import { AppDataSource } from './data-source'

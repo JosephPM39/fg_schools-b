@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import { jwtPAuth } from '../../../middlewares'
-import { BaseController } from '../controller'
+import { BaseController } from '../../../core_db'
 import { checkRole } from '../middlewares'
 
 interface options<Model extends {}> {
