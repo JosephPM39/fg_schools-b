@@ -1,0 +1,7 @@
+export { IBorder, Border } from './border.model'
+export { IColor, Color } from './color.model'
+export { IModel, Model } from './model.model'
+export { IProduct, Product } from './product.model'
+export { IProfile, Profile } from './profile.model'
+export { ISize, Size } from './size.model'
+export { IType, Type } from './type.model'

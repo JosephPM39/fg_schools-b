@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 import { Connection } from '../../core_db'
 import { AppDataSource } from '../../db/data-source'
+import { testProductComponent } from './products'
 
 describe('Full e2e App Testing', () => {
   const mutableParams: TestMutableParams = {}
@@ -39,4 +40,5 @@ describe('Full e2e App Testing', () => {
     mutableParams.server?.close()
   })
   testSchoolComponent(mutableParams, path)
+  testProductComponent(mutableParams, path)
 })
