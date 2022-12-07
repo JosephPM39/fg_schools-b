@@ -1,4 +1,4 @@
-import { endpointsCrud } from '../../base/'
+import { endpointsCrud } from '../../../core_api'
 import { Router } from 'express'
 import { School } from '../../../models_school/schools/school.model'
 import { Group } from '../../../models_school/schools/group.model'

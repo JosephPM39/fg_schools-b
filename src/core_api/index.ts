@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express'
-import { jwtPAuth } from '../../../middlewares'
-import { BaseController } from '../../../core_db'
-import { checkRole } from '../middlewares'
+import { jwtPAuth, checkRole } from './middlewares'
+import { BaseController } from '../core_db'
 
 interface options<Model extends {}> {
   router: Router
@@ -20,7 +19,7 @@ interface options<Model extends {}> {
   }
 }
 
-const queryExtract = (req: Request): object => ({
+export const queryExtract = (req: Request): object => ({
   order: req.query.order,
   limit: req.query.limit,
   offset: req.query.offset

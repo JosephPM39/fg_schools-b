@@ -7,6 +7,10 @@ export const ROLES = {
   root: {
     name: 'root',
     enable: true
+  },
+  admin: {
+    name: 'admin',
+    enable: true
   }
 }
 

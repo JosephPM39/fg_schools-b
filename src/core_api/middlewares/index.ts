@@ -1,5 +1,8 @@
 import Boom from '@hapi/boom'
 import { NextFunction, Request, Response } from 'express'
+import passport from 'passport'
+
+export const jwtPAuth = () => passport.authenticate('jwt', { session: false })
 
 export const checkRole = (roles?: string[]) => (req: Request, res: Response, next: NextFunction) => {
   const role = req?.user?.role
