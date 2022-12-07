@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
-import { BaseModel } from './base.model'
+import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsString, Length } from 'class-validator'
-import { Prom } from '.'
+import { Prom } from './prom.model'
 
 @Entity()
 @Exclude()

@@ -1,6 +1,7 @@
+import 'reflect-metadata'
 import { Connection } from '../core_db'
 import config from '../config'
-import { EntitiesORM } from '../components/'
+import { EntitiesORM } from '../models_school'
 import { AppDataSource } from './data-source'
 
 if (config.env !== 'test') {

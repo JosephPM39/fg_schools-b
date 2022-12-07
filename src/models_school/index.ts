@@ -1,6 +1,6 @@
-import { Title, Prom, Position, Employee, EmployeePosition } from './schools/'
-import { School } from './schools/school.model'
-import { Group } from './schools/group.model'
+import { Title, Prom, Position, Employee, EmployeePosition, School, Group } from './schools/'
+export { Title, Prom, Position, Employee, EmployeePosition, School, Group } from './schools'
+export { ITitle, IProm, IPosition, IEmployee, IEmployeePosition, ISchool, IGroup } from './schools'
 
 export const AllEntities = {
   Group,

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { IGroup } from '../.././../models_school/schools/group.model'
+import { IGroup } from '../.././../models_school/'
 import { v4 as uuidv4 } from 'uuid'
 import { EntityFaker, gOneFakeParams, gManyFakesParams } from '../types'
 
