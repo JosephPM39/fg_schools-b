@@ -1,2 +1,5 @@
 export { schoolFaker } from './school.faker'
 export { groupFaker } from './group.faker'
+export { employeeFaker } from './employee.faker'
+export { titleFaker } from './title.faker'
+export { positionFaker } from './position.faker'

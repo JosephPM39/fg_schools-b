@@ -4,6 +4,7 @@ import { School } from '../../../models_school/schools/school.model'
 import { Group } from '../../../models_school/schools/group.model'
 import { entitiesRoles } from '../auth'
 import { BaseController, Connection as DB } from '../../../core_db'
+import { Employee, EmployeePosition, Position, Prom, Title } from '../../../models_school'
 
 export const SchoolsRoutes = (connection: DB) => {
   const router = Router()
@@ -20,8 +21,43 @@ export const SchoolsRoutes = (connection: DB) => {
     rolesForEndpoints: entitiesRoles.group
   })
 
+  const EmployeeRoutes = endpointsCrud({
+    router: Router(),
+    controller: new BaseController(connection, Employee),
+    rolesForEndpoints: entitiesRoles.employee
+  })
+
+  const EmployeePositionRoutes = endpointsCrud({
+    router: Router(),
+    controller: new BaseController(connection, EmployeePosition),
+    rolesForEndpoints: entitiesRoles.employeePosition
+  })
+
+  const PositionRoutes = endpointsCrud({
+    router: Router(),
+    controller: new BaseController(connection, Position),
+    rolesForEndpoints: entitiesRoles.position
+  })
+
+  const TitleRoutes = endpointsCrud({
+    router: Router(),
+    controller: new BaseController(connection, Title),
+    rolesForEndpoints: entitiesRoles.title
+  })
+
+  const PromRoutes = endpointsCrud({
+    router: Router(),
+    controller: new BaseController(connection, Prom),
+    rolesForEndpoints: entitiesRoles.prom
+  })
+
   router.use('/school', SchoolRoutes)
   router.use('/group', GroupRoutes)
+  router.use('/employee', EmployeeRoutes)
+  router.use('/employee-position', EmployeePositionRoutes)
+  router.use('/position', PositionRoutes)
+  router.use('/title', TitleRoutes)
+  router.use('/prom', PromRoutes)
 
   return router
 }

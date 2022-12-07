@@ -1,7 +1,7 @@
 import { Entity, ManyToOne, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
-import { EXPOSE_VERSIONS } from '../../core_db'
+import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { Employee } from './employee.model'
 import { Position } from './position.model'
 import { Prom } from './prom.model'
@@ -9,9 +9,11 @@ import { Prom } from './prom.model'
 @Entity()
 @Exclude()
 export class EmployeePosition extends BaseModel {
+  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @ManyToOne(() => Employee, (employee) => employee.employeePositions)
     employee: Employee
 
+  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @ManyToOne(() => Position, (position) => position.employeePositions)
     position: Position
 

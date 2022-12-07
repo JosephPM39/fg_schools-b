@@ -6,8 +6,9 @@ import { IQuery, Query } from './query'
 
 export const validateIdBy = async <Model extends {}>(params: ValidateIdOptions<Model>) => {
   const { idBy, version, model } = params
-  return await validateDto<Model>({
-    dto: typeof idBy === 'object' ? idBy : { id: idBy },
+  const dto = typeof idBy === 'object' ? idBy : { id: idBy }
+  const valid = await validateDto<Model>({
+    dto,
     model,
     version,
     validatorOptions: {
@@ -15,6 +16,22 @@ export const validateIdBy = async <Model extends {}>(params: ValidateIdOptions<M
       skipUndefinedProperties: true
     }
   })
+
+  const propertiesAllowed = Object.keys(valid)
+  const dtoProperties = Object.keys(dto)
+  const rejectedProperties = dtoProperties.filter((p) => !propertiesAllowed.includes(p))
+
+  if (rejectedProperties.length > 0) {
+    const error = Boom.badRequest('Invalid Search Object or id')
+    error.output.payload = {
+      ...error.output.payload,
+      propertiesAllowed,
+      rejectedProperties
+    }
+    throw error
+  }
+
+  return valid
 }
 
 export const validateDto = async <Model extends {}>(params: ValidateDtoOptions<Model>) => {

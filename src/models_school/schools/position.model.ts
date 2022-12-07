@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
-import { EXPOSE_VERSIONS } from '../../core_db'
+import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsString, Length } from 'class-validator'
 import { EmployeePosition } from './employee-position.model'
 
@@ -9,8 +9,8 @@ import { EmployeePosition } from './employee-position.model'
 @Exclude()
 export class Position extends BaseModel {
   @Expose({
-    since: EXPOSE_VERSIONS.UPDATE,
-    until: EXPOSE_VERSIONS.GET
+    since: EV.UPDATE,
+    until: EV.DELETE
   })
   @IsString()
   @Length(1, 30)

@@ -2,6 +2,7 @@ import { Repository, FindOptionsWhere, FindManyOptions } from 'typeorm'
 import { Connection } from '../db/'
 import { CreateParams, DeleteParams, EXPOSE_VERSIONS as EV, IController, ModelClassType, ReadParams, UpdateParams } from '../types'
 import { validateDto, validateIdBy, validateQuery } from '../validations'
+import Boom from '@hapi/boom'
 
 export class BaseController<Model extends {}> implements IController<Model> {
   protected repo: Repository<Model>
