@@ -6,12 +6,14 @@ import { EntityFaker, gOneFakeParams, gManyFakesParams } from '../types'
 const name = () => faker.datatype.string(30)
 const sample = () => faker.datatype.string(100)
 const available = () => faker.datatype.boolean()
+const hex = () => faker.color.rgb()
 
 const generateOneFake = (params?: gOneFakeParams): Partial<IColor> => {
   const id = params?.withId ? { id: uuidv4() } : {}
   return {
     ...id,
     name: name(),
+    hex: hex(),
     sample: sample(),
     available: available()
   }

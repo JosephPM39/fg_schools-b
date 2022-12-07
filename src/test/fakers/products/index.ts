@@ -1,1 +1,5 @@
 export { modelFaker } from './model.faker'
+export { borderFaker } from './border.faker'
+export { colorFaker } from './color.faker'
+export { sizeFaker } from './size.faker'
+export { typeFaker } from './type.faker'
