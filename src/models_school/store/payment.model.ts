@@ -29,7 +29,7 @@ export class Payment extends BaseModel {
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  @Column({ type: 'timestamp without time zone', default: Math.floor(Date.now() / 1000) })
+  @Column({ type: 'timestamp without time zone', default: () => 'CURRENT_TIMESTAMP' })
     date: Date
 }
 
