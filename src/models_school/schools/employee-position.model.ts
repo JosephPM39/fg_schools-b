@@ -5,15 +5,18 @@ import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { Employee } from './employee.model'
 import { Position } from './position.model'
 import { Prom } from './prom.model'
+import { IsUUID } from 'class-validator'
 
 @Entity()
 @Exclude()
 export class EmployeePosition extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Employee, (employee) => employee.employeePositions)
     employee: Employee
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Position, (position) => position.employeePositions)
     position: Position
 

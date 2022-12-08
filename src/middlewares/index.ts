@@ -4,10 +4,34 @@ import passport from 'passport'
 
 export const jwtPAuth = () => passport.authenticate('jwt', { session: false })
 
+enum DBErrors {
+  vfk = 'violates foreign key constraint'
+}
+
+enum ClientErrors {
+  vfk = 'Some FK ID property doesn\'t exist'
+}
+
+const getErrorClientDB = (msg: string, res: Response) => {
+  if (msg.includes(DBErrors.vfk)) {
+    return res.status(400).json({
+      message: ClientErrors.vfk
+    })
+  }
+}
+
 export const logErrors = (err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log('LOGs:')
   console.error(err)
   next(err)
+}
+
+export const dbErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err.name === 'QueryFailedError') {
+    const { message } = err
+    getErrorClientDB(message, res)
+    next()
+  }
 }
 
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {

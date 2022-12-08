@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator'
+import { IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min } from 'class-validator'
 import { ComboOrder } from './combo-order.model'
 import { ProductOrder } from './product-order.model'
 import { Payment } from './payment.model'
@@ -13,10 +13,12 @@ import { Prom } from '../schools'
 @Exclude()
 export class Order extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Student, (student) => student.orders)
     student: Student
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Prom, (prom) => prom.orders)
     prom: Prom
 

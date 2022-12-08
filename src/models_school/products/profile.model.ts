@@ -1,8 +1,8 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, ManyToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsBoolean, IsString, Length } from 'class-validator'
+import { IsBoolean, IsString, IsUUID, Length } from 'class-validator'
 import { Model } from './model.model'
 import { Type } from './type.model'
 import { Size } from './size.model'
@@ -19,22 +19,27 @@ export class Profile extends BaseModel {
     name: string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Model, (model) => model.profiles)
     model: Model
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Type, (type) => type.profiles)
     type: Type
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Size, (size) => size.profiles)
     size: Size
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Color, (color) => color.profiles)
     color: Color
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Border, (border) => border.profiles)
     border: Border
 

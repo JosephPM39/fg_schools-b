@@ -2,7 +2,7 @@ import express, { Request, Response, Router } from 'express'
 import cors, { CorsOptions } from 'cors'
 import { getRoutes } from './components'
 import { Connection as DB } from './core_db/'
-import { boomErrorHandler, errorHandler, logErrors } from './middlewares'
+import { boomErrorHandler, dbErrorHandler, errorHandler, logErrors } from './middlewares'
 import passport from 'passport'
 import { JwtStrategy } from './auth'
 
@@ -46,6 +46,7 @@ export const createApp = (params: AppParams) => {
 
   app.use(logErrors)
   app.use(boomErrorHandler)
+  app.use(dbErrorHandler)
   app.use(errorHandler)
 
   const server = app.listen(port)

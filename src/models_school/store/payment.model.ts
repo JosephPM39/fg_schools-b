@@ -2,13 +2,14 @@ import { Column, Entity, ManyToOne } from 'typeorm'
 import { Exclude, Expose, Type } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsDate, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator'
+import { IsDate, IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min } from 'class-validator'
 import { Order } from './order.model'
 
 @Entity()
 @Exclude()
 export class Payment extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Order, (order) => order.payments)
     order: Order
 

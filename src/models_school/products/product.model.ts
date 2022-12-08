@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsBoolean, IsString, Length } from 'class-validator'
+import { IsBoolean, IsString, IsUUID, Length } from 'class-validator'
 import { Model } from './model.model'
 import { Type } from './type.model'
 import { Size } from './size.model'
@@ -21,22 +21,27 @@ export class Product extends BaseModel {
     name: string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Model, (model) => model.products, { nullable: true })
     model: Model
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Type, (type) => type.products, { nullable: true })
     type: Type
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Size, (size) => size.products, { nullable: true })
     size: Size
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Color, (color) => color.products, { nullable: true })
     color: Color
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsUUID()
   @ManyToOne(() => Border, (border) => border.products, { nullable: true })
     border: Border
 
