@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from 'typeorm'
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
@@ -20,7 +20,7 @@ export class Combo extends BaseModel {
   @Column('boolean')
     available: boolean
 
-  @OneToMany(() => ComboOrder, (comboOrder) => comboOrder.combo)
+  @OneToOne(() => ComboOrder, (comboOrder) => comboOrder.combo)
     comboOrders: ComboOrder[]
 
   @OneToMany(() => ProductCombo, (productCombo) => productCombo.combo)

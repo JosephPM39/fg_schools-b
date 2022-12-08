@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne } from 'typeorm'
 import { Exclude, Expose, Type } from 'class-transformer'
-import { BaseModel } from '../base.model'
+import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsDate, IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min } from 'class-validator'
 import { Order } from './order.model'
@@ -10,7 +10,7 @@ import { Order } from './order.model'
 export class Payment extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
-  @ManyToOne(() => Order, (order) => order.payments)
+  @ManyToOne(() => Order, (order) => order.payments, baseRelationOptions)
     order: Order
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })

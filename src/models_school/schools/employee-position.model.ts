@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
-import { BaseModel } from '../base.model'
+import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { Employee } from './employee.model'
 import { Position } from './position.model'
@@ -12,12 +12,12 @@ import { IsUUID } from 'class-validator'
 export class EmployeePosition extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
-  @ManyToOne(() => Employee, (employee) => employee.employeePositions)
+  @ManyToOne(() => Employee, (employee) => employee.employeePositions, baseRelationOptions)
     employee: Employee
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
-  @ManyToOne(() => Position, (position) => position.employeePositions)
+  @ManyToOne(() => Position, (position) => position.employeePositions, baseRelationOptions)
     position: Position
 
   @OneToMany(() => Prom, (proms) => proms.group)

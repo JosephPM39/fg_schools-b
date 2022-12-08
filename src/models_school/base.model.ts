@@ -1,9 +1,15 @@
 import { IsDate, IsOptional, IsUUID } from 'class-validator'
 import { Expose, Exclude } from 'class-transformer'
 import {
-  BaseEntity, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn
+  BaseEntity, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, RelationOptions, UpdateDateColumn
 } from 'typeorm'
 import { EXPOSE_VERSIONS } from '../core_db'
+
+export const baseRelationOptions: RelationOptions = {
+  cascade: ['insert', 'update', 'soft-remove', 'recover'],
+  onDelete: 'RESTRICT',
+  onUpdate: 'CASCADE'
+}
 
 @Entity()
 @Exclude()

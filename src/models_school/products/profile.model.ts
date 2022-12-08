@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
-import { BaseModel } from '../base.model'
+import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsBoolean, IsString, IsUUID, Length } from 'class-validator'
 import { Model } from './model.model'
@@ -20,27 +20,27 @@ export class Profile extends BaseModel {
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
-  @ManyToOne(() => Model, (model) => model.profiles)
+  @ManyToOne(() => Model, (model) => model.profiles, baseRelationOptions)
     model: Model
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
-  @ManyToOne(() => Type, (type) => type.profiles)
+  @ManyToOne(() => Type, (type) => type.profiles, baseRelationOptions)
     type: Type
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
-  @ManyToOne(() => Size, (size) => size.profiles)
+  @ManyToOne(() => Size, (size) => size.profiles, baseRelationOptions)
     size: Size
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
-  @ManyToOne(() => Color, (color) => color.profiles)
+  @ManyToOne(() => Color, (color) => color.profiles, baseRelationOptions)
     color: Color
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
-  @ManyToOne(() => Border, (border) => border.profiles)
+  @ManyToOne(() => Border, (border) => border.profiles, baseRelationOptions)
     border: Border
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
