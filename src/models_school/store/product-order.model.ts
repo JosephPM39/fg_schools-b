@@ -9,12 +9,12 @@ import { Order } from './order.model'
 @Entity()
 @Exclude()
 export class ProductOrder extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Order, (order) => order.productOrders, baseRelationOptions)
     order: Order
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Product, (product) => product.productOrders, baseRelationOptions)
     product: Product

@@ -9,13 +9,13 @@ import { IsUUID } from 'class-validator'
 @Entity()
 @Exclude()
 export class ComboOrder extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @JoinColumn()
   @OneToOne(() => Order, (order) => order.comboOrder, baseRelationOptions)
     order: Order
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Combo, (combo) => combo.comboOrders, baseRelationOptions)
     combo: Combo

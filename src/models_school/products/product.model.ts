@@ -21,27 +21,27 @@ export class Product extends BaseModel {
   @Column('varchar', { length: 30 })
     name: string
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Model, (model) => model.products, { ...baseRelationOptions, nullable: true })
     model: Model
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Type, (type) => type.products, { ...baseRelationOptions, nullable: true })
     type: Type
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Size, (size) => size.products, { ...baseRelationOptions, nullable: true })
     size: Size
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Color, (color) => color.products, { ...baseRelationOptions, nullable: true })
     color: Color
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Border, (border) => border.products, { ...baseRelationOptions, nullable: true })
     border: Border

@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, OneToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
@@ -35,17 +35,19 @@ export class Photo extends BaseModel {
   @Column({ type: 'varchar', length: 100 })
     sectionPhotos: string
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @ValidateIf(o => !o.prom || o.order)
   @IsUUID()
   @IsOptional()
+  @JoinColumn()
   @OneToOne(() => Order, (order) => order.photo, { ...baseRelationOptions, nullable: true })
     order: Order
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @ValidateIf(o => !o.order || o.prom)
   @IsUUID()
   @IsOptional()
+  @JoinColumn()
   @OneToOne(() => Prom, (prom) => prom.photo, { ...baseRelationOptions, nullable: true })
     prom: Prom
 

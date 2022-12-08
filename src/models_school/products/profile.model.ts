@@ -18,27 +18,27 @@ export class Profile extends BaseModel {
   @Column('varchar', { length: 30 })
     name: string
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Model, (model) => model.profiles, baseRelationOptions)
     model: Model
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Type, (type) => type.profiles, baseRelationOptions)
     type: Type
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Size, (size) => size.profiles, baseRelationOptions)
     size: Size
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Color, (color) => color.profiles, baseRelationOptions)
     color: Color
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Border, (border) => border.profiles, baseRelationOptions)
     border: Border

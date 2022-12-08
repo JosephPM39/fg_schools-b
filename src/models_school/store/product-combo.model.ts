@@ -9,12 +9,12 @@ import { Product } from '../products'
 @Entity()
 @Exclude()
 export class ProductCombo extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Combo, (combo) => combo.productCombos, baseRelationOptions)
     combo: Combo
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Product, (product) => product.productCombos, baseRelationOptions)
     product: Product

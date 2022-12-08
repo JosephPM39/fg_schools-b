@@ -13,12 +13,12 @@ import { Photo } from '../photo/photo.model'
 @Entity()
 @Exclude()
 export class Order extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Student, (student) => student.orders, baseRelationOptions)
     student: Student
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Prom, (prom) => prom.orders, baseRelationOptions)
     prom: Prom

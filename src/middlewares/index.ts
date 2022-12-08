@@ -30,8 +30,8 @@ export const dbErrorHandler = (err: Error, req: Request, res: Response, next: Ne
   if (err.name === 'QueryFailedError') {
     const { message } = err
     getErrorClientDB(message, res)
-    next()
   }
+  next(err)
 }
 
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {

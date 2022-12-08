@@ -8,7 +8,8 @@ import { EXPOSE_VERSIONS } from '../core_db'
 export const baseRelationOptions: RelationOptions = {
   cascade: ['insert', 'update', 'soft-remove', 'recover'],
   onDelete: 'RESTRICT',
-  onUpdate: 'CASCADE'
+  onUpdate: 'CASCADE',
+  nullable: false
 }
 
 @Entity()

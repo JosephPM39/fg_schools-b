@@ -8,7 +8,7 @@ import { Order } from './order.model'
 @Entity()
 @Exclude()
 export class Payment extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Order, (order) => order.payments, baseRelationOptions)
     order: Order

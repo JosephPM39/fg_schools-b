@@ -15,12 +15,12 @@ export class PhotoProduct extends BaseModel {
   @Column('varchar', { length: 20 })
     code: string
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Photo, (photo) => photo.photoProduct, baseRelationOptions)
     photo: Photo
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Product, (product) => product.photoProduct, baseRelationOptions)
     product: Product

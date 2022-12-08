@@ -10,12 +10,12 @@ import { IsUUID } from 'class-validator'
 @Entity()
 @Exclude()
 export class EmployeePosition extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Employee, (employee) => employee.employeePositions, baseRelationOptions)
     employee: Employee
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Position, (position) => position.employeePositions, baseRelationOptions)
     position: Position
