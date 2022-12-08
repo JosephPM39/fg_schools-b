@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Connection } from '../../core_db'
 import { AppDataSource } from '../../db/data-source'
 import { testProductComponent } from './products'
+import { testStoreComponent } from './store'
 
 describe('Full e2e App Testing', () => {
   const mutableParams: TestMutableParams = {}
@@ -41,4 +42,5 @@ describe('Full e2e App Testing', () => {
   })
   testSchoolComponent(mutableParams, path)
   testProductComponent(mutableParams, path)
+  testStoreComponent(mutableParams, path)
 })

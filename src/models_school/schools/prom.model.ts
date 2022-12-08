@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
@@ -7,6 +7,7 @@ import { School } from './school.model'
 import { Group } from './group.model'
 import { EmployeePosition } from './employee-position.model'
 import { Title } from './title.model'
+import { Order } from '../store/order.model'
 
 @Entity()
 @Exclude()
@@ -36,6 +37,9 @@ export class Prom extends BaseModel {
   @Min(1900)
   @Column('smallint')
     year: number
+
+  @OneToMany(() => Order, (order) => order.prom)
+    orders: Order[]
 }
 
 export interface IProm extends Prom {}

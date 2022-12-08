@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
@@ -8,6 +8,8 @@ import { Type } from './type.model'
 import { Size } from './size.model'
 import { Color } from './color.model'
 import { Border } from './border.model'
+import { ProductOrder } from '../store/product-order.model'
+import { ProductCombo } from '../store/product-combo.model'
 
 @Entity()
 @Exclude()
@@ -42,6 +44,12 @@ export class Product extends BaseModel {
   @IsBoolean()
   @Column('boolean')
     available: boolean
+
+  @OneToMany(() => ProductOrder, (productOrder) => productOrder.product)
+    productOrders: ProductOrder[]
+
+  @OneToMany(() => ProductCombo, (productCombo) => productCombo.product)
+    productCombos: ProductCombo[]
 }
 
 export interface IProduct extends Product {}
