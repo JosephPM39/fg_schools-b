@@ -21,7 +21,7 @@ const generateOneFake = (params?: gOneFakeParams): Partial<IModel> => {
 
 const generateManyFakes = (params?: gManyFakesParams) => {
   const fakes: Array<Partial<IModel>> = []
-  const quantity = params?.quantity ?? 10
+  const quantity = params?.quantity ?? 100
   for (let i = 0; i < quantity; i++) {
     fakes.push(generateOneFake({ withId: params?.withId }))
   }

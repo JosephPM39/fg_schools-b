@@ -40,4 +40,4 @@ export class BaseModel extends BaseEntity {
     deletedAt: Date
 }
 
-export default { BaseModel }
+export interface IBaseModel extends BaseModel {}

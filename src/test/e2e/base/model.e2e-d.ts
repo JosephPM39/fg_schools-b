@@ -45,6 +45,7 @@ export const basicCrudTests = <T extends { id: string }>(params: CrudTestsParams
     test(`[GET]: Should return "${fakes.length} elements"`, async () => await supertest(params.mutable.app)
       .get(params.path)
       .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+      .query({ limit: fakes.length })
       .expect(200)
       .then((res) => {
         expect(res.body.length).toBe(fakes.length)

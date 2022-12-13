@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { IColor } from '../.././../models_school/'
 import { v4 as uuidv4 } from 'uuid'
 import { EntityFaker, gOneFakeParams, gManyFakesParams } from '../types'
+import { manyFakes } from '../model.faker'
 
 const name = () => faker.datatype.string(30)
 const sample = () => faker.datatype.string(100)
@@ -19,14 +20,9 @@ const generateOneFake = (params?: gOneFakeParams): Partial<IColor> => {
   }
 }
 
-const generateManyFakes = (params?: gManyFakesParams) => {
-  const fakes: Array<Partial<IColor>> = []
-  const quantity = params?.quantity ?? 10
-  for (let i = 0; i < quantity; i++) {
-    fakes.push(generateOneFake({ withId: params?.withId }))
-  }
-  return fakes
-}
+const generateManyFakes = (params?: gManyFakesParams) => (
+  manyFakes<IColor>({ ...params, generateOneFake })
+)
 
 export const colorFaker: EntityFaker<IColor> = {
   generateOneFake,
