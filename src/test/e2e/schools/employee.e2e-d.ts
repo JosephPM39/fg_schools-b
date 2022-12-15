@@ -5,7 +5,7 @@ import { TestMutableParams } from '../types'
 
 export const testEmployee = (params: TestMutableParams, basePath: string) => {
   describe('[ENTITY]: Employee', () => {
-    const path = basePath + 'employee/'
+    const path = basePath + 'schools/employee/'
     // console.log(path, 'URL')
 
     // const logResValitaionError = (res: any) => res.body.details.map((c: any) => console.log(c, 'error'))

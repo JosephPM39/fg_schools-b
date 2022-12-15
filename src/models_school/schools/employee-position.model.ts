@@ -13,12 +13,12 @@ export class EmployeePosition extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Employee, (employee) => employee.employeePositions, baseRelationOptions)
-    employee: Employee
+    employee: Employee | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Position, (position) => position.employeePositions, baseRelationOptions)
-    position: Position
+    position: Position | string
 
   @OneToMany(() => Prom, (proms) => proms.group)
     proms: Prom[]

@@ -4,9 +4,9 @@ import { EntityFaker } from '../../fakers/types'
 import { TestMutableParams } from '../types'
 
 interface fakesGenerated<T extends IBaseModel> {
-  oneWithId: T
-  oneWithoutId: Omit<T, 'id'>
-  manyWithoutId: Array<Omit<T, 'id'>>
+  oneWithId: Partial<T>
+  oneWithoutId: Partial<Omit<T, 'id'>>
+  manyWithoutId: Array<Partial<Omit<T, 'id'>>>
 }
 
 interface EFO<T> {
@@ -17,13 +17,21 @@ interface FO<T extends IBaseModel> {
   fakes: fakesGenerated<T>
 }
 
+interface ReadExclude {
+  all?: boolean
+  normal?: boolean
+  byId?: boolean
+  byObject?: boolean
+  withPagination?: boolean
+}
+
 type fakes<T extends IBaseModel> = FO<T> | EFO<T>
 
 type CrudTestsParams<T extends IBaseModel> = {
   mutable: TestMutableParams
   path: string
   excludeEndpoints?: {
-    read?: boolean
+    get?: ReadExclude
     create?: boolean
     update?: boolean
     delete?: boolean
@@ -48,6 +56,8 @@ const extractFakes = <T extends IBaseModel>(obj: fakes<T>) => {
 export const basicCrudTests = <T extends IBaseModel>(params: CrudTestsParams<T>) => {
   const fakes = extractFakes(params)
 
+  const excludeGet = params.excludeEndpoints?.get
+
   if (!params.excludeEndpoints?.create) {
     test('[POST]: One DTO', async () => await supertest(params.mutable.app)
       .post(params.path)
@@ -71,7 +81,7 @@ export const basicCrudTests = <T extends IBaseModel>(params: CrudTestsParams<T>)
     )
   }
 
-  if (!params.excludeEndpoints?.read) {
+  if (!excludeGet?.all && !excludeGet?.normal) {
     test(`[GET]: Should return "${fakes.manyWithoutId.length} elements"`, async () => await supertest(params.mutable.app)
       .get(params.path)
       .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
@@ -81,6 +91,9 @@ export const basicCrudTests = <T extends IBaseModel>(params: CrudTestsParams<T>)
         expect(res.body.length).toBe(fakes.manyWithoutId.length)
       })
     )
+  }
+
+  if (!excludeGet?.all && !excludeGet?.byId) {
     test('[GET]: By ID', async () => await supertest(params.mutable.app)
       .get(`${params.path}${fakes.oneWithId.id ?? ''}`)
       .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
@@ -89,6 +102,9 @@ export const basicCrudTests = <T extends IBaseModel>(params: CrudTestsParams<T>)
         expect(res.body[0].id).toBe(fakes.oneWithId.id)
       })
     )
+  }
+
+  if (!excludeGet?.all && !excludeGet?.byObject) {
     const object = { ...fakes.oneWithId }
     delete object.id
     test('[GET]: By Object', async () => await supertest(params.mutable.app)
@@ -100,7 +116,9 @@ export const basicCrudTests = <T extends IBaseModel>(params: CrudTestsParams<T>)
         expect(Object.values(res.body)).toMatchObject([object])
       })
     )
+  }
 
+  if (!excludeGet?.all && !excludeGet?.withPagination) {
     test('[GET]: With pagination', async () => await supertest(params.mutable.app)
       .get(params.path)
       .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
