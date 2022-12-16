@@ -8,6 +8,9 @@ export interface gManyFakesParams extends gOneFakeParams {
 
 export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends ReadonlyArray<(infer ElementType)> ? ElementType : never
+
 export interface EntityFaker<Entity> {
   generateOneFake: (params?: gOneFakeParams) => Partial<Entity>
   generateManyFakes: (params?: gManyFakesParams) => Array<Partial<Entity>>
