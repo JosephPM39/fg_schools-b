@@ -1,5 +1,6 @@
 import { IBaseModel } from '../../models_school/base.model'
 import { gOneFakeParams, WithRequired } from './types'
+import { v4 as uuidv4 } from 'uuid'
 
 export const manyFakes = <Model extends IBaseModel>({
   withId,
@@ -26,9 +27,9 @@ interface ManyFakesParams {
 export type WithId = 'withId' | undefined
 
 export interface Fakes<Entity extends IBaseModel> {
-  manyWithId: Array<WithRequired<Partial<Entity>, 'id'>>
+  manyWithId: Array<WithRequired<Entity, 'id'>>
   manyWithoutId: Array<Partial<Entity>>
-  oneWithId: WithRequired<Partial<Entity>, 'id'>
+  oneWithId: WithRequired<Entity, 'id'>
   oneWithoutId: Partial<Entity>
 }
 
@@ -47,10 +48,12 @@ const arrayContainsId = <Entity extends IBaseModel>(
   return (fakes as Fakes<Entity>['manyWithId'])[0]?.id !== undefined
 }
 
-// is necessary add condicional type for make oneFake
 export abstract class BaseFaker<Entity extends IBaseModel, D extends {} = {}> {
-  protected fakes: Partial<Fakes<Entity>> = {
-    oneWithId: undefined,
+  protected fakes: Fakes<Entity> = {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    oneWithId: {
+      id: 'test'
+    } as Fakes<Entity>['oneWithId'],
     oneWithoutId: {},
     manyWithId: [],
     manyWithoutId: []
@@ -74,6 +77,27 @@ export abstract class BaseFaker<Entity extends IBaseModel, D extends {} = {}> {
     if (!arrayContainsId(fakes)) {
       this.fakes.manyWithoutId = fakes
     }
+  }
+
+  makeFakesPack = (params: D) => {
+    this.makeManyFake(params)
+    this.makeManyFake(params, 'withId')
+    this.makeOneFake(params)
+    this.makeOneFake(params, 'withId')
+  }
+
+  protected readonly makeOneHelper = <C extends WithId = undefined>(base: Partial<Entity>, withId?: C): Fake<Entity, C> => {
+    if (withId === 'withId') {
+      const res = {
+        id: uuidv4(),
+        ...base
+      }
+      this.fakes.oneWithId = res
+      return res
+    }
+
+    this.fakes.oneWithoutId = base
+    return base as any
   }
 
   getFakes = () => {

@@ -1,28 +1,13 @@
 import { faker } from '@faker-js/faker'
+import { BaseFaker, Fake, WithId } from '../model.faker'
 import { IPosition } from '../.././../models_school/'
-import { v4 as uuidv4 } from 'uuid'
-import { EntityFaker, gOneFakeParams, gManyFakesParams } from '../types'
 
-const name = () => faker.datatype.string(30)
+export class PositionFaker extends BaseFaker<IPosition, {}> {
+  makeOneFake = <C extends WithId = undefined>(_: {}, withId?: C): Fake<IPosition, C> => {
+    const base: Partial<IPosition> = {
+      name: faker.datatype.string(30)
+    }
 
-const generateOneFake = (params?: gOneFakeParams): Partial<IPosition> => {
-  const id = params?.withId ? { id: uuidv4() } : {}
-  return {
-    ...id,
-    name: name()
+    return this.makeOneHelper(base, withId)
   }
-}
-
-const generateManyFakes = (params?: gManyFakesParams) => {
-  const fakes: Array<Partial<IPosition>> = []
-  const quantity = params?.quantity ?? 10
-  for (let i = 0; i < quantity; i++) {
-    fakes.push(generateOneFake({ withId: params?.withId }))
-  }
-  return fakes
-}
-
-export const positionFaker: EntityFaker<IPosition> = {
-  generateOneFake,
-  generateManyFakes
 }

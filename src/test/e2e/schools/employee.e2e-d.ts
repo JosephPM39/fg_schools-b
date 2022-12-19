@@ -1,7 +1,5 @@
-import { IEmployee } from '../../../models_school/'
-import { employeeFaker } from '../../fakers/schools'
 import { basicCrudTests } from '../base/model.e2e-d'
-import { TestMutableParams } from '../types'
+import { COMPONENTS, SCHOOLS_ENTITIES, TestMutableParams } from '../types'
 
 export const testEmployee = (params: TestMutableParams, basePath: string) => {
   describe('[ENTITY]: Employee', () => {
@@ -9,12 +7,12 @@ export const testEmployee = (params: TestMutableParams, basePath: string) => {
     // console.log(path, 'URL')
 
     // const logResValitaionError = (res: any) => res.body.details.map((c: any) => console.log(c, 'error'))
-
     describe('- BASIC CRUD', () => {
-      basicCrudTests<IEmployee>({
+      basicCrudTests({
         path,
-        mutable: params,
-        entityFaker: employeeFaker
+        component: COMPONENTS.Schools,
+        entity: SCHOOLS_ENTITIES.Employee,
+        mutable: params
       })
     })
   })

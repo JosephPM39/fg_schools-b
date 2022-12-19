@@ -16,27 +16,27 @@ export class Prom extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Group, (group) => group.proms, baseRelationOptions)
-    group: Group
+    group: Group | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Title, (title) => title.proms, baseRelationOptions)
-    title: Title
+    title: Title | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => EmployeePosition, (ep) => ep.proms, baseRelationOptions)
-    profesor: EmployeePosition
+    profesor: EmployeePosition | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => EmployeePosition, (ep) => ep.proms, baseRelationOptions)
-    principal: EmployeePosition
+    principal: EmployeePosition | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => School, (school) => school.proms, baseRelationOptions)
-    school: School
+    school: School | string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsInt()

@@ -1,7 +1,5 @@
-import { IGroup } from '../../../models_school/'
-import { groupFaker } from '../../fakers/schools'
 import { basicCrudTests } from '../base/model.e2e-d'
-import { TestMutableParams } from '../types'
+import { COMPONENTS, SCHOOLS_ENTITIES, TestMutableParams } from '../types'
 
 export const testGroup = (params: TestMutableParams, basePath: string) => {
   describe('[ENTITY]: Group', () => {
@@ -11,10 +9,11 @@ export const testGroup = (params: TestMutableParams, basePath: string) => {
     // const logResValitaionError = (res: any) => res.body.details.map((c: any) => console.log(c, 'error'))
 
     describe('- BASIC CRUD', () => {
-      basicCrudTests<IGroup>({
+      basicCrudTests({
         path,
-        mutable: params,
-        entityFaker: groupFaker
+        component: COMPONENTS.Schools,
+        entity: SCHOOLS_ENTITIES.Group,
+        mutable: params
       })
     })
   })

@@ -1,34 +1,16 @@
 import { faker } from '@faker-js/faker'
+import { BaseFaker, Fake, WithId } from '../model.faker'
 import { IEmployee } from '../.././../models_school/'
-import { v4 as uuidv4 } from 'uuid'
-import { EntityFaker, gOneFakeParams, gManyFakesParams } from '../types'
 
-const firstName = () => faker.datatype.string(40)
-const lastName = () => faker.datatype.string(40)
-const contact = () => faker.datatype.string(55)
-const profesion = () => faker.datatype.string(10)
+export class EmployeeFaker extends BaseFaker<IEmployee, {}> {
+  makeOneFake = <C extends WithId = undefined>(_: {}, withId?: C): Fake<IEmployee, C> => {
+    const base: Partial<IEmployee> = {
+      firstName: faker.datatype.string(40),
+      lastName: faker.datatype.string(40),
+      contact: faker.datatype.string(55),
+      profesion: faker.datatype.string(10)
+    }
 
-const generateOneFake = (params?: gOneFakeParams): Partial<IEmployee> => {
-  const id = params?.withId ? { id: uuidv4() } : {}
-  return {
-    ...id,
-    firstName: firstName(),
-    lastName: lastName(),
-    contact: contact(),
-    profesion: profesion()
+    return this.makeOneHelper(base, withId)
   }
-}
-
-const generateManyFakes = (params?: gManyFakesParams) => {
-  const fakes: Array<Partial<IEmployee>> = []
-  const quantity = params?.quantity ?? 10
-  for (let i = 0; i < quantity; i++) {
-    fakes.push(generateOneFake({ withId: params?.withId }))
-  }
-  return fakes
-}
-
-export const employeeFaker: EntityFaker<IEmployee> = {
-  generateOneFake,
-  generateManyFakes
 }

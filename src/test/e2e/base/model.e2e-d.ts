@@ -2,7 +2,7 @@ import supertest from 'supertest'
 import { IBaseModel } from '../../../models_school/base.model'
 import { BaseFaker } from '../../fakers/model.faker'
 import { EntityFaker } from '../../fakers/types'
-import { TestMutableParams } from '../types'
+import { COMPONENTS, SCHOOLS_ENTITIES, TestMutableParams } from '../types'
 
 interface fakesGenerated<T extends IBaseModel> {
   oneWithId: Partial<T>
@@ -22,6 +22,13 @@ interface CEF<T extends IBaseModel, D extends {}> {
   faker: BaseFaker<T, D>
 }
 
+interface CreateExclude {
+  all?: true
+  oneWithId?: true
+  manyWithoutId?: true
+  manyWithId?: true
+}
+
 interface ReadExclude {
   all?: boolean
   normal?: boolean
@@ -30,18 +37,30 @@ interface ReadExclude {
   withPagination?: boolean
 }
 
+interface UpdateExclude {
+  all?: true
+  oneById?: true
+}
+
+interface DeleteExclude {
+  all?: true
+  oneById?: true
+}
+
 type fakes<T extends IBaseModel, D extends {}> = FO<T> | EFO<T> | CEF<T, D>
 
-type CrudTestsParams<T extends IBaseModel, D extends {}> = {
+interface CrudTestsParams {
   mutable: TestMutableParams
   path: string
+  component: COMPONENTS
+  entity: SCHOOLS_ENTITIES
   excludeEndpoints?: {
     get?: ReadExclude
-    create?: boolean
-    update?: boolean
-    delete?: boolean
+    post?: CreateExclude
+    patch?: UpdateExclude
+    delete?: DeleteExclude
   }
-} & fakes<T, D>
+}
 
 const isEntityFaker = <T extends IBaseModel, D extends {}>(obj: fakes<T, D>): obj is EFO<T> => {
   return !!(obj as EFO<T>).entityFaker
@@ -70,105 +89,148 @@ const extractFakes = <T extends IBaseModel, D extends {}>(obj: fakes<T, D>) => {
   return obj.fakes
 }
 
-export const basicCrudTests = <T extends IBaseModel, D extends {} = {}>(params: CrudTestsParams<T, D>) => {
-  const fakes = extractFakes(params)
+export const basicCrudTests = (params: CrudTestsParams) => {
+  let fakes = params.mutable.fakers?.[params.component][params.entity].getFakes()
+  let objToSearch = fakes?.oneWithoutId
+
+  beforeAll(() => {
+    fakes = params.mutable.fakers?.[params.component][params.entity].getFakes()
+    objToSearch = { ...fakes?.oneWithId }
+    delete objToSearch?.id
+    if (!fakes) throw new Error('Worng Fakes')
+  })
 
   const excludeGet = params.excludeEndpoints?.get
+  const excludeCreate = params.excludeEndpoints?.post
+  const excludeUpdate = params.excludeEndpoints?.patch
+  const excludeDelete = params.excludeEndpoints?.delete
 
-  if (!params.excludeEndpoints?.create) {
-    test('[POST]: One DTO', async () => await supertest(params.mutable.app)
-      .post(params.path)
-      .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-      .send(fakes.oneWithId)
-      .expect('Content-Type', /json/)
-      .expect(201)
-      .then((res) => {
-        expect(res.body).toBeTruthy()
-      })
-    )
-    test(`[POST]: ${fakes.manyWithoutId?.length ?? ''} DTO`, async () => await supertest(params.mutable.app)
-      .post(params.path)
-      .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-      .send(fakes.manyWithoutId)
-      .expect('Content-Type', /json/)
-      .expect(201)
-      .then((res) => {
-        expect(res.body).toBeTruthy()
-      })
-    )
+  if (!excludeCreate?.all && !excludeCreate?.oneWithId) {
+    test('[POST]: One DTO with ID', (done) => {
+      void supertest(params.mutable.app)
+        .post(params.path)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .send(fakes?.oneWithId)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+          if (res.body.details) {
+            res.body.details.map((c: any) => console.log(c, 'error'))
+          }
+        })
+        .expect(201)
+        .expect((res) => !!res.body)
+        .end(done)
+    })
+  }
+
+  if (!excludeCreate?.all && !excludeCreate?.manyWithoutId) {
+    test(`[POST]: ${fakes?.manyWithoutId?.length ?? ''} DTO without ID`, (done) => {
+      void supertest(params.mutable.app)
+        .post(params.path)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .send(fakes?.manyWithoutId)
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .expect((res) => !!res.body)
+        .end(done)
+    })
+  }
+
+  if (!excludeCreate?.all && !excludeCreate?.manyWithId) {
+    test(`[POST]: ${fakes?.manyWithId?.length ?? ''} DTO with ID`, (done) => {
+      void supertest(params.mutable.app)
+        .post(params.path)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .send(fakes?.manyWithId)
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .expect((res) => !!res.body)
+        .end(done)
+    })
   }
 
   if (!excludeGet?.all && !excludeGet?.normal) {
-    test(`[GET]: Should return "${fakes.manyWithoutId?.length ?? ''} elements"`, async () => await supertest(params.mutable.app)
-      .get(params.path)
-      .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-      .query({ limit: fakes.manyWithoutId?.length })
-      .expect(200)
-      .then((res) => {
-        expect(res.body.length).toBe(fakes.manyWithoutId?.length)
-      })
-    )
+    test(`[GET]: Should return "${fakes?.manyWithoutId?.length ?? ''} elements"`, (done) => {
+      void supertest(params.mutable.app)
+        .get(params.path)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ limit: fakes?.manyWithoutId?.length })
+        .expect(200)
+        .expect((res) => {
+          expect(Array.isArray(res.body)).toBe(true)
+          expect(res.body.length).toBe(fakes?.manyWithoutId.length)
+        })
+        .end(done)
+    })
   }
 
   if (!excludeGet?.all && !excludeGet?.byId) {
-    test('[GET]: By ID', async () => await supertest(params.mutable.app)
-      .get(`${params.path}${fakes.oneWithId?.id ?? ''}`)
-      .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-      .expect(200)
-      .then((res) => {
-        expect(res.body[0].id).toBe(fakes.oneWithId?.id)
-      })
-    )
+    test('[GET]: By ID', (done) => {
+      void supertest(params.mutable.app)
+        .get(`${params.path}${fakes?.oneWithId?.id ?? ''}`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .expect(200)
+        .expect((res) => {
+          expect(Array.isArray(res.body)).toBe(true)
+          expect(res.body[0].id).toBe(fakes?.oneWithId?.id)
+        })
+        .end(done)
+    })
   }
 
   if (!excludeGet?.all && !excludeGet?.byObject) {
-    const object: Partial<T> = { ...fakes.oneWithId }
-    delete object.id
-    test('[GET]: By Object', async () => await supertest(params.mutable.app)
-      .get(params.path)
-      .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-      .send(object)
-      .expect(200)
-      .then((res) => {
-        expect(Object.values(res.body)).toMatchObject([object])
-      })
-    )
+    test('[GET]: By Object', (done) => {
+      void supertest(params.mutable.app)
+        .get(params.path)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .send(objToSearch)
+        .expect(200)
+        .expect((res) => expect(Object.values(res.body)).toMatchObject([objToSearch]))
+        .end(done)
+    })
   }
 
   if (!excludeGet?.all && !excludeGet?.withPagination) {
-    test('[GET]: With pagination', async () => await supertest(params.mutable.app)
-      .get(params.path)
-      .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-      .query({ limit: 2, offset: 4, order: 'DESC' })
-      .expect(200)
-      .then((res) => {
-        expect(res.body.length).toBe(2)
-      })
-    )
+    test('[GET]: With pagination', (done) => {
+      void supertest(params.mutable.app)
+        .get(params.path)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ limit: 2, offset: 4, order: 'DESC' })
+        .expect(200)
+        .expect((res) => {
+          expect(Array.isArray(res.body)).toBe(true)
+          expect(res.body.length).toBe(2)
+        })
+        .end(done)
+    })
   }
 
-  if (!params.excludeEndpoints?.update) {
-    const newFake = fakes.oneWithoutId
+  if (!excludeUpdate?.all && !excludeUpdate?.oneById) {
+    const newFake = fakes?.oneWithoutId
     // console.log('Patch data', newFake)
-    test('[PATCH]: Update one element', async () => await supertest(params.mutable.app)
-      .patch(`${params.path}${fakes.oneWithId?.id ?? ''}`)
-      .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-      .send(newFake)
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toBe(true)
-      })
-    )
+    test('[PATCH]: Update one element', (done) => {
+      void supertest(params.mutable.app)
+        .patch(`${params.path}${fakes?.oneWithId?.id ?? ''}`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .send(newFake)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toBe(true)
+        })
+        .end(done)
+    })
   }
 
-  if (!params.excludeEndpoints?.delete) {
-    test('[DELETE]: One element', async () => await supertest(params.mutable.app)
-      .delete(`${params.path}${fakes.oneWithId?.id ?? ''}`)
-      .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toBe(true)
-      })
-    )
+  if (!excludeDelete?.all && !excludeDelete?.oneById) {
+    test('[DELETE]: One element', (done) => {
+      void supertest(params.mutable.app)
+        .delete(`${params.path}${fakes?.oneWithId?.id ?? ''}`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toBe(true)
+        })
+        .end(done)
+    })
   }
 }
