@@ -7,15 +7,14 @@ import { testSchool } from './schools.e2e-d'
 import { testTitle } from './title.e2e-d'
 import { testProm } from './prom.e2e-d'
 
-export const testSchoolComponent = (params: TestMutableParams, basePath: string) => {
-  const path = basePath
+export const testSchoolComponent = (params: TestMutableParams) => {
   describe('[COMPONENT]: Schools', () => {
-    testSchool(params, path)
-    testGroup(params, path)
-    testPosition(params, path)
-    testEmployee(params, path)
-    testTitle(params, path)
-    testEmployeePosition(params, path)
-    testProm(params, path)
+    testSchool(params)
+    testGroup(params)
+    testPosition(params)
+    testEmployee(params)
+    testTitle(params)
+    testEmployeePosition(params)
+    testProm(params)
   })
 }

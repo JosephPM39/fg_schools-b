@@ -1,28 +1,15 @@
 import { faker } from '@faker-js/faker'
+import { BaseFaker, Fake, WithId } from '../model.faker'
 import { IBorder } from '../.././../models_school/'
-import { v4 as uuidv4 } from 'uuid'
-import { EntityFaker, gOneFakeParams, gManyFakesParams } from '../types'
-import { manyFakes } from '../model.faker'
 
-const name = () => faker.datatype.string(30)
-const file = () => faker.datatype.string(100)
-const available = () => faker.datatype.boolean()
+export class BorderFaker extends BaseFaker<IBorder, {}> {
+  makeOneFake = <C extends WithId = undefined>(_: {}, withId?: C): Fake<IBorder, C> => {
+    const base: Partial<IBorder> = {
+      name: faker.datatype.string(30),
+      file: faker.datatype.string(100),
+      available: faker.datatype.boolean()
+    }
 
-const generateOneFake = (params?: gOneFakeParams): Partial<IBorder> => {
-  const id = params?.withId ? { id: uuidv4() } : {}
-  return {
-    ...id,
-    name: name(),
-    file: file(),
-    available: available()
+    return this.makeOneHelper(base, withId)
   }
-}
-
-const generateManyFakes = (params?: gManyFakesParams) => (
-  manyFakes<IBorder>({ ...params, generateOneFake })
-)
-
-export const borderFaker: EntityFaker<IBorder> = {
-  generateOneFake,
-  generateManyFakes
 }

@@ -1,2 +1,2 @@
-export { comboFaker } from './combo.faker'
-export { studentFaker } from './student.faker'
+export { ComboFaker } from './combo.faker'
+export { StudentFaker } from './student.faker'

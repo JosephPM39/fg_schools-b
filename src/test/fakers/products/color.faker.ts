@@ -1,30 +1,16 @@
 import { faker } from '@faker-js/faker'
+import { BaseFaker, Fake, WithId } from '../model.faker'
 import { IColor } from '../.././../models_school/'
-import { v4 as uuidv4 } from 'uuid'
-import { EntityFaker, gOneFakeParams, gManyFakesParams } from '../types'
-import { manyFakes } from '../model.faker'
 
-const name = () => faker.datatype.string(30)
-const sample = () => faker.datatype.string(100)
-const available = () => faker.datatype.boolean()
-const hex = () => faker.color.rgb()
+export class ColorFaker extends BaseFaker<IColor, {}> {
+  makeOneFake = <C extends WithId = undefined>(_: {}, withId?: C): Fake<IColor, C> => {
+    const base: Partial<IColor> = {
+      name: faker.datatype.string(30),
+      sample: faker.datatype.string(100),
+      hex: faker.color.rgb(),
+      available: faker.datatype.boolean()
+    }
 
-const generateOneFake = (params?: gOneFakeParams): Partial<IColor> => {
-  const id = params?.withId ? { id: uuidv4() } : {}
-  return {
-    ...id,
-    name: name(),
-    hex: hex(),
-    sample: sample(),
-    available: available()
+    return this.makeOneHelper(base, withId)
   }
-}
-
-const generateManyFakes = (params?: gManyFakesParams) => (
-  manyFakes<IColor>({ ...params, generateOneFake })
-)
-
-export const colorFaker: EntityFaker<IColor> = {
-  generateOneFake,
-  generateManyFakes
 }

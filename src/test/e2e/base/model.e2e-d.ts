@@ -1,26 +1,5 @@
 import supertest from 'supertest'
-import { IBaseModel } from '../../../models_school/base.model'
-import { BaseFaker } from '../../fakers/model.faker'
-import { EntityFaker } from '../../fakers/types'
-import { COMPONENTS, SCHOOLS_ENTITIES, TestMutableParams } from '../types'
-
-interface fakesGenerated<T extends IBaseModel> {
-  oneWithId: Partial<T>
-  oneWithoutId: Partial<Omit<T, 'id'>>
-  manyWithoutId: Array<Partial<Omit<T, 'id'>>>
-}
-
-interface EFO<T> {
-  entityFaker: EntityFaker<T>
-}
-
-interface FO<T extends IBaseModel> {
-  fakes: fakesGenerated<T>
-}
-
-interface CEF<T extends IBaseModel, D extends {}> {
-  faker: BaseFaker<T, D>
-}
+import { ENTITIES, TestMutableParams } from '../types'
 
 interface CreateExclude {
   all?: true
@@ -47,13 +26,10 @@ interface DeleteExclude {
   oneById?: true
 }
 
-type fakes<T extends IBaseModel, D extends {}> = FO<T> | EFO<T> | CEF<T, D>
-
 interface CrudTestsParams {
   mutable: TestMutableParams
-  path: string
-  component: COMPONENTS
-  entity: SCHOOLS_ENTITIES
+  path?: string
+  entity: ENTITIES
   excludeEndpoints?: {
     get?: ReadExclude
     post?: CreateExclude
@@ -62,39 +38,17 @@ interface CrudTestsParams {
   }
 }
 
-const isEntityFaker = <T extends IBaseModel, D extends {}>(obj: fakes<T, D>): obj is EFO<T> => {
-  return !!(obj as EFO<T>).entityFaker
-}
-
-const isFaker = <T extends IBaseModel, D extends {}>(obj: fakes<T, D>): obj is CEF<T, D> => {
-  return !!(obj as CEF<T, D>).faker
-}
-
-const extractFakes = <T extends IBaseModel, D extends {}>(obj: fakes<T, D>) => {
-  if (isEntityFaker(obj)) {
-    return {
-      oneWithId: obj.entityFaker.generateOneFake({ withId: true }),
-      oneWithoutId: obj.entityFaker.generateOneFake(),
-      manyWithoutId: obj.entityFaker.generateManyFakes()
-    }
-  }
-  if (isFaker(obj)) {
-    const fakes = obj.faker.getFakes()
-    return {
-      oneWithId: fakes.oneWithId,
-      oneWithoutId: fakes.oneWithoutId,
-      manyWithoutId: fakes.manyWithoutId
-    }
-  }
-  return obj.fakes
-}
-
 export const basicCrudTests = (params: CrudTestsParams) => {
-  let fakes = params.mutable.fakers?.[params.component][params.entity].getFakes()
+  let fakes = params.mutable.fakers?.[params.entity].getFakes()
   let objToSearch = fakes?.oneWithoutId
+  const {
+    path = `${params.mutable.basePath ?? ''}${params.entity}`
+  } = params
+
+  console.log(path, 'path')
 
   beforeAll(() => {
-    fakes = params.mutable.fakers?.[params.component][params.entity].getFakes()
+    fakes = params.mutable.fakers?.[params.entity].getFakes()
     objToSearch = { ...fakes?.oneWithId }
     delete objToSearch?.id
     if (!fakes) throw new Error('Worng Fakes')
@@ -108,7 +62,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeCreate?.all && !excludeCreate?.oneWithId) {
     test('[POST]: One DTO with ID', (done) => {
       void supertest(params.mutable.app)
-        .post(params.path)
+        .post(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(fakes?.oneWithId)
         .expect('Content-Type', /json/)
@@ -126,7 +80,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeCreate?.all && !excludeCreate?.manyWithoutId) {
     test(`[POST]: ${fakes?.manyWithoutId?.length ?? ''} DTO without ID`, (done) => {
       void supertest(params.mutable.app)
-        .post(params.path)
+        .post(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(fakes?.manyWithoutId)
         .expect('Content-Type', /json/)
@@ -139,7 +93,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeCreate?.all && !excludeCreate?.manyWithId) {
     test(`[POST]: ${fakes?.manyWithId?.length ?? ''} DTO with ID`, (done) => {
       void supertest(params.mutable.app)
-        .post(params.path)
+        .post(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(fakes?.manyWithId)
         .expect('Content-Type', /json/)
@@ -152,7 +106,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeGet?.all && !excludeGet?.normal) {
     test(`[GET]: Should return "${fakes?.manyWithoutId?.length ?? ''} elements"`, (done) => {
       void supertest(params.mutable.app)
-        .get(params.path)
+        .get(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .query({ limit: fakes?.manyWithoutId?.length })
         .expect(200)
@@ -167,7 +121,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeGet?.all && !excludeGet?.byId) {
     test('[GET]: By ID', (done) => {
       void supertest(params.mutable.app)
-        .get(`${params.path}${fakes?.oneWithId?.id ?? ''}`)
+        .get(`${path}/${fakes?.oneWithId?.id ?? ''}`)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .expect(200)
         .expect((res) => {
@@ -181,7 +135,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeGet?.all && !excludeGet?.byObject) {
     test('[GET]: By Object', (done) => {
       void supertest(params.mutable.app)
-        .get(params.path)
+        .get(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(objToSearch)
         .expect(200)
@@ -193,7 +147,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeGet?.all && !excludeGet?.withPagination) {
     test('[GET]: With pagination', (done) => {
       void supertest(params.mutable.app)
-        .get(params.path)
+        .get(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .query({ limit: 2, offset: 4, order: 'DESC' })
         .expect(200)
@@ -207,10 +161,9 @@ export const basicCrudTests = (params: CrudTestsParams) => {
 
   if (!excludeUpdate?.all && !excludeUpdate?.oneById) {
     const newFake = fakes?.oneWithoutId
-    // console.log('Patch data', newFake)
     test('[PATCH]: Update one element', (done) => {
       void supertest(params.mutable.app)
-        .patch(`${params.path}${fakes?.oneWithId?.id ?? ''}`)
+        .patch(`${path}/${fakes?.oneWithId?.id ?? ''}`)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(newFake)
         .expect(200)
@@ -224,7 +177,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeDelete?.all && !excludeDelete?.oneById) {
     test('[DELETE]: One element', (done) => {
       void supertest(params.mutable.app)
-        .delete(`${params.path}${fakes?.oneWithId?.id ?? ''}`)
+        .delete(`${path}/${fakes?.oneWithId?.id ?? ''}`)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .expect(200)
         .expect((res) => {
