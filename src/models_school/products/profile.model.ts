@@ -21,27 +21,27 @@ export class Profile extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Model, (model) => model.profiles, baseRelationOptions)
-    model: Model
+    model: Model | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Type, (type) => type.profiles, baseRelationOptions)
-    type: Type
+    type: Type | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Size, (size) => size.profiles, baseRelationOptions)
-    size: Size
+    size: Size | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Color, (color) => color.profiles, baseRelationOptions)
-    color: Color
+    color: Color | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Border, (border) => border.profiles, baseRelationOptions)
-    border: Border
+    border: Border | string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsBoolean()

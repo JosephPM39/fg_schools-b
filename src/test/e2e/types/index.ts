@@ -1,7 +1,7 @@
 import { Express } from 'express'
 import { Server } from 'http'
 import { Connection as DB } from '../../../core_db/'
-import { BorderFaker, ColorFaker, ModelFaker, SizeFaker, TypeFaker } from '../../fakers/products'
+import { BorderFaker, ColorFaker, ModelFaker, ProductFaker, ProfileFaker, SizeFaker, TypeFaker } from '../../fakers/products'
 import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, PromFaker, SchoolFaker, TitleFaker } from '../../fakers/schools'
 import { ComboFaker, StudentFaker } from '../../fakers/store'
 
@@ -26,6 +26,8 @@ export enum ENTITIES {
   Model = '/products/model',
   Size = '/products/size',
   Type = '/products/type',
+  Product = '/products/product',
+  Profile = '/products/profile',
   // STORE_ENTITIES
   Combo = '/store/combo',
   Student = '/store/student'
@@ -46,6 +48,8 @@ export interface Fakers {
   [ENTITIES.Model]: ModelFaker
   [ENTITIES.Size]: SizeFaker
   [ENTITIES.Type]: TypeFaker
+  [ENTITIES.Product]: ProductFaker
+  [ENTITIES.Profile]: ProfileFaker
   // STORE_ENTITIES
   [ENTITIES.Combo]: ComboFaker
   [ENTITIES.Student]: StudentFaker

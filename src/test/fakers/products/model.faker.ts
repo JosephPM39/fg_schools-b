@@ -6,8 +6,8 @@ export class ModelFaker extends BaseFaker<IModel, {}> {
   makeOneFake = <C extends WithId = undefined>(_: {}, withId?: C): Fake<IModel, C> => {
     const base: Partial<IModel> = {
       name: faker.datatype.string(50),
-      offer: parseInt(faker.commerce.price(0.01, 9999.99)),
-      price: parseInt(faker.commerce.price(0.01, 9999.99)),
+      offer: parseFloat(faker.commerce.price(0.01, 9999.99)),
+      price: parseFloat(faker.commerce.price(0.01, 9999.99)),
       available: faker.datatype.boolean()
     }
 

@@ -38,14 +38,19 @@ interface CrudTestsParams {
   }
 }
 
+const logErrorValidation = (res: any, dto: any) => {
+  if (res.body?.details) {
+    res.body.details.map((e: any) => console.log(e, 'Validation error'))
+    console.log(dto, 'data delivered')
+  }
+}
+
 export const basicCrudTests = (params: CrudTestsParams) => {
   let fakes = params.mutable.fakers?.[params.entity].getFakes()
   let objToSearch = fakes?.oneWithoutId
   const {
     path = `${params.mutable.basePath ?? ''}${params.entity}`
   } = params
-
-  console.log(path, 'path')
 
   beforeAll(() => {
     fakes = params.mutable.fakers?.[params.entity].getFakes()
@@ -65,12 +70,9 @@ export const basicCrudTests = (params: CrudTestsParams) => {
         .post(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(fakes?.oneWithId)
+        .expect((res) => res.body?.details?.map((e: any) => console.log(e, 'FAllo')))
         .expect('Content-Type', /json/)
-        .expect((res) => {
-          if (res.body.details) {
-            res.body.details.map((c: any) => console.log(c, 'error'))
-          }
-        })
+        .expect((res) => logErrorValidation(res, fakes?.oneWithId))
         .expect(201)
         .expect((res) => !!res.body)
         .end(done)
@@ -83,6 +85,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
         .post(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(fakes?.manyWithoutId)
+        .expect((res) => logErrorValidation(res, fakes?.manyWithoutId))
         .expect('Content-Type', /json/)
         .expect(201)
         .expect((res) => !!res.body)
@@ -96,6 +99,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
         .post(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(fakes?.manyWithId)
+        .expect((res) => logErrorValidation(res, fakes?.manyWithId))
         .expect('Content-Type', /json/)
         .expect(201)
         .expect((res) => !!res.body)
