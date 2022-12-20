@@ -11,7 +11,7 @@ export class Payment extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Order, (order) => order.payments, baseRelationOptions)
-    order: Order
+    order: Order | string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsNumber()

@@ -1,11 +1,11 @@
 import { basicCrudTests } from '../base/'
 import { ENTITIES, TestMutableParams } from '../types'
 
-export const testProm = (params: TestMutableParams) => {
-  describe('[ENTITY]: Prom ', () => {
+export const testOrder = (params: TestMutableParams) => {
+  describe('[ENTITY]: Order', () => {
     describe('- BASIC CRUD', () => {
       basicCrudTests({
-        entity: ENTITIES.Prom,
+        entity: ENTITIES.Order,
         mutable: params,
         excludeEndpoints: {
           get: { byObject: true },

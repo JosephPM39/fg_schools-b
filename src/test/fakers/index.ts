@@ -1,6 +1,6 @@
 import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, PromFaker, SchoolFaker, TitleFaker } from '../fakers/schools'
 import { BorderFaker, ColorFaker, ModelFaker, ProductFaker, ProfileFaker, SizeFaker, TypeFaker } from '../fakers/products'
-import { ComboFaker, StudentFaker } from '../fakers/store'
+import { ComboFaker, StudentFaker, OrderFaker, PaymentFaker, ComboOrderFaker, ProductOrderFaker, ProductComboFaker } from '../fakers/store'
 import { ENTITIES, Fakers } from '../e2e/types'
 
 export const GetApiFakers = () => {
@@ -23,7 +23,13 @@ export const GetApiFakers = () => {
     [ENTITIES.Profile]: new ProfileFaker(),
     // STORE_ENTITIES
     [ENTITIES.Combo]: new ComboFaker(),
-    [ENTITIES.Student]: new StudentFaker()
+    [ENTITIES.Student]: new StudentFaker(),
+    [ENTITIES.Order]: new OrderFaker(),
+    [ENTITIES.Payment]: new PaymentFaker(),
+    [ENTITIES.ComboOrder]: new ComboOrderFaker(),
+    [ENTITIES.ProductOrder]: new ProductOrderFaker(),
+    [ENTITIES.ProductCombo]: new ProductComboFaker()
+
   }
 
   // SCHOOLS_ENTITIES
@@ -66,6 +72,27 @@ export const GetApiFakers = () => {
   // SCHOOLS_ENTITIES
   fakers[ENTITIES.Combo].makeFakesPack({})
   fakers[ENTITIES.Student].makeFakesPack({})
+  fakers[ENTITIES.Order].makeFakesPack({
+    student: fakers[ENTITIES.Student].getFakes().manyWithId[0],
+    prom: fakers[ENTITIES.Prom].getFakes().manyWithId[0],
+    quantity: 101
+  })
+  fakers[ENTITIES.Payment].makeFakesPack({
+    order: fakers[ENTITIES.Order].getFakes().manyWithId[0]
+  })
+  fakers[ENTITIES.ComboOrder].makeFakesPack({
+    oneOrder: fakers[ENTITIES.Order].getFakes().manyWithId[0],
+    manyOrders: fakers[ENTITIES.Order].getFakes().manyWithId.filter((_, i) => i > 0),
+    combo: fakers[ENTITIES.Combo].getFakes().manyWithId[0]
+  })
+  fakers[ENTITIES.ProductOrder].makeFakesPack({
+    order: fakers[ENTITIES.Order].getFakes().manyWithId[0],
+    product: fakers[ENTITIES.Product].getFakes().manyWithId[0]
+  })
+  fakers[ENTITIES.ProductCombo].makeFakesPack({
+    product: fakers[ENTITIES.Product].getFakes().manyWithId[0],
+    combo: fakers[ENTITIES.Combo].getFakes().manyWithId[0]
+  })
 
   return fakers
 }

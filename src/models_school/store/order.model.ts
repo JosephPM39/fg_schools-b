@@ -16,12 +16,12 @@ export class Order extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Student, (student) => student.orders, baseRelationOptions)
-    student: Student
+    student: Student | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Prom, (prom) => prom.orders, baseRelationOptions)
-    prom: Prom
+    prom: Prom | string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsNumber()

@@ -12,12 +12,12 @@ export class ProductOrder extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Order, (order) => order.productOrders, baseRelationOptions)
-    order: Order
+    order: Order | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Product, (product) => product.productOrders, baseRelationOptions)
-    product: Product
+    product: Product | string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsInt()

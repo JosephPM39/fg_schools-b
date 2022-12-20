@@ -3,7 +3,7 @@ import { Server } from 'http'
 import { Connection as DB } from '../../../core_db/'
 import { BorderFaker, ColorFaker, ModelFaker, ProductFaker, ProfileFaker, SizeFaker, TypeFaker } from '../../fakers/products'
 import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, PromFaker, SchoolFaker, TitleFaker } from '../../fakers/schools'
-import { ComboFaker, StudentFaker } from '../../fakers/store'
+import { ComboFaker, StudentFaker, ComboOrderFaker, OrderFaker, PaymentFaker, ProductOrderFaker, ProductComboFaker } from '../../fakers/store'
 
 export enum COMPONENTS {
   Schools = 'schools',
@@ -30,7 +30,12 @@ export enum ENTITIES {
   Profile = '/products/profile',
   // STORE_ENTITIES
   Combo = '/store/combo',
-  Student = '/store/student'
+  Student = '/store/student',
+  Order = '/store/order',
+  Payment = '/store/payment',
+  ComboOrder = '/store/combo-order',
+  ProductOrder = '/store/product-order',
+  ProductCombo = '/store/product-combo'
 }
 
 export interface Fakers {
@@ -53,6 +58,11 @@ export interface Fakers {
   // STORE_ENTITIES
   [ENTITIES.Combo]: ComboFaker
   [ENTITIES.Student]: StudentFaker
+  [ENTITIES.Order]: OrderFaker
+  [ENTITIES.Payment]: PaymentFaker
+  [ENTITIES.ComboOrder]: ComboOrderFaker
+  [ENTITIES.ProductOrder]: ProductOrderFaker
+  [ENTITIES.ProductCombo]: ProductComboFaker
 }
 
 export interface TestMutableParams {

@@ -12,12 +12,12 @@ export class ProductCombo extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Combo, (combo) => combo.productCombos, baseRelationOptions)
-    combo: Combo
+    combo: Combo | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Product, (product) => product.productCombos, baseRelationOptions)
-    product: Product
+    product: Product | string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsInt()

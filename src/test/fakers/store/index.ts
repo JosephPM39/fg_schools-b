@@ -1,2 +1,7 @@
 export { ComboFaker } from './combo.faker'
 export { StudentFaker } from './student.faker'
+export { OrderFaker, IOrderD } from './order.faker-r'
+export { ComboOrderFaker, IComboOrderD } from './combo-order.faker-r'
+export { PaymentFaker, IPaymentD } from './payment.faker-r'
+export { ProductComboFaker, IProductComboD } from './product-combo.faker-r'
+export { ProductOrderFaker, IProductOrderD } from './product-order.faker-r'

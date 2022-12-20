@@ -13,12 +13,12 @@ export class ComboOrder extends BaseModel {
   @IsUUID()
   @JoinColumn()
   @OneToOne(() => Order, (order) => order.comboOrder, baseRelationOptions)
-    order: Order
+    order: Order | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Combo, (combo) => combo.comboOrders, baseRelationOptions)
-    combo: Combo
+    combo: Combo | string
 }
 
 export interface IComboOrder extends ComboOrder {}

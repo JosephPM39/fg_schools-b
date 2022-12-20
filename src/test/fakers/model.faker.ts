@@ -2,9 +2,7 @@ import { IBaseModel } from '../../models_school/base.model'
 import { WithRequired } from './types'
 import { v4 as uuidv4 } from 'uuid'
 
-// NEW CODE
-
-interface ManyFakesParams {
+export interface ManyFakesParams {
   quantity?: number
 }
 
@@ -26,7 +24,7 @@ export const containsId = <Entity extends IBaseModel>(
   return (fakes as Fakes<Entity>['oneWithId'])?.id !== undefined
 }
 
-const arrayContainsId = <Entity extends IBaseModel>(
+export const arrayContainsId = <Entity extends IBaseModel>(
   fakes: Fakes<Entity>['manyWithoutId'] | Fakes<Entity>['manyWithId']
 ): fakes is Fakes<Entity>['manyWithId'] => {
   return (fakes as Fakes<Entity>['manyWithId'])[0]?.id !== undefined
@@ -43,9 +41,11 @@ export abstract class BaseFaker<Entity extends IBaseModel, D extends {} = {}> {
     manyWithoutId: []
   }
 
+  protected defaultQuantity = 100
+
   makeOneFake: <C extends WithId = undefined>(params: D, withId?: C) => Fake<Entity, C>
   makeManyFake = <C extends WithId = undefined>(params: ManyFakesParams & D, withId?: C): void => {
-    const { quantity = 100, ...r } = params
+    const { quantity = this.defaultQuantity, ...r } = params
     const remaining = r as D
 
     const fakes: FakesArray<Entity, C> = []
@@ -63,7 +63,7 @@ export abstract class BaseFaker<Entity extends IBaseModel, D extends {} = {}> {
     }
   }
 
-  makeFakesPack = (params: D) => {
+  makeFakesPack = (params: D & ManyFakesParams) => {
     this.makeManyFake(params)
     this.makeManyFake(params, 'withId')
     this.makeOneFake(params)
