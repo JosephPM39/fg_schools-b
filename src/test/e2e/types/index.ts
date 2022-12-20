@@ -32,18 +32,21 @@ export enum ENTITIES {
 }
 
 export interface Fakers {
-  [ENTITIES.School]: SchoolFaker
-  [ENTITIES.Prom]: PromFaker
-  [ENTITIES.EmployeePosition]: EmployeePositionFaker
-  [ENTITIES.Group]: GroupFaker
-  [ENTITIES.Title]: TitleFaker
+  // SCHOOLS_ENTITIES
   [ENTITIES.Employee]: EmployeeFaker
   [ENTITIES.Position]: PositionFaker
+  [ENTITIES.Title]: TitleFaker
+  [ENTITIES.Group]: GroupFaker
+  [ENTITIES.School]: SchoolFaker
+  [ENTITIES.EmployeePosition]: EmployeePositionFaker
+  [ENTITIES.Prom]: PromFaker
+  // PRODUCTS_ENTITIES
   [ENTITIES.Border]: BorderFaker
   [ENTITIES.Color]: ColorFaker
-  [ENTITIES.Size]: SizeFaker
   [ENTITIES.Model]: ModelFaker
+  [ENTITIES.Size]: SizeFaker
   [ENTITIES.Type]: TypeFaker
+  // STORE_ENTITIES
   [ENTITIES.Combo]: ComboFaker
   [ENTITIES.Student]: StudentFaker
 }
