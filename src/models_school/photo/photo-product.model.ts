@@ -18,12 +18,12 @@ export class PhotoProduct extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Photo, (photo) => photo.photoProduct, baseRelationOptions)
-    photo: Photo
+    photo: Photo | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @IsUUID()
   @ManyToOne(() => Product, (product) => product.photoProduct, baseRelationOptions)
-    product: Product
+    product: Product | string
 }
 
 export interface IPhotoProduct extends PhotoProduct {}

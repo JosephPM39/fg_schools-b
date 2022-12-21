@@ -21,17 +21,11 @@ export class Qr extends BaseModel {
     url: string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
-  @IsString()
-  @Length(1, 100)
-  @Column({ type: 'varchar', length: 100 })
-    sectionPhotos: string
-
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsUUID()
   @IsOptional()
   @JoinColumn()
   @OneToOne(() => Photo, (photo) => photo.qr, { ...baseRelationOptions, nullable: true })
-    photo: Photo
+    photo: Photo | string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsBoolean()

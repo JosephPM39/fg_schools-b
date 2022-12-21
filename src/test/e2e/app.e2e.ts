@@ -11,6 +11,7 @@ import { AppDataSource } from '../../db/data-source'
 import { testProductComponent } from './products'
 import { testStoreComponent } from './store'
 import { GetApiFakers } from '../fakers'
+import { testPhotoComponent } from './photos'
 
 describe('Full e2e App Testing', () => {
   const mutableParams: TestMutableParams = {
@@ -47,4 +48,5 @@ describe('Full e2e App Testing', () => {
   testSchoolComponent(mutableParams)
   testProductComponent(mutableParams)
   testStoreComponent(mutableParams)
+  testPhotoComponent(mutableParams)
 })

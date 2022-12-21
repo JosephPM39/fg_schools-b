@@ -41,7 +41,7 @@ export class Photo extends BaseModel {
   @IsOptional()
   @JoinColumn()
   @OneToOne(() => Order, (order) => order.photo, { ...baseRelationOptions, nullable: true })
-    order: Order
+    order: Order | string
 
   @Expose({ since: EV.UPDATE, until: EV.GET })
   @ValidateIf(o => !o.order || o.prom)
@@ -49,7 +49,7 @@ export class Photo extends BaseModel {
   @IsOptional()
   @JoinColumn()
   @OneToOne(() => Prom, (prom) => prom.photo, { ...baseRelationOptions, nullable: true })
-    prom: Prom
+    prom: Prom | string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsBoolean()

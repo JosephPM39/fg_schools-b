@@ -1,7 +1,8 @@
 import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, PromFaker, SchoolFaker, TitleFaker } from '../fakers/schools'
 import { BorderFaker, ColorFaker, ModelFaker, ProductFaker, ProfileFaker, SizeFaker, TypeFaker } from '../fakers/products'
 import { ComboFaker, StudentFaker, OrderFaker, PaymentFaker, ComboOrderFaker, ProductOrderFaker, ProductComboFaker } from '../fakers/store'
-import { ENTITIES, Fakers } from '../e2e/types'
+import { ENTITIES, Fakers } from './types'
+import { PhotoFaker, PhotoProductFaker, QrFaker } from './photos'
 
 export const GetApiFakers = () => {
   const fakers: Fakers = {
@@ -28,7 +29,11 @@ export const GetApiFakers = () => {
     [ENTITIES.Payment]: new PaymentFaker(),
     [ENTITIES.ComboOrder]: new ComboOrderFaker(),
     [ENTITIES.ProductOrder]: new ProductOrderFaker(),
-    [ENTITIES.ProductCombo]: new ProductComboFaker()
+    [ENTITIES.ProductCombo]: new ProductComboFaker(),
+    // PHOTOS_ENTITIES
+    [ENTITIES.Photo]: new PhotoFaker(),
+    [ENTITIES.Qr]: new QrFaker(),
+    [ENTITIES.PhotoProduct]: new PhotoProductFaker()
 
   }
 
@@ -47,7 +52,8 @@ export const GetApiFakers = () => {
     title: fakers[ENTITIES.Title].getFakes().manyWithId[0],
     profesor: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId[0],
     principal: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId[1],
-    school: fakers[ENTITIES.School].getFakes().manyWithId[0]
+    school: fakers[ENTITIES.School].getFakes().manyWithId[0],
+    quantity: 102
   })
   // PRODUCTS_ENTITIES
   fakers[ENTITIES.Border].makeFakesPack({})
@@ -75,7 +81,7 @@ export const GetApiFakers = () => {
   fakers[ENTITIES.Order].makeFakesPack({
     student: fakers[ENTITIES.Student].getFakes().manyWithId[0],
     prom: fakers[ENTITIES.Prom].getFakes().manyWithId[0],
-    quantity: 101
+    quantity: 102
   })
   fakers[ENTITIES.Payment].makeFakesPack({
     order: fakers[ENTITIES.Order].getFakes().manyWithId[0]
@@ -92,6 +98,22 @@ export const GetApiFakers = () => {
   fakers[ENTITIES.ProductCombo].makeFakesPack({
     product: fakers[ENTITIES.Product].getFakes().manyWithId[0],
     combo: fakers[ENTITIES.Combo].getFakes().manyWithId[0]
+  })
+  // PHOTOS_ENTITIES
+  fakers[ENTITIES.Photo].makeFakesPack({
+    oneOrder: fakers[ENTITIES.Order].getFakes().manyWithId[0],
+    manyOrders: fakers[ENTITIES.Order].getFakes().manyWithId.filter((_, i) => i > 0),
+    oneProm: fakers[ENTITIES.Prom].getFakes().manyWithId[0],
+    manyProms: fakers[ENTITIES.Prom].getFakes().manyWithId.filter((_, i) => i > 0),
+    quantity: 101
+  })
+  fakers[ENTITIES.Qr].makeFakesPack({
+    onePhoto: fakers[ENTITIES.Photo].getFakes().manyWithId[0],
+    manyPhotos: fakers[ENTITIES.Photo].getFakes().manyWithId.filter((_, i) => i > 0)
+  })
+  fakers[ENTITIES.PhotoProduct].makeFakesPack({
+    photo: fakers[ENTITIES.Photo].getFakes().manyWithId[0],
+    product: fakers[ENTITIES.Product].getFakes().manyWithId[0]
   })
 
   return fakers
