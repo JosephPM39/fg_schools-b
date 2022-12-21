@@ -2,7 +2,6 @@ import { Repository, FindOptionsWhere, FindManyOptions } from 'typeorm'
 import { Connection } from '../db/'
 import { CreateParams, DeleteParams, EXPOSE_VERSIONS as EV, IController, ModelClassType, ReadParams, UpdateParams } from '../types'
 import { validateDto, validateIdBy, validateQuery } from '../validations'
-import Boom from '@hapi/boom'
 
 export class BaseController<Model extends {}> implements IController<Model> {
   protected repo: Repository<Model>
@@ -38,6 +37,9 @@ export class BaseController<Model extends {}> implements IController<Model> {
   async read (params: ReadParams) {
     const { query, idBy } = params
 
+    if (!this.repo) await this.init()
+    if (!idBy && !query) return await this.repo.find()
+
     const queryValid = await validateQuery(query)
 
     // console.log(queryValid, 'queryValid', query, 'query')
@@ -48,9 +50,6 @@ export class BaseController<Model extends {}> implements IController<Model> {
       take: queryValid.limit ?? 10,
       skip: queryValid.offset ?? 0
     }
-
-    if (!this.repo) await this.init()
-    if (!idBy) return await this.repo.find()
 
     const idByValid = await validateIdBy<Model>({
       idBy,

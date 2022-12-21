@@ -139,7 +139,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
   if (!excludeGet?.all && !excludeGet?.byObject) {
     test('[GET]: By Object', (done) => {
       void supertest(params.mutable.app)
-        .get(path)
+        .post(`${path}/get-filtered`)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .send(objToSearch)
         .expect(200)

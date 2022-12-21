@@ -30,6 +30,15 @@ export const endpointsCrud = <Model extends {}>(params: options<Model>) => {
 
   const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const query = queryExtract(req)
+      res.json(await controller.read({ idBy: {}, query }))
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  const getAllFiltered = async (req: Request, res: Response, next: NextFunction) => {
+    try {
       const { body: idBy } = req
       const query = queryExtract(req)
       res.json(await controller.read({ idBy, query }))
@@ -81,6 +90,7 @@ export const endpointsCrud = <Model extends {}>(params: options<Model>) => {
   if (!excludeEndpoints?.read) {
     router.get('/', jwtPAuth(), checkRole(roles?.read), getAll)
     router.get('/:id', jwtPAuth(), checkRole(roles?.read), getOne)
+    router.post('/get-filtered', jwtPAuth(), checkRole(roles?.read), getAllFiltered)
   }
 
   if (!excludeEndpoints?.create) {
