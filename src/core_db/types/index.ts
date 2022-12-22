@@ -8,8 +8,8 @@ export enum EXPOSE_VERSIONS {
   CREATE = 2,
   FULL = 3,
   GET = 4,
-  DELETE = 5,
-  CREATE_NESTED = 6
+  CREATE_NESTED = 5,
+  DELETE = 6,
 }
 
 type IdBy = string | object
