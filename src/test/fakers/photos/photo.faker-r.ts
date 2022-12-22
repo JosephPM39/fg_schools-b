@@ -14,8 +14,8 @@ export class PhotoFaker extends BaseFaker<IPhoto, IPhotoD> {
   makeOneFake = <C extends WithId = undefined>(params: IPhotoD, withId?: C): Fake<IPhoto, C> => {
     const { oneOrder, oneProm } = params
     const base: Partial<IPhoto> = {
-      order: oneOrder.id,
-      prom: oneProm.id,
+      orderId: oneOrder.id,
+      promId: oneProm.id,
       startCode: faker.datatype.string(20),
       endCode: faker.datatype.string(20),
       studentPhotos: faker.datatype.string(100),

@@ -10,7 +10,7 @@ import { EmployeePosition } from './employee-position.model'
 export class Employee extends BaseModel {
   @Expose({
     since: EV.UPDATE,
-    until: EV.DELETE
+    until: EV.CREATE_NESTED
   })
   @IsString()
   @Length(1, 40)
@@ -19,7 +19,7 @@ export class Employee extends BaseModel {
 
   @Expose({
     since: EV.UPDATE,
-    until: EV.DELETE
+    until: EV.CREATE_NESTED
   })
   @IsString()
   @Length(1, 40)
@@ -28,7 +28,7 @@ export class Employee extends BaseModel {
 
   @Expose({
     since: EV.UPDATE,
-    until: EV.DELETE
+    until: EV.CREATE_NESTED
   })
   @IsString()
   @Length(1, 10)
@@ -37,12 +37,14 @@ export class Employee extends BaseModel {
 
   @Expose({
     since: EV.UPDATE,
-    until: EV.DELETE
+    until: EV.CREATE_NESTED
   })
   @IsString()
   @Length(1, 55)
   @Column('varchar', { length: 55 })
     contact: string
+
+  // RELATIONS
 
   @OneToMany(() => EmployeePosition, (ep) => ep.employee)
     employeePositions: EmployeePosition[]

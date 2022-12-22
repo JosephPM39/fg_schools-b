@@ -11,8 +11,8 @@ export class EmployeePositionFaker extends BaseFaker<IEmployeePosition, IEmploye
   makeOneFake = <C extends WithId = undefined>(params: IEmployeePositionFakerD, withId?: C): Fake<IEmployeePosition, C> => {
     const { employee, position } = params
     const base: Partial<IEmployeePosition> = {
-      employee: employee.id,
-      position: position.id
+      employeeId: employee.id,
+      positionId: position.id
     }
 
     return this.makeOneHelper(base, withId)

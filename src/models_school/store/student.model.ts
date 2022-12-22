@@ -27,6 +27,8 @@ export class Student extends BaseModel {
   @Column({ type: 'varchar', length: 100, nullable: true })
     nickName: string
 
+  // RELATIONS
+
   @OneToMany(() => Order, (order) => order.student)
     orders: Order[]
 }

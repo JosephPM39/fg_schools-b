@@ -8,29 +8,31 @@ import { Prom } from './prom.model'
 @Entity()
 @Exclude()
 export class School extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsString()
   @Length(1, 100)
   @Column('varchar', { length: 100 })
     name: string
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsString()
   @Length(1, 254)
   @Column('varchar', { length: 254 })
     location: string
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsString()
   @Length(1, 30)
   @Column('varchar', { length: 30 })
     code: string
 
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsString()
   @Length(1, 100)
   @Column('varchar', { length: 100 })
     icon: string
+
+  // RELATIONS
 
   @OneToMany(() => Prom, (proms) => proms.group)
     proms: Prom[]

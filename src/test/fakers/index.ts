@@ -83,6 +83,9 @@ export const GetApiFakers = () => {
     prom: fakers[ENTITIES.Prom].getFakes().manyWithId[0],
     quantity: 102
   })
+
+  fakers[ENTITIES.Prom].getFakes().manyWithId[0].year = 2022
+
   fakers[ENTITIES.Payment].makeFakesPack({
     order: fakers[ENTITIES.Order].getFakes().manyWithId[0]
   })

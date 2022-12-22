@@ -20,6 +20,8 @@ export class Combo extends BaseModel {
   @Column('boolean')
     available: boolean
 
+  // RELATIONS
+
   @OneToOne(() => ComboOrder, (comboOrder) => comboOrder.combo)
     comboOrders: ComboOrder[]
 

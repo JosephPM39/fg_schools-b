@@ -12,8 +12,8 @@ export class OrderFaker extends BaseFaker<IOrder, IOrderD> {
   makeOneFake = <C extends WithId = undefined>(params: IOrderD, withId?: C): Fake<IOrder, C> => {
     const { student, prom } = params
     const base: Partial<IOrder> = {
-      student: student.id,
-      prom: prom.id,
+      studentId: student.id,
+      promId: prom.id,
       total: parseFloat(faker.commerce.price(0.01, 9999.99)),
       remaining: parseFloat(faker.commerce.price(0.01, 9999.99)),
       details: faker.datatype.string(254)

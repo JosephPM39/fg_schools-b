@@ -10,12 +10,14 @@ import { EmployeePosition } from './employee-position.model'
 export class Position extends BaseModel {
   @Expose({
     since: EV.UPDATE,
-    until: EV.DELETE
+    until: EV.CREATE_NESTED
   })
   @IsString()
   @Length(1, 30)
   @Column('varchar', { length: 30 })
     name: string
+
+  // RELATIONS
 
   @OneToMany(() => EmployeePosition, (ep) => ep.position)
     employeePositions: EmployeePosition[]

@@ -1,13 +1,13 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsBoolean, IsString, IsUUID, Length } from 'class-validator'
-import { Model } from './model.model'
-import { Type } from './type.model'
-import { Size } from './size.model'
-import { Color } from './color.model'
-import { Border } from './border.model'
+import { IsBoolean, IsString, IsUUID, Length, ValidateNested } from 'class-validator'
+import { IModel, Model } from './model.model'
+import { IType, Type } from './type.model'
+import { ISize, Size } from './size.model'
+import { Color, IColor } from './color.model'
+import { Border, IBorder } from './border.model'
 import { ProductOrder } from '../store/product-order.model'
 import { ProductCombo } from '../store/product-combo.model'
 import { PhotoProduct } from '../photo/photo-product.model'
@@ -21,35 +21,69 @@ export class Product extends BaseModel {
   @Column('varchar', { length: 30 })
     name: string
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Model, (model) => model.products, { ...baseRelationOptions, nullable: true })
-    model: Model | string
+  @Column()
+    modelId: IModel['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Type, (type) => type.products, { ...baseRelationOptions, nullable: true })
-    type: Type | string
+  @Column()
+    typeId: IType['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Size, (size) => size.products, { ...baseRelationOptions, nullable: true })
-    size: Size | string
+  @Column()
+    sizeId: ISize['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Color, (color) => color.products, { ...baseRelationOptions, nullable: true })
-    color: Color | string
+  @Column()
+    colorId: IColor['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Border, (border) => border.products, { ...baseRelationOptions, nullable: true })
-    border: Border | string
+  @Column()
+    borderId: IBorder['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsBoolean()
   @Column('boolean')
     available: boolean
+
+  // RELATIONS
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Model, (model) => model.products, { ...baseRelationOptions, nullable: true })
+  @JoinColumn({ name: 'modelId' })
+    model: Model
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Type, (type) => type.products, { ...baseRelationOptions, nullable: true })
+  @JoinColumn({ name: 'typeId' })
+    type: Type
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Size, (size) => size.products, { ...baseRelationOptions, nullable: true })
+  @JoinColumn({ name: 'sizeId' })
+    size: Size
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.CREATE_NESTED })
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Color, (color) => color.products, { ...baseRelationOptions, nullable: true })
+  @JoinColumn({ name: 'colorId' })
+    color: Color
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.CREATE_NESTED })
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Border, (border) => border.products, { ...baseRelationOptions, nullable: true })
+  @JoinColumn({ name: 'borderId' })
+    border: Border
 
   @OneToMany(() => ProductOrder, (productOrder) => productOrder.product)
     productOrders: ProductOrder[]

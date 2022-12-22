@@ -1,10 +1,10 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsString, IsUUID, Length } from 'class-validator'
-import { Photo } from './photo.model'
-import { Product } from '../products'
+import { IsString, IsUUID, Length, ValidateNested } from 'class-validator'
+import { IPhoto, Photo } from './photo.model'
+import { IProduct, Product } from '../products'
 
 @Entity()
 @Exclude()
@@ -15,15 +15,29 @@ export class PhotoProduct extends BaseModel {
   @Column('varchar', { length: 20 })
     code: string
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Photo, (photo) => photo.photoProduct, baseRelationOptions)
-    photo: Photo | string
+  @Column()
+    photoId: IPhoto['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
+  @Column()
+    productId: IProduct['id']
+
+  // RELATIONS
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Photo, (photo) => photo.photoProduct, baseRelationOptions)
+  @JoinColumn({ name: 'photoId' })
+    photo: Photo
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
   @ManyToOne(() => Product, (product) => product.photoProduct, baseRelationOptions)
-    product: Product | string
+  @JoinColumn({ name: 'productId' })
+    product: Product
 }
 
 export interface IPhotoProduct extends PhotoProduct {}

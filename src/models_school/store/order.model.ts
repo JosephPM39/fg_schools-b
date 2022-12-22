@@ -1,27 +1,27 @@
-import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min } from 'class-validator'
+import { IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min, ValidateNested } from 'class-validator'
 import { ComboOrder } from './combo-order.model'
 import { ProductOrder } from './product-order.model'
 import { Payment } from './payment.model'
-import { Student } from './student.model'
-import { Prom } from '../schools'
+import { IStudent, Student } from './student.model'
+import { IProm, Prom } from '../schools'
 import { Photo } from '../photo/photo.model'
 
 @Entity()
 @Exclude()
 export class Order extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Student, (student) => student.orders, baseRelationOptions)
-    student: Student | string
+  @Column()
+    studentId: IStudent['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Prom, (prom) => prom.orders, baseRelationOptions)
-    prom: Prom | string
+  @Column()
+    promId: IProm['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsNumber()
@@ -43,6 +43,20 @@ export class Order extends BaseModel {
   @Length(1, 254)
   @Column('varchar', { length: 254 })
     details: string
+
+  // RELATIONS
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Student, (student) => student.orders, baseRelationOptions)
+  @JoinColumn({ name: 'studentId' })
+    student: Student
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Prom, (prom) => prom.orders, baseRelationOptions)
+  @JoinColumn({ name: 'promId' })
+    prom: Prom
 
   @OneToOne(() => ComboOrder, (comboOrder) => comboOrder.order)
     comboOrder: ComboOrder

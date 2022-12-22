@@ -11,7 +11,7 @@ export class PaymentFaker extends BaseFaker<IPayment, IPaymentD> {
   makeOneFake = <C extends WithId = undefined>(params: IPaymentD, withId?: C): Fake<IPayment, C> => {
     const { order } = params
     const base: Partial<IPayment> = {
-      order: order.id,
+      orderId: order.id,
       total: parseFloat(faker.commerce.price(0.01, 9999.99)),
       details: faker.datatype.string(254),
       date: faker.date.recent()

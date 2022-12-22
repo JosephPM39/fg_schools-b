@@ -22,10 +22,14 @@ describe('Full e2e App Testing', () => {
 
   beforeAll(async () => {
     mutableParams.connection = new Connection(await AppDataSource(EntitiesORM).initialize())
+    if (process.env.SEEDER === 'true') {
+      console.log('SEEDER MODE')
+      await mutableParams.connection.dropDB('confirm')
+    }
     await mutableParams.connection.syncDB('confirm')
 
     const { allowedOrigins } = config
-    const createdApp = createApp({ connection: mutableParams.connection, port: 3001, allowedOrigins })
+    const createdApp = createApp({ connection: mutableParams.connection, port: 3002, allowedOrigins })
 
     mutableParams.app = createdApp.app
     mutableParams.server = createdApp.server
@@ -41,7 +45,9 @@ describe('Full e2e App Testing', () => {
   })
 
   afterAll(async () => {
-    await mutableParams.connection?.dropDB('confirm')
+    if (process.env.SEEDER !== 'true') {
+      await mutableParams.connection?.dropDB('confirm')
+    }
     await mutableParams.connection?.quit()
     mutableParams.server?.close()
   })

@@ -12,7 +12,7 @@ export class QrFaker extends BaseFaker<IQr, IQrD> {
   makeOneFake = <C extends WithId = undefined>(params: IQrD, withId?: C): Fake<IQr, C> => {
     const { onePhoto } = params
     const base: Partial<IQr> = {
-      photo: onePhoto.id,
+      photoId: onePhoto.id,
       code: faker.helpers.unique(faker.datatype.string, [20]),
       url: faker.helpers.unique(faker.datatype.string, [100]),
       available: faker.datatype.boolean()

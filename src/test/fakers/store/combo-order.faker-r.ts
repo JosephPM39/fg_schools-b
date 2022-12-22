@@ -12,8 +12,8 @@ export class ComboOrderFaker extends BaseFaker<IComboOrder, IComboOrderD> {
   makeOneFake = <C extends WithId = undefined>(params: IComboOrderD, withId?: C): Fake<IComboOrder, C> => {
     const { combo, oneOrder } = params
     const base: Partial<IComboOrder> = {
-      combo: combo.id,
-      order: oneOrder.id
+      comboId: combo.id,
+      orderId: oneOrder.id
     }
 
     return this.makeOneHelper(base, withId)

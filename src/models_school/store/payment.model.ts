@@ -1,17 +1,17 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { Exclude, Expose, Type } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsDate, IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min } from 'class-validator'
-import { Order } from './order.model'
+import { IsDate, IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min, ValidateNested } from 'class-validator'
+import { IOrder, Order } from './order.model'
 
 @Entity()
 @Exclude()
 export class Payment extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Order, (order) => order.payments, baseRelationOptions)
-    order: Order | string
+  @Column()
+    orderId: IOrder['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsNumber()
@@ -32,6 +32,14 @@ export class Payment extends BaseModel {
   @Type(() => Date)
   @Column({ type: 'timestamp without time zone', default: () => 'CURRENT_TIMESTAMP' })
     date: Date
+
+  // RELATIONS
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Order, (order) => order.payments, baseRelationOptions)
+  @JoinColumn({ name: 'orderId' })
+    order: Order
 }
 
 export interface IPayment extends Payment {}

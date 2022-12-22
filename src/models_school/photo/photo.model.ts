@@ -2,9 +2,9 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsBoolean, IsOptional, IsString, IsUUID, Length, ValidateIf } from 'class-validator'
-import { Order } from '../store'
-import { Prom } from '../schools'
+import { IsBoolean, IsOptional, IsString, IsUUID, Length, ValidateNested } from 'class-validator'
+import { IOrder, Order } from '../store'
+import { IProm, Prom } from '../schools'
 import { Qr } from './qr.model'
 import { PhotoProduct } from './photo-product.model'
 
@@ -35,26 +35,38 @@ export class Photo extends BaseModel {
   @Column({ type: 'varchar', length: 100 })
     sectionPhotos: string
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
-  @ValidateIf(o => !o.prom || o.order)
-  @IsUUID()
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsOptional()
-  @JoinColumn()
-  @OneToOne(() => Order, (order) => order.photo, { ...baseRelationOptions, nullable: true })
-    order: Order | string
+  @IsUUID()
+  @Column()
+    orderId: IOrder['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
-  @ValidateIf(o => !o.order || o.prom)
-  @IsUUID()
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsOptional()
-  @JoinColumn()
-  @OneToOne(() => Prom, (prom) => prom.photo, { ...baseRelationOptions, nullable: true })
-    prom: Prom | string
+  @IsUUID()
+  @Column()
+    promId: IProm['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsBoolean()
   @Column('boolean')
     available: boolean
+
+  // RELATIONS
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @IsOptional()
+  @ValidateNested()
+  @OneToOne(() => Order, (order) => order.photo, { ...baseRelationOptions, nullable: true })
+  @JoinColumn({ name: 'orderId' })
+    order: Order
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @IsOptional()
+  @ValidateNested()
+  @OneToOne(() => Prom, (prom) => prom.photo, { ...baseRelationOptions, nullable: true })
+  @JoinColumn({ name: 'promId' })
+    prom: Prom
 
   @OneToOne(() => Qr, (qr) => qr.photo)
     qr: Qr

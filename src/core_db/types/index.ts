@@ -9,6 +9,7 @@ export enum EXPOSE_VERSIONS {
   FULL = 3,
   GET = 4,
   DELETE = 5,
+  CREATE_NESTED = 6
 }
 
 type IdBy = string | object
@@ -18,8 +19,8 @@ export interface CreateParams {
 }
 
 export interface ReadParams {
-  idBy: IdBy
-  query: IQuery
+  idBy?: IdBy
+  query?: IQuery
 }
 
 export interface UpdateParams {

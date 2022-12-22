@@ -15,11 +15,11 @@ export interface IPromFakerD {
 export class PromFaker extends BaseFaker<IProm, IPromFakerD> {
   makeOneFake = <C extends WithId = undefined>(params: IPromFakerD, withId?: C): Fake<IProm, C> => {
     const base: Partial<IProm> = {
-      group: params.group.id,
-      title: params.title.id,
-      profesor: params.profesor.id,
-      principal: params.principal.id,
-      school: params.school.id,
+      groupId: params.group.id,
+      titleId: params.title.id,
+      profesorId: params.profesor.id,
+      principalId: params.principal.id,
+      schoolId: params.school.id,
       year: faker.datatype.number({ min: 1900, max: 9999 })
     }
 

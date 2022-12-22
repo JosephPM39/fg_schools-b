@@ -33,6 +33,8 @@ export class Color extends BaseModel {
   @Column('boolean')
     available: boolean
 
+  // RELATIONS
+
   @OneToMany(() => Profile, (profile) => profile.color)
     profiles: Profile[]
 

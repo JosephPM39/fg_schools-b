@@ -9,12 +9,14 @@ import { Prom } from './prom.model'
 @Exclude()
 export class Group extends BaseModel {
   @Expose({
-    since: EV.UPDATE, until: EV.DELETE
+    since: EV.UPDATE, until: EV.CREATE_NESTED
   })
   @IsString()
   @Length(1, 30)
   @Column('varchar', { length: 30 })
     name: string
+
+  // RELATIONS
 
   @OneToMany(() => Prom, (proms) => proms.group)
     proms: Prom[]

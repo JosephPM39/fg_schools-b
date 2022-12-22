@@ -31,7 +31,7 @@ export const endpointsCrud = <Model extends {}>(params: options<Model>) => {
   const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const query = queryExtract(req)
-      res.json(await controller.read({ idBy: {}, query }))
+      res.json(await controller.read({ query }))
     } catch (error) {
       next(error)
     }

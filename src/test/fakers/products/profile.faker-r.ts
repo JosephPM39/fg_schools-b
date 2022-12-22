@@ -16,11 +16,11 @@ export class ProfileFaker extends BaseFaker<IProfile, IProfileD> {
     const { model, size, color, border, type } = params
     const base: Partial<IProfile> = {
       name: faker.datatype.string(30),
-      model: model.id,
-      color: color.id,
-      border: border.id,
-      size: size.id,
-      type: type.id,
+      modelId: model.id,
+      colorId: color.id,
+      borderId: border.id,
+      sizeId: size.id,
+      typeId: type.id,
       available: faker.datatype.boolean()
     }
 

@@ -1,42 +1,42 @@
-import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsInt, IsUUID, Max, Min } from 'class-validator'
-import { School } from './school.model'
-import { Group } from './group.model'
-import { EmployeePosition } from './employee-position.model'
-import { Title } from './title.model'
+import { IsInt, IsUUID, Max, Min, ValidateIf, ValidateNested } from 'class-validator'
+import { ISchool, School } from './school.model'
+import { Group, IGroup } from './group.model'
+import { EmployeePosition, IEmployeePosition } from './employee-position.model'
+import { ITitle, Title } from './title.model'
 import { Order } from '../store/order.model'
 import { Photo } from '../photo/photo.model'
 
 @Entity()
 @Exclude()
 export class Prom extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Group, (group) => group.proms, baseRelationOptions)
-    group: Group | string
+  @Column()
+    groupId: IGroup['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Title, (title) => title.proms, baseRelationOptions)
-    title: Title | string
+  @Column()
+    titleId: ITitle['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => EmployeePosition, (ep) => ep.proms, baseRelationOptions)
-    profesor: EmployeePosition | string
+  @Column()
+    profesorId: IEmployeePosition['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => EmployeePosition, (ep) => ep.proms, baseRelationOptions)
-    principal: EmployeePosition | string
+  @Column()
+    principalId: IEmployeePosition['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => School, (school) => school.proms, baseRelationOptions)
-    school: School | string
+  @Column()
+    schoolId: ISchool['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsInt()
@@ -44,6 +44,43 @@ export class Prom extends BaseModel {
   @Min(1900)
   @Column('smallint')
     year: number
+
+  // RELATIONS
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateIf(o => !o.groupId)
+  @ValidateNested()
+  @ManyToOne(() => Group, (group) => group.proms, baseRelationOptions)
+  @JoinColumn({ name: 'groupId' })
+    group: Group
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateIf(o => !o.titleId)
+  @ValidateNested()
+  @ManyToOne(() => Title, (title) => title.proms, baseRelationOptions)
+  @JoinColumn({ name: 'titleId' })
+    title: Title
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateIf(o => !o.profesorId)
+  @ValidateNested()
+  @ManyToOne(() => EmployeePosition, (ep) => ep.proms, baseRelationOptions)
+  @JoinColumn({ name: 'profesorId' })
+    profesor: EmployeePosition
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateIf(o => !o.principalId)
+  @ValidateNested()
+  @ManyToOne(() => EmployeePosition, (ep) => ep.proms, baseRelationOptions)
+  @JoinColumn({ name: 'principalId' })
+    principal: EmployeePosition
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateIf(o => !o.schoolId)
+  @ValidateNested()
+  @ManyToOne(() => School, (school) => school.proms, baseRelationOptions)
+  @JoinColumn({ name: 'schoolId' })
+    school: School
 
   @OneToMany(() => Order, (order) => order.prom)
     orders: Order[]

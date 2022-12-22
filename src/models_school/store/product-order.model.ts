@@ -1,23 +1,23 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsBoolean, IsInt, IsUUID, Max, Min } from 'class-validator'
-import { Product } from '../products'
-import { Order } from './order.model'
+import { IsBoolean, IsInt, IsUUID, Max, Min, ValidateNested } from 'class-validator'
+import { IProduct, Product } from '../products'
+import { IOrder, Order } from './order.model'
 
 @Entity()
 @Exclude()
 export class ProductOrder extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Order, (order) => order.productOrders, baseRelationOptions)
-    order: Order | string
+  @Column()
+    orderId: IOrder['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Product, (product) => product.productOrders, baseRelationOptions)
-    product: Product | string
+  @Column()
+    productId: IProduct['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsInt()
@@ -30,6 +30,20 @@ export class ProductOrder extends BaseModel {
   @IsBoolean()
   @Column('boolean')
     inOffer: boolean
+
+  // RELATIONS
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Order, (order) => order.productOrders, baseRelationOptions)
+  @JoinColumn({ name: 'orderId' })
+    order: Order
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Product, (product) => product.productOrders, baseRelationOptions)
+  @JoinColumn({ name: 'productId' })
+    product: Product
 }
 
 export interface IProductOrder extends ProductOrder {}

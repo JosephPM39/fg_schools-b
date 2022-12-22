@@ -34,6 +34,8 @@ export class Model extends BaseModel {
   @Column('boolean')
     available: boolean
 
+  // RELATIONS
+
   @OneToMany(() => Profile, (profile) => profile.model)
     profiles: Profile[]
 

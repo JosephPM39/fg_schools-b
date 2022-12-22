@@ -38,24 +38,25 @@ export class BaseController<Model extends {}> implements IController<Model> {
     const { query, idBy } = params
 
     if (!this.repo) await this.init()
-    if (!idBy && !query) return await this.repo.find()
-
     const queryValid = await validateQuery(query)
 
-    // console.log(queryValid, 'queryValid', query, 'query')
-
-    const orderBy: object = { createdAt: queryValid.order }
+    const orderBy: object | undefined = queryValid ? { createdAt: queryValid.order } : undefined
     const findOptions: FindManyOptions<Model> = {
       order: orderBy,
-      take: queryValid.limit ?? 10,
-      skip: queryValid.offset ?? 0
+      take: queryValid?.limit ?? 10,
+      skip: queryValid?.offset ?? 0
     }
 
-    const idByValid = await validateIdBy<Model>({
-      idBy,
-      model: this.model,
-      version: EV.GET
-    })
+    const validIdby = async ({ idBy }: Pick<ReadParams, 'idBy'>) => {
+      if (!idBy) return {}
+      return await validateIdBy<Model>({
+        idBy,
+        model: this.model,
+        version: EV.GET
+      })
+    }
+
+    const idByValid = await validIdby({ idBy })
 
     const findOptionsWhere: FindOptionsWhere<Model> = {
       ...idByValid
@@ -64,7 +65,6 @@ export class BaseController<Model extends {}> implements IController<Model> {
     findOptions.where = findOptionsWhere
 
     const res = await this.repo.find(findOptions)
-
     if (res.length < 1) return null
     return res
   }

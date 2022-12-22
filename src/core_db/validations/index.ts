@@ -53,7 +53,8 @@ export const validateDto = async <Model extends {}>(params: ValidateDtoOptions<M
   return instance
 }
 
-export const validateQuery = async (query: object | IQuery): Promise<Partial<Query>> => {
+export const validateQuery = async (query?: object | IQuery): Promise<Partial<Query> | undefined> => {
+  if (!query) return undefined
   return await validateDto<Query>({
     dto: query,
     model: Query,

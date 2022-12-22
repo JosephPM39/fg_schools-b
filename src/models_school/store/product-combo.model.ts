@@ -1,23 +1,23 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsBoolean, IsInt, IsUUID, Max, Min } from 'class-validator'
-import { Combo } from './combo.model'
-import { Product } from '../products'
+import { IsBoolean, IsInt, IsUUID, Max, Min, ValidateNested } from 'class-validator'
+import { Combo, ICombo } from './combo.model'
+import { IProduct, Product } from '../products'
 
 @Entity()
 @Exclude()
 export class ProductCombo extends BaseModel {
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Combo, (combo) => combo.productCombos, baseRelationOptions)
-    combo: Combo | string
+  @Column()
+    comboId: ICombo['id']
 
-  @Expose({ since: EV.UPDATE, until: EV.GET })
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
-  @ManyToOne(() => Product, (product) => product.productCombos, baseRelationOptions)
-    product: Product | string
+  @Column()
+    productId: IProduct['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsInt()
@@ -30,6 +30,20 @@ export class ProductCombo extends BaseModel {
   @IsBoolean()
   @Column('boolean')
     inOffer: boolean
+
+  // RELATIONS
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Combo, (combo) => combo.productCombos, baseRelationOptions)
+  @JoinColumn({ name: 'comboId' })
+    combo: Combo
+
+  @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
+  @ValidateNested()
+  @ManyToOne(() => Product, (product) => product.productCombos, baseRelationOptions)
+  @JoinColumn({ name: 'productId' })
+    product: Product
 }
 
 export interface IProductCombo extends ProductCombo {}

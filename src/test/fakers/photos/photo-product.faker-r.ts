@@ -12,8 +12,8 @@ export class PhotoProductFaker extends BaseFaker<IPhotoProduct, IPhotoProductD> 
   makeOneFake = <C extends WithId = undefined>(params: IPhotoProductD, withId?: C): Fake<IPhotoProduct, C> => {
     const { photo, product } = params
     const base: Partial<IPhotoProduct> = {
-      photo: photo.id,
-      product: product.id,
+      photoId: photo.id,
+      productId: product.id,
       code: faker.helpers.unique(faker.datatype.string, [20])
     }
 
