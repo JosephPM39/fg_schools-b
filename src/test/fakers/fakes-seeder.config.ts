@@ -14,16 +14,19 @@ export const configSchool = (fakers: Fakers) => {
   fakers[ENTITIES.Employee].makeFakesPack({})
   fakers[ENTITIES.School].makeFakesPack({})
   fakers[ENTITIES.Title].makeFakesPack({})
-  fakers[ENTITIES.EmployeePosition].makeFakesPack({
-    employee: fakers[ENTITIES.Employee].getFakes().manyWithId[0],
-    position: fakers[ENTITIES.Position].getFakes().manyWithId[0]
-  })
+
+  for (let i = 0; i < 2; i++) {
+    fakers[ENTITIES.EmployeePosition].makeFakesPackWithManyD({
+      employee: fakers[ENTITIES.Employee].getFakes().manyWithId,
+      position: fakers[ENTITIES.Position].getFakes().manyWithId
+    })
+  }
 
   fakers[ENTITIES.Prom].makeFakesPackWithManyD({
     group: fakers[ENTITIES.Group].getFakes().manyWithId,
     title: fakers[ENTITIES.Title].getFakes().manyWithId,
-    profesor: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId,
-    principal: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId,
+    profesor: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId.filter((_, i) => i < 100),
+    principal: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId.filter((_, i) => i > 99),
     school: fakers[ENTITIES.School].getFakes().manyWithId,
     year: fakers[ENTITIES.School].getFakes().manyWithId.map(() => ({ n: 2022 }))
   })
