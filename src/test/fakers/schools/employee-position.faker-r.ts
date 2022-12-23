@@ -2,7 +2,7 @@ import { IEmployee, IEmployeePosition, IPosition } from '../../../models_school'
 import type { WithRequired } from '../types'
 import { BaseFaker, Fake, WithId } from '../model.faker'
 
-export interface IEmployeePositionFakerD {
+export type IEmployeePositionFakerD = {
   employee: WithRequired<IEmployee, 'id'>
   position: WithRequired<IPosition, 'id'>
 }

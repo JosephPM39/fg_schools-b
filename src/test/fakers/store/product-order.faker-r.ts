@@ -3,7 +3,7 @@ import { BaseFaker, Fake, WithId } from '../model.faker'
 import { IOrder, IProductOrder, IProduct } from '../../../models_school'
 import { faker } from '@faker-js/faker'
 
-export interface IProductOrderD {
+export type IProductOrderD = {
   order: WithRequired<IOrder, 'id'>
   product: WithRequired<IProduct, 'id'>
 }

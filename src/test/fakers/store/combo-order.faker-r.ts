@@ -1,8 +1,8 @@
 import type { WithRequired } from '../types'
-import { BaseFaker, Fake, WithId, arrayContainsId, ManyFakesParams, FakesArray } from '../model.faker'
+import { BaseFaker, Fake, WithId, ManyFakesParams } from '../model.faker'
 import { ICombo, IComboOrder, IOrder } from '../../../models_school'
 
-export interface IComboOrderD {
+export type IComboOrderD = {
   combo: WithRequired<ICombo, 'id'>
   oneOrder: WithRequired<IOrder, 'id'>
   manyOrders: Array<WithRequired<IOrder, 'id'>>
@@ -23,7 +23,7 @@ export class ComboOrderFaker extends BaseFaker<IComboOrder, IComboOrderD> {
     const { quantity = this.defaultQuantity, ...r } = params
     const remaining = r as IComboOrderD
 
-    const fakes: FakesArray<IComboOrder, C> = []
+    const fakes: Array<Fake<IComboOrder, C>> = []
 
     for (let i = 0; i < quantity; i++) {
       fakes.push(this.makeOneFake({
@@ -33,12 +33,6 @@ export class ComboOrderFaker extends BaseFaker<IComboOrder, IComboOrderD> {
       }, withId))
     }
 
-    if (arrayContainsId(fakes)) {
-      this.fakes.manyWithId = fakes
-    }
-
-    if (!arrayContainsId(fakes)) {
-      this.fakes.manyWithoutId = fakes
-    }
+    return this.makeManyHelper(fakes)
   }
 }

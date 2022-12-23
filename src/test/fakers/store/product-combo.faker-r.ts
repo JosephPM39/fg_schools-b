@@ -3,7 +3,7 @@ import { BaseFaker, Fake, WithId } from '../model.faker'
 import { ICombo, IProductCombo, IProduct } from '../../../models_school'
 import { faker } from '@faker-js/faker'
 
-export interface IProductComboD {
+export type IProductComboD = {
   combo: WithRequired<ICombo, 'id'>
   product: WithRequired<IProduct, 'id'>
 }

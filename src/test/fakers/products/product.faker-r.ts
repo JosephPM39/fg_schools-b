@@ -3,7 +3,7 @@ import { IBorder, IColor, IModel, IProduct, ISize, IType } from '../../../models
 import type { WithRequired } from '../types'
 import { BaseFaker, Fake, WithId } from '../model.faker'
 
-export interface IProductD {
+export type IProductD = {
   model: WithRequired<IModel, 'id'>
   size: WithRequired<ISize, 'id'>
   color: WithRequired<IColor, 'id'>

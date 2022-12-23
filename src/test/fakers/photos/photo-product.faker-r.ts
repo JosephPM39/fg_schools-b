@@ -3,7 +3,7 @@ import { IPhoto, IPhotoProduct, IProduct } from '../../../models_school'
 import type { WithRequired } from '../types'
 import { BaseFaker, Fake, WithId } from '../model.faker'
 
-export interface IPhotoProductD {
+export type IPhotoProductD = {
   photo: WithRequired<IPhoto, 'id'>
   product: WithRequired<IProduct, 'id'>
 }

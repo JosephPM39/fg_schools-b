@@ -4,6 +4,7 @@ import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, PromFa
 import { ComboFaker, StudentFaker, ComboOrderFaker, OrderFaker, PaymentFaker, ProductOrderFaker, ProductComboFaker } from '../store'
 
 export type WithRequired<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]-?: T[P] }
+export type ArrayProperties<T> = { [P in keyof T]: Array<T[P]> }
 
 export type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends ReadonlyArray<(infer ElementType)> ? ElementType : never

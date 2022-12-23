@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { IPhoto, IQr } from '../../../models_school'
 import type { WithRequired } from '../types'
-import { arrayContainsId, BaseFaker, Fake, FakesArray, ManyFakesParams, WithId } from '../model.faker'
+import { BaseFaker, Fake, ManyFakesParams, WithId } from '../model.faker'
 
-export interface IQrD {
+export type IQrD = {
   onePhoto: WithRequired<IPhoto, 'id'>
   manyPhotos: Array<WithRequired<IPhoto, 'id'>>
 }
@@ -25,7 +25,7 @@ export class QrFaker extends BaseFaker<IQr, IQrD> {
     const { quantity = this.defaultQuantity, ...r } = params
     const remaining = r as IQrD
 
-    const fakes: FakesArray<IQr, C> = []
+    const fakes: Array<Fake<IQr, C>> = []
 
     for (let i = 0; i < quantity; i++) {
       fakes.push(this.makeOneFake({
@@ -34,12 +34,6 @@ export class QrFaker extends BaseFaker<IQr, IQrD> {
       }, withId))
     }
 
-    if (arrayContainsId(fakes)) {
-      this.fakes.manyWithId = fakes
-    }
-
-    if (!arrayContainsId(fakes)) {
-      this.fakes.manyWithoutId = fakes
-    }
+    this.makeManyHelper(fakes)
   }
 }

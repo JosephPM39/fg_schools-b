@@ -4,12 +4,13 @@ import { IEmployeePosition, IGroup, ISchool, ITitle, IProm } from '../../../mode
 import { BaseFaker, Fake, WithId } from '../model.faker'
 import { WithRequired } from '../types'
 
-export interface IPromFakerD {
+export type IPromFakerD = {
   group: WithRequired<Partial<IGroup>, 'id'>
   title: WithRequired<Partial<ITitle>, 'id'>
   profesor: WithRequired<Partial<IEmployeePosition>, 'id'>
   principal: WithRequired<Partial<IEmployeePosition>, 'id'>
   school: WithRequired<Partial<ISchool>, 'id'>
+  year?: { n: number }
 }
 
 export class PromFaker extends BaseFaker<IProm, IPromFakerD> {
@@ -20,7 +21,7 @@ export class PromFaker extends BaseFaker<IProm, IPromFakerD> {
       profesorId: params.profesor.id,
       principalId: params.principal.id,
       schoolId: params.school.id,
-      year: faker.datatype.number({ min: 1900, max: 9999 })
+      year: params.year?.n ?? faker.datatype.number({ min: 1900, max: 9999 })
     }
 
     if (withId === 'withId') {

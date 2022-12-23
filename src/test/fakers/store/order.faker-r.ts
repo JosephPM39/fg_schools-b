@@ -3,7 +3,7 @@ import type { WithRequired } from '../types'
 import { BaseFaker, Fake, WithId } from '../model.faker'
 import { IOrder, IProm, IStudent } from '../../../models_school'
 
-export interface IOrderD {
+export type IOrderD = {
   student: WithRequired<IStudent, 'id'>
   prom: WithRequired<IProm, 'id'>
 }
