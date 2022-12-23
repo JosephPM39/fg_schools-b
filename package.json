@@ -9,7 +9,7 @@
     "typeorm": "typeorm-ts-node-commonjs",
     "test:unit": "jest --testRegex='.*\\.test\\.ts' --detectOpenHandles",
     "test:e2e": "jest --testRegex='.*\\.e2e\\.ts' --detectOpenHandles",
-    "test:seeder": "cross-env SEEDER='true' jest --testRegex='.*\\.e2e\\.ts' --detectOpenHandles"
+    "test:seeder": "cross-env MODE='SEEDER' jest --testRegex='.*\\.e2e\\.ts' --detectOpenHandles"
   },
   "keywords": [],
   "author": "",

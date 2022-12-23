@@ -12,6 +12,7 @@ import { testProductComponent } from './products'
 import { testStoreComponent } from './store'
 import { GetApiFakers } from '../fakers'
 import { testPhotoComponent } from './photos'
+import { ENV_TEST_CONFIG, MODES } from '../config'
 
 describe('Full e2e App Testing', () => {
   const mutableParams: TestMutableParams = {
@@ -22,7 +23,7 @@ describe('Full e2e App Testing', () => {
 
   beforeAll(async () => {
     mutableParams.connection = new Connection(await AppDataSource(EntitiesORM).initialize())
-    if (process.env.SEEDER === 'true') {
+    if (ENV_TEST_CONFIG.mode === MODES.seeder) {
       console.log('SEEDER MODE')
       await mutableParams.connection.dropDB('confirm')
     }
@@ -45,7 +46,7 @@ describe('Full e2e App Testing', () => {
   })
 
   afterAll(async () => {
-    if (process.env.SEEDER !== 'true') {
+    if (ENV_TEST_CONFIG.mode === MODES.test) {
       await mutableParams.connection?.dropDB('confirm')
     }
     await mutableParams.connection?.quit()
