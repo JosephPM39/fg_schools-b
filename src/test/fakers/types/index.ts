@@ -1,6 +1,6 @@
-import { PhotoFaker, PhotoProductFaker, QrFaker } from '../photos'
+import { AlbumFaker, GalleryAlbumFaker, GalleryFaker, PhotoProductFaker, QrFaker } from '../photos'
 import { BorderFaker, ColorFaker, ModelFaker, ProductFaker, ProfileFaker, SizeFaker, TypeFaker } from '../products'
-import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, PromFaker, SchoolFaker, TitleFaker } from '../schools'
+import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, SchoolFaker, SchoolPromFaker, SectionPromFaker, TitleFaker } from '../schools'
 import { ComboFaker, StudentFaker, ComboOrderFaker, OrderFaker, PaymentFaker, ProductOrderFaker, ProductComboFaker } from '../store'
 
 export type WithRequired<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]-?: T[P] }
@@ -17,7 +17,8 @@ export enum ENTITIES {
   Group = '/schools/group',
   School = '/schools/school',
   EmployeePosition = '/schools/employee-position',
-  Prom = '/schools/prom',
+  SchoolProm = '/schools/school-prom',
+  SectionProm = '/schools/section-prom',
   // PRODUCTS_ENTITIES
   Border = '/products/border',
   Color = '/products/color',
@@ -35,7 +36,9 @@ export enum ENTITIES {
   ProductOrder = '/store/product-order',
   ProductCombo = '/store/product-combo',
   // PHOTOS_ENTITIES
-  Photo = '/photos/photo',
+  Gallery = '/photos/gallery',
+  GalleryAlbum = '/photos/gallery-album',
+  Album = '/photos/album',
   Qr = '/photos/qr',
   PhotoProduct = '/photos/photo-product'
 }
@@ -48,7 +51,8 @@ export interface Fakers {
   [ENTITIES.Group]: GroupFaker
   [ENTITIES.School]: SchoolFaker
   [ENTITIES.EmployeePosition]: EmployeePositionFaker
-  [ENTITIES.Prom]: PromFaker
+  [ENTITIES.SchoolProm]: SchoolPromFaker
+  [ENTITIES.SectionProm]: SectionPromFaker
   // PRODUCTS_ENTITIES
   [ENTITIES.Border]: BorderFaker
   [ENTITIES.Color]: ColorFaker
@@ -66,7 +70,9 @@ export interface Fakers {
   [ENTITIES.ProductOrder]: ProductOrderFaker
   [ENTITIES.ProductCombo]: ProductComboFaker
   // PHOTOS_ENTITIES
-  [ENTITIES.Photo]: PhotoFaker
+  [ENTITIES.Gallery]: GalleryFaker
+  [ENTITIES.GalleryAlbum]: GalleryAlbumFaker
+  [ENTITIES.Album]: AlbumFaker
   [ENTITIES.Qr]: QrFaker
   [ENTITIES.PhotoProduct]: PhotoProductFaker
 }

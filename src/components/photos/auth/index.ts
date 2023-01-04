@@ -1,17 +1,21 @@
 import { ROLES, getRolesNames } from '../../base'
 
-const photo = {
+const gallery = {
   create: getRolesNames([ROLES.root]),
   read: getRolesNames([ROLES.root]),
   update: getRolesNames([ROLES.root]),
   delete: getRolesNames([ROLES.root])
 }
 
-const photoProduct = { ...photo }
-const qr = { ...photo }
+const photoProduct = { ...gallery }
+const qr = { ...gallery }
+const album = { ...gallery }
+const galleryAlbum = { ...gallery }
 
 export const entitiesRoles = {
-  photo,
+  gallery,
+  album,
+  galleryAlbum,
   qr,
   photoProduct
 }

@@ -1,18 +1,18 @@
 import { faker } from '@faker-js/faker'
-import { IPhoto, IPhotoProduct, IProduct } from '../../../models_school'
+import { IAlbum, IPhotoProduct, IProduct } from '../../../models_school'
 import type { WithRequired } from '../types'
 import { BaseFaker, Fake, WithId } from '../model.faker'
 
 export type IPhotoProductD = {
-  photo: WithRequired<IPhoto, 'id'>
+  album: WithRequired<IAlbum, 'id'>
   product: WithRequired<IProduct, 'id'>
 }
 
 export class PhotoProductFaker extends BaseFaker<IPhotoProduct, IPhotoProductD> {
   makeOneFake = <C extends WithId = undefined>(params: IPhotoProductD, withId?: C): Fake<IPhotoProduct, C> => {
-    const { photo, product } = params
+    const { album, product } = params
     const base: Partial<IPhotoProduct> = {
-      photoId: photo.id,
+      albumId: album.id,
       productId: product.id,
       code: faker.helpers.unique(faker.datatype.string, [20])
     }

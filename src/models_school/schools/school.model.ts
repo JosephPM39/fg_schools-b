@@ -3,7 +3,7 @@ import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsString, Length } from 'class-validator'
-import { Prom } from './prom.model'
+import { SchoolProm } from './school-prom.model'
 
 @Entity()
 @Exclude()
@@ -34,8 +34,8 @@ export class School extends BaseModel {
 
   // RELATIONS
 
-  @OneToMany(() => Prom, (proms) => proms.group)
-    proms: Prom[]
+  @OneToMany(() => SchoolProm, (schoolProm) => schoolProm.school)
+    schoolsProms: SchoolProm[]
 }
 
 export interface ISchool extends School {}

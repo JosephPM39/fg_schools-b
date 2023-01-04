@@ -70,12 +70,12 @@ export abstract class BaseFaker<Entity extends IBaseModel, D extends { [key: str
     this.makeOneFake(params, 'withId')
   }
 
-  makeFakesPackWithManyD = (params: ArrayProperties<D>) => {
-    const one = pairProps(params)[0]
+  makeFakesPackWithManyD = (params: ArrayProperties<D>, one?: D) => {
+    const finalOne = one ?? pairProps(params)[0]
     this.makeManyFakeWithManyD(params)
     this.makeManyFakeWithManyD(params, 'withId')
-    this.makeOneFake(one)
-    this.makeOneFake(one, 'withId')
+    this.makeOneFake(finalOne)
+    this.makeOneFake(finalOne, 'withId')
   }
 
   clearFakes = () => {

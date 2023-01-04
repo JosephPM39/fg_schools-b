@@ -3,8 +3,8 @@ import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsString, IsUUID, Length, ValidateNested } from 'class-validator'
-import { IPhoto, Photo } from './photo.model'
 import { IProduct, Product } from '../products'
+import { Album, IAlbum } from './album.model'
 
 @Entity()
 @Exclude()
@@ -18,7 +18,7 @@ export class PhotoProduct extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
   @Column()
-    photoId: IPhoto['id']
+    albumId: IAlbum['id']
 
   @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
@@ -29,9 +29,9 @@ export class PhotoProduct extends BaseModel {
 
   @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
   @ValidateNested()
-  @ManyToOne(() => Photo, (photo) => photo.photoProduct, baseRelationOptions)
-  @JoinColumn({ name: 'photoId' })
-    photo: Photo
+  @ManyToOne(() => Album, (album) => album.photoProduct, baseRelationOptions)
+  @JoinColumn({ name: 'albumId' })
+    album: Album
 
   @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
   @ValidateNested()

@@ -1,8 +1,8 @@
-import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, PromFaker, SchoolFaker, TitleFaker } from '../fakers/schools'
+import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, SchoolFaker, SchoolPromFaker, SectionPromFaker, TitleFaker } from '../fakers/schools'
 import { BorderFaker, ColorFaker, ModelFaker, ProductFaker, ProfileFaker, SizeFaker, TypeFaker } from '../fakers/products'
 import { ComboFaker, StudentFaker, OrderFaker, PaymentFaker, ComboOrderFaker, ProductOrderFaker, ProductComboFaker } from '../fakers/store'
 import { ENTITIES, Fakers } from './types'
-import { PhotoFaker, PhotoProductFaker, QrFaker } from './photos'
+import { AlbumFaker, GalleryAlbumFaker, GalleryFaker, PhotoProductFaker, QrFaker } from './photos'
 import { ENV_TEST_CONFIG, MODES } from '../config'
 import { configForTest } from './fakes-test.config'
 import { configForSeeder } from './fakes-seeder.config'
@@ -16,7 +16,8 @@ export const GetApiFakers = () => {
     [ENTITIES.Group]: new GroupFaker(),
     [ENTITIES.School]: new SchoolFaker(),
     [ENTITIES.EmployeePosition]: new EmployeePositionFaker(),
-    [ENTITIES.Prom]: new PromFaker(),
+    [ENTITIES.SectionProm]: new SectionPromFaker(),
+    [ENTITIES.SchoolProm]: new SchoolPromFaker(),
     // PRODUCTS_ENTITIES
     [ENTITIES.Border]: new BorderFaker(),
     [ENTITIES.Color]: new ColorFaker(),
@@ -34,7 +35,9 @@ export const GetApiFakers = () => {
     [ENTITIES.ProductOrder]: new ProductOrderFaker(),
     [ENTITIES.ProductCombo]: new ProductComboFaker(),
     // PHOTOS_ENTITIES
-    [ENTITIES.Photo]: new PhotoFaker(),
+    [ENTITIES.GalleryAlbum]: new GalleryAlbumFaker(),
+    [ENTITIES.Gallery]: new GalleryFaker(),
+    [ENTITIES.Album]: new AlbumFaker(),
     [ENTITIES.Qr]: new QrFaker(),
     [ENTITIES.PhotoProduct]: new PhotoProductFaker()
   }

@@ -12,7 +12,8 @@ const employee = { ...school }
 const title = { ...school }
 const employeePosition = { ...school }
 const position = { ...school }
-const prom = { ...school }
+const schoolProm = { ...school }
+const sectionProm = { ...school }
 
 export const entitiesRoles = {
   school,
@@ -21,5 +22,6 @@ export const entitiesRoles = {
   title,
   employeePosition,
   position,
-  prom
+  schoolProm,
+  sectionProm
 }

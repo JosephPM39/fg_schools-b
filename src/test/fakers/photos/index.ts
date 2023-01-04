@@ -1,3 +1,5 @@
-export { PhotoFaker, IPhotoD } from './photo.faker-r'
 export { PhotoProductFaker, IPhotoProductD } from './photo-product.faker-r'
 export { QrFaker, IQrD } from './qr.faker-r'
+export { AlbumFaker } from './album.faker-r'
+export { GalleryFaker, IGalleryD } from './gallery.faker-r'
+export { GalleryAlbumFaker, IGalleryAlbumD } from './gallery-album.faker-r'

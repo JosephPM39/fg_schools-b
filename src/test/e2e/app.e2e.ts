@@ -25,8 +25,8 @@ describe('Full e2e App Testing', () => {
     mutableParams.connection = new Connection(await AppDataSource(EntitiesORM).initialize())
     if (ENV_TEST_CONFIG.mode === MODES.seeder) {
       console.log('SEEDER MODE')
-      await mutableParams.connection.dropDB('confirm')
     }
+    await mutableParams.connection.dropDB('confirm')
     await mutableParams.connection.syncDB('confirm')
 
     const { allowedOrigins } = config

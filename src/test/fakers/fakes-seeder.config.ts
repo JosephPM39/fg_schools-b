@@ -22,13 +22,10 @@ export const configSchool = (fakers: Fakers) => {
     })
   }
 
-  fakers[ENTITIES.Prom].makeFakesPackWithManyD({
-    group: fakers[ENTITIES.Group].getFakes().manyWithId,
-    title: fakers[ENTITIES.Title].getFakes().manyWithId,
-    profesor: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId.filter((_, i) => i < 100),
+  fakers[ENTITIES.SchoolProm].makeFakesPackWithManyD({
     principal: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId.filter((_, i) => i > 99),
     school: fakers[ENTITIES.School].getFakes().manyWithId,
-    year: fakers[ENTITIES.School].getFakes().manyWithId.map(() => ({ n: 2022 }))
+    year: fakers[ENTITIES.School].getFakes().manyWithId.map(() => ({ n: 2023 }))
   })
 }
 
@@ -59,13 +56,14 @@ export const configStore = (fakers: Fakers) => {
   // STORE_ENTITIES
   fakers[ENTITIES.Combo].makeFakesPack({})
   fakers[ENTITIES.Student].makeFakesPack({})
-
+  /*
   for (let i = 0; i < 2; i++) {
     fakers[ENTITIES.Order].makeFakesPackWithManyD({
       student: fakers[ENTITIES.Student].getFakes().manyWithId,
       prom: fakers[ENTITIES.Prom].getFakes().manyWithId
     })
   }
+  */
 
   fakers[ENTITIES.Payment].makeFakesPack({
     order: fakers[ENTITIES.Order].getFakes().manyWithId[0]
@@ -87,6 +85,7 @@ export const configStore = (fakers: Fakers) => {
 
 export const configPhoto = (fakers: Fakers) => {
   // PHOTOS_ENTITIES
+  /*
   fakers[ENTITIES.Photo].makeFakesPack({
     oneOrder: fakers[ENTITIES.Order].getFakes().manyWithId[0],
     manyOrders: fakers[ENTITIES.Order].getFakes().manyWithId.filter((_, i) => i > 0),
@@ -105,4 +104,5 @@ export const configPhoto = (fakers: Fakers) => {
     product: fakers[ENTITIES.Product].getFakes().manyWithId[0],
     quantity: 97
   })
+  */
 }

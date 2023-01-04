@@ -1,11 +1,11 @@
 import { basicCrudTests } from '../base/'
 import { ENTITIES, TestMutableParams } from '../types'
 
-export const testPhoto = (params: TestMutableParams) => {
-  describe('[ENTITY]: Photo', () => {
+export const testGalleryAlbum = (params: TestMutableParams) => {
+  describe('[ENTITY]: Gallery Album', () => {
     describe('- BASIC CRUD', () => {
       basicCrudTests({
-        entity: ENTITIES.Photo,
+        entity: ENTITIES.GalleryAlbum,
         mutable: params,
         excludeEndpoints: {
           get: { byObject: true },

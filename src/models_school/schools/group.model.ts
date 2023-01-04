@@ -3,7 +3,7 @@ import { Exclude, Expose } from 'class-transformer'
 import { BaseModel } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsString, Length } from 'class-validator'
-import { Prom } from './prom.model'
+import { ISectionProm, SectionProm } from './section-prom.model'
 
 @Entity()
 @Exclude()
@@ -18,8 +18,8 @@ export class Group extends BaseModel {
 
   // RELATIONS
 
-  @OneToMany(() => Prom, (proms) => proms.group)
-    proms: Prom[]
+  @OneToMany(() => SectionProm, (sectionProm) => sectionProm.group)
+    sectionsProms: ISectionProm[]
 }
 
 export interface IGroup extends Group {}

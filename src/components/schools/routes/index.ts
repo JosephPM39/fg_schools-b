@@ -2,7 +2,7 @@ import { endpointsCrud } from '../../../core_api'
 import { Router } from 'express'
 import { entitiesRoles } from '../auth'
 import { BaseController, Connection as DB } from '../../../core_db'
-import { Employee, EmployeePosition, Position, Prom, Title, School, Group } from '../../../models_school'
+import { Employee, EmployeePosition, Position, Title, School, Group, SchoolProm, SectionProm } from '../../../models_school'
 
 export const SchoolsRoutes = (connection: DB) => {
   const router = Router()
@@ -43,10 +43,16 @@ export const SchoolsRoutes = (connection: DB) => {
     rolesForEndpoints: entitiesRoles.title
   })
 
-  const PromRoutes = endpointsCrud({
+  const SchoolPromRoutes = endpointsCrud({
     router: Router(),
-    controller: new BaseController(connection, Prom),
-    rolesForEndpoints: entitiesRoles.prom
+    controller: new BaseController(connection, SchoolProm),
+    rolesForEndpoints: entitiesRoles.schoolProm
+  })
+
+  const SectionPromRoutes = endpointsCrud({
+    router: Router(),
+    controller: new BaseController(connection, SectionProm),
+    rolesForEndpoints: entitiesRoles.sectionProm
   })
 
   router.use('/school', SchoolRoutes)
@@ -55,7 +61,8 @@ export const SchoolsRoutes = (connection: DB) => {
   router.use('/employee-position', EmployeePositionRoutes)
   router.use('/position', PositionRoutes)
   router.use('/title', TitleRoutes)
-  router.use('/prom', PromRoutes)
+  router.use('/school-prom', SchoolPromRoutes)
+  router.use('/section-prom', SectionPromRoutes)
 
   return router
 }

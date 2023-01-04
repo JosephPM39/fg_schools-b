@@ -7,8 +7,8 @@ import { ComboOrder } from './combo-order.model'
 import { ProductOrder } from './product-order.model'
 import { Payment } from './payment.model'
 import { IStudent, Student } from './student.model'
-import { IProm, Prom } from '../schools'
-import { Photo } from '../photo/photo.model'
+import { SectionProm, ISectionProm } from '../schools/section-prom.model'
+import { Gallery } from '../photo'
 
 @Entity()
 @Exclude()
@@ -21,7 +21,7 @@ export class Order extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
   @IsUUID()
   @Column()
-    promId: IProm['id']
+    sectionPromId: ISectionProm['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsNumber()
@@ -54,9 +54,9 @@ export class Order extends BaseModel {
 
   @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
   @ValidateNested()
-  @ManyToOne(() => Prom, (prom) => prom.orders, baseRelationOptions)
-  @JoinColumn({ name: 'promId' })
-    prom: Prom
+  @ManyToOne(() => SectionProm, (sectionProm) => sectionProm.orders, baseRelationOptions)
+  @JoinColumn({ name: 'sectionPromId' })
+    sectionProm: SectionProm
 
   @OneToOne(() => ComboOrder, (comboOrder) => comboOrder.order)
     comboOrder: ComboOrder
@@ -67,8 +67,8 @@ export class Order extends BaseModel {
   @OneToMany(() => Payment, (payment) => payment.order)
     payments: Payment[]
 
-  @OneToOne(() => Photo, (photo) => photo.order)
-    photo: Photo
+  @OneToOne(() => Gallery, (gallery) => gallery.order)
+    gallery: Gallery
 }
 
 export interface IOrder extends Order {}

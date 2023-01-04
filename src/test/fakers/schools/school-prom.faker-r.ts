@@ -1,24 +1,18 @@
 import { faker } from '@faker-js/faker'
 import { v4 as uuidv4 } from 'uuid'
-import { IEmployeePosition, IGroup, ISchool, ITitle, IProm } from '../../../models_school'
+import { IEmployeePosition, ISchool, ISchoolProm } from '../../../models_school'
 import { BaseFaker, Fake, WithId } from '../model.faker'
 import { WithRequired } from '../types'
 
-export type IPromFakerD = {
-  group: WithRequired<Partial<IGroup>, 'id'>
-  title: WithRequired<Partial<ITitle>, 'id'>
-  profesor: WithRequired<Partial<IEmployeePosition>, 'id'>
+export type ISchoolPromFakerD = {
   principal: WithRequired<Partial<IEmployeePosition>, 'id'>
   school: WithRequired<Partial<ISchool>, 'id'>
   year?: { n: number }
 }
 
-export class PromFaker extends BaseFaker<IProm, IPromFakerD> {
-  makeOneFake = <C extends WithId = undefined>(params: IPromFakerD, withId?: C): Fake<IProm, C> => {
-    const base: Partial<IProm> = {
-      groupId: params.group.id,
-      titleId: params.title.id,
-      profesorId: params.profesor.id,
+export class SchoolPromFaker extends BaseFaker<ISchoolProm, ISchoolPromFakerD> {
+  makeOneFake = <C extends WithId = undefined>(params: ISchoolPromFakerD, withId?: C): Fake<ISchoolProm, C> => {
+    const base: Partial<ISchoolProm> = {
       principalId: params.principal.id,
       schoolId: params.school.id,
       year: params.year?.n ?? faker.datatype.number({ min: 1900, max: 9999 })

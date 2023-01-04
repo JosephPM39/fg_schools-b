@@ -4,8 +4,9 @@ import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { Employee, IEmployee } from './employee.model'
 import { IPosition, Position } from './position.model'
-import { Prom } from './prom.model'
 import { IsUUID, ValidateNested } from 'class-validator'
+import { SectionProm } from './section-prom.model'
+import { SchoolProm } from './school-prom.model'
 
 @Entity()
 @Exclude()
@@ -34,8 +35,11 @@ export class EmployeePosition extends BaseModel {
   @JoinColumn({ name: 'positionId' })
     position: Position
 
-  @OneToMany(() => Prom, (proms) => proms.group)
-    proms: Prom[]
+  @OneToMany(() => SectionProm, (sectionProm) => sectionProm.profesor)
+    sectionsProms: SectionProm[]
+
+  @OneToMany(() => SchoolProm, (schoolProm) => schoolProm.principal)
+    schoolsProms: SchoolProm[]
 }
 
 export interface IEmployeePosition extends EmployeePosition {}

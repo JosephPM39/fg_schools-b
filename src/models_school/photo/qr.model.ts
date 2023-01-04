@@ -3,7 +3,7 @@ import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsBoolean, IsOptional, IsString, IsUUID, Length, ValidateNested } from 'class-validator'
-import { IPhoto, Photo } from './photo.model'
+import { Gallery, IGallery } from './gallery.model'
 
 @Entity()
 @Exclude()
@@ -24,7 +24,7 @@ export class Qr extends BaseModel {
   @IsOptional()
   @IsUUID()
   @Column()
-    photoId: IPhoto['id']
+    galleryId: IGallery['id']
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsBoolean()
@@ -36,9 +36,9 @@ export class Qr extends BaseModel {
   @Expose({ since: EV.CREATE_NESTED, until: EV.DELETE })
   @IsOptional()
   @ValidateNested()
-  @OneToOne(() => Photo, (photo) => photo.qr, { ...baseRelationOptions, nullable: true })
-  @JoinColumn({ name: 'photoId' })
-    photo: Photo
+  @OneToOne(() => Gallery, (gallery) => gallery.qr, { ...baseRelationOptions, nullable: true })
+  @JoinColumn({ name: 'galleryId' })
+    gallery: Gallery
 }
 
 export interface IQr extends Qr {}
