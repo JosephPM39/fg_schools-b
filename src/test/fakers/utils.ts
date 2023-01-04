@@ -17,9 +17,9 @@ export const pairProps = <D extends { [key: string]: object } >(obj: ArrayProper
   const lengths = keys.map((k) => obj[k].length)
   const validLengths = lengths.every((l) => l === lengths[0])
   if (!validLengths) {
-    const error = new Error('Error: Every properties must be with the same length')
-    error.message = `${error.message}, Props: ${keys.reduce((p, c) => `${p} ${c}`, '')}`
-    throw error
+    const principalMsg = 'Error: Every properties must be with the same length'
+    const message = `${principalMsg}, Props: ${keys.reduce((p, c) => `${p} | ${c}:${obj[c].length}`, '')}`
+    throw Error(message)
   }
 
   const getPair = (i: number) => {

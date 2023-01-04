@@ -7,7 +7,7 @@ import { findWithLength } from '../utils'
 const fake = (): Partial<ITitle> => {
   if (ENV_TEST_CONFIG.mode === MODES.seeder) {
     return {
-      name: findWithLength({ faker: faker.name.jobTitle, lessThan: 10 })
+      name: findWithLength({ faker: faker.name.jobTitle, lessThan: 30 })
     }
   }
   return {
