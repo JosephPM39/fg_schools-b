@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { v4 as uuidv4 } from 'uuid'
 import { IEmployeePosition, ISchool, ISchoolProm } from '../../../models_school'
 import { BaseFaker, Fake, WithId } from '../model.faker'
 import { WithRequired } from '../types'
@@ -18,16 +17,6 @@ export class SchoolPromFaker extends BaseFaker<ISchoolProm, ISchoolPromFakerD> {
       year: params.year?.n ?? faker.datatype.number({ min: 1900, max: 9999 })
     }
 
-    if (withId === 'withId') {
-      const res = {
-        id: uuidv4(),
-        ...base
-      }
-      this.fakes.oneWithId = res
-      return res
-    }
-
-    this.fakes.oneWithoutId = base
-    return base as any
+    return this.makeOneHelper(base, withId)
   }
 }
