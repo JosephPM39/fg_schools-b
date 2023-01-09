@@ -35,7 +35,7 @@ export interface DeleteParams {
 
 export interface IController<Model> {
   create: (params: CreateParams) => Promise<boolean | Model[]>
-  read: (params: ReadParams) => Promise<null | Model[]>
+  read: (params: ReadParams) => Promise<{ data: Model[] | null, queryUsed: Partial<IQuery> & { count: number } }>
   update: (params: UpdateParams) => Promise<boolean>
   delete: (params: DeleteParams) => Promise<boolean>
 }

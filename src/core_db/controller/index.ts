@@ -69,8 +69,17 @@ export class BaseController<Model extends {}> implements IController<Model> {
     findOptions.where = findOptionsWhere
 
     const res = await this.repo.find(findOptions)
-    if (res.length < 1) return null
-    return res
+    const count = await this.repo.countBy(findOptionsWhere)
+
+    return {
+      data: res.length < 1 ? null : res,
+      queryUsed: {
+        limit: findOptions.take,
+        offset: findOptions.skip,
+        order: queryValid?.order,
+        count
+      }
+    }
   }
 
   async update (params: UpdateParams) {
