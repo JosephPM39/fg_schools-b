@@ -14,6 +14,7 @@ interface ReadExclude {
   byId?: boolean
   byObject?: boolean
   withPagination?: boolean
+  withAllRegisters?: boolean
 }
 
 interface UpdateExclude {
@@ -113,6 +114,7 @@ export const basicCrudTests = (params: CrudTestsParams) => {
         .get(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
         .query({ limit: fakes?.manyWithoutId?.length })
+        .expect((res) => logErrorValidation(res, fakes?.manyWithoutId))
         .expect(200)
         .expect((res) => {
           expect(Array.isArray(res.body)).toBe(true)
@@ -153,11 +155,28 @@ export const basicCrudTests = (params: CrudTestsParams) => {
       void supertest(params.mutable.app)
         .get(path)
         .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
-        .query({ limit: 2, offset: 4, order: 'DESC' })
+        .query({ limit: '2', offset: 4, order: 'DESC' })
+        .expect((res) => logErrorValidation(res, fakes?.manyWithoutId))
         .expect(200)
         .expect((res) => {
           expect(Array.isArray(res.body)).toBe(true)
           expect(res.body.length).toBe(2)
+        })
+        .end(done)
+    })
+  }
+
+  if (!excludeGet?.all && !excludeGet?.withAllRegisters) {
+    test('[GET]: With all registers', (done) => {
+      void supertest(params.mutable.app)
+        .get(path)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ limit: 'NONE' })
+        .expect((res) => logErrorValidation(res, fakes?.manyWithoutId))
+        .expect(200)
+        .expect((res) => {
+          expect(Array.isArray(res.body)).toBe(true)
+          expect(res.body.length).toBeGreaterThan(10)
         })
         .end(done)
     })

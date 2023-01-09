@@ -1,13 +1,13 @@
 import { Expose, Exclude, Type } from 'class-transformer'
 import { IsInt, IsOptional, IsIn } from 'class-validator'
+import { IsIntOrIn } from './custom-decorators'
 
 @Exclude()
 export class Query {
   @Expose()
-  @IsInt()
-  @Type(() => Number)
   @IsOptional()
-    limit: number
+  @IsIntOrIn('limit', ['NONE'])
+    limit: number | 'NONE'
 
   @Expose()
   @Type(() => Number)
@@ -16,6 +16,7 @@ export class Query {
     offset: number
 
   @Expose()
+  @Type(() => String)
   @IsIn(['ASC', 'DESC'])
   @IsOptional()
     order: 'ASC' | 'DESC'

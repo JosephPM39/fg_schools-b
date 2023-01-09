@@ -39,11 +39,15 @@ export class BaseController<Model extends {}> implements IController<Model> {
 
     if (!this.repo) await this.init()
     const queryValid = await validateQuery(query)
+    const take = () => {
+      if (queryValid?.limit === 'NONE') return undefined
+      return queryValid?.limit ?? 10
+    }
 
     const orderBy: object | undefined = queryValid ? { createdAt: queryValid.order } : undefined
     const findOptions: FindManyOptions<Model> = {
       order: orderBy,
-      take: queryValid?.limit ?? 10,
+      take: take(),
       skip: queryValid?.offset ?? 0
     }
 

@@ -1,6 +1,6 @@
 import { EntityTarget } from 'typeorm'
 import { ValidatorOptions } from 'class-validator'
-import { ClassConstructor } from 'class-transformer'
+import { ClassConstructor, ClassTransformOptions } from 'class-transformer'
 import { IQuery } from '../validations/query'
 
 export enum EXPOSE_VERSIONS {
@@ -47,6 +47,7 @@ export interface ValidateDtoOptions<Model> {
   model: ModelClassType<Model>
   version?: EXPOSE_VERSIONS
   validatorOptions?: ValidatorOptions
+  transformOptions?: ClassTransformOptions
 }
 
 export interface ValidateIdOptions<Model> {

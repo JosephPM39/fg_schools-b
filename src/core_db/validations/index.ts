@@ -35,11 +35,11 @@ export const validateIdBy = async <Model extends {}>(params: ValidateIdOptions<M
 }
 
 export const validateDto = async <Model extends {}>(params: ValidateDtoOptions<Model>) => {
-  const { model, dto, version } = params
+  const { model, dto, version, transformOptions } = params
   const instance = plainToInstance(
     model as ClassConstructor<Model>,
     dto,
-    { version, excludeExtraneousValues: true, exposeUnsetFields: false }
+    { version, excludeExtraneousValues: true, exposeUnsetFields: false, ...transformOptions }
   )
   const errors = await validate(instance, params.validatorOptions)
   if (errors.length > 0) {
@@ -61,6 +61,9 @@ export const validateQuery = async (query?: object | IQuery): Promise<Partial<Qu
     validatorOptions: {
       skipMissingProperties: true,
       skipUndefinedProperties: true
+    },
+    transformOptions: {
+      enableImplicitConversion: true
     }
   })
 }
