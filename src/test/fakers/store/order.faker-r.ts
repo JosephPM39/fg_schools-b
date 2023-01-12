@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import type { WithRequired } from '../types'
 import { BaseFaker, Fake, WithId } from '../model.faker'
-import { IOrder, ISectionProm, IStudent } from '../../../models_school'
+import { IOrder, ISectionProm, IStudent, orderTypes } from '../../../models_school'
 
 export type IOrderD = {
   student: WithRequired<IStudent, 'id'>
@@ -16,7 +16,8 @@ export class OrderFaker extends BaseFaker<IOrder, IOrderD> {
       sectionPromId: sectionProm.id,
       total: parseFloat(faker.commerce.price(0.01, 9999.99)),
       remaining: parseFloat(faker.commerce.price(0.01, 9999.99)),
-      details: faker.datatype.string(254)
+      details: faker.datatype.string(254),
+      type: faker.helpers.arrayElement(orderTypes)
     }
 
     return this.makeOneHelper(base, withId)

@@ -2,13 +2,20 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'type
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min, ValidateNested } from 'class-validator'
+import { IsIn, IsNumber, IsOptional, IsString, IsUUID, Length, Max, Min, ValidateNested } from 'class-validator'
 import { ComboOrder } from './combo-order.model'
 import { ProductOrder } from './product-order.model'
 import { Payment } from './payment.model'
 import { IStudent, Student } from './student.model'
 import { SectionProm, ISectionProm } from '../schools/section-prom.model'
 import { Gallery } from '../photo'
+
+export enum OrderType {
+  STUDIO = 'Studio',
+  SCHOOL = 'Escuela'
+}
+
+export const orderTypes = [OrderType.SCHOOL, OrderType.STUDIO]
 
 @Entity()
 @Exclude()
@@ -43,6 +50,11 @@ export class Order extends BaseModel {
   @Length(1, 254)
   @Column('varchar', { length: 254 })
     details: string
+
+  @Expose()
+  @IsIn(orderTypes)
+  @Column({ type: 'enum', enum: OrderType })
+    type: OrderType
 
   // RELATIONS
 
