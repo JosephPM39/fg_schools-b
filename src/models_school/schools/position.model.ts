@@ -24,7 +24,10 @@ export class Position extends BaseModel {
   @Column('varchar', { length: 30 })
     name: string
 
-  @Expose()
+  @Expose({
+    since: EV.UPDATE,
+    until: EV.CREATE_NESTED
+  })
   @IsIn(positionTypes)
   @Column({ type: 'enum', enum: PositionType })
     type: PositionType

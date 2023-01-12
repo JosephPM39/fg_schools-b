@@ -51,7 +51,7 @@ export class Order extends BaseModel {
   @Column('varchar', { length: 254 })
     details: string
 
-  @Expose()
+  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsIn(orderTypes)
   @Column({ type: 'enum', enum: OrderType })
     type: OrderType
