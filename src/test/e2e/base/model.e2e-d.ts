@@ -153,6 +153,107 @@ export const basicCrudTests = (params: CrudTestsParams) => {
         })
         .end(done)
     })
+
+    test('[GET]: By Object with EQUAL operator', (done) => {
+      void supertest(params.mutable.app)
+        .post(`${path}/get-filtered`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ byoperator: 'EQUAL' })
+        .send(objToSearch)
+        .expect(200)
+        .expect((res) => {
+          expect(Object.values(res.body.data)).toMatchObject([objToSearch])
+          expect(res.body.queryUsed).toBeTruthy()
+        })
+        .end(done)
+    })
+    test('[GET]: By Object with NOT_EQUAL operator', (done) => {
+      void supertest(params.mutable.app)
+        .post(`${path}/get-filtered`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ byoperator: 'NOT_EQUAL' })
+        .send(objToSearch)
+        .expect(200)
+        .expect((res) => {
+          if (res?.body?.data) {
+            expect(Object.values(res.body.data)).not.toMatchObject([objToSearch])
+          }
+          expect(res.body.queryUsed).toBeTruthy()
+        })
+        .end(done)
+    })
+
+    test('[GET]: By Object with LESS_THAN operator', (done) => {
+      void supertest(params.mutable.app)
+        .post(`${path}/get-filtered`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ byoperator: 'LESS_THAN' })
+        .send(objToSearch)
+        .expect(200)
+        .then((res) => {
+          if (res?.body?.data) {
+            expect(Object.values(res?.body?.data ?? {})).toMatchObject([objToSearch])
+          }
+          expect(res.body.queryUsed).toBeTruthy()
+          done()
+        }).catch((e) => {
+          done(e)
+        })
+    })
+
+    test('[GET]: By Object with MORE_THAN operator', (done) => {
+      void supertest(params.mutable.app)
+        .post(`${path}/get-filtered`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ byoperator: 'MORE_THAN' })
+        .send(objToSearch)
+        .expect(200)
+        .then((res) => {
+          if (res?.body?.data) {
+            expect(Object.values(res?.body?.data ?? {})).toMatchObject([objToSearch])
+          }
+          expect(res.body.queryUsed).toBeTruthy()
+          done()
+        }).catch((e) => {
+          done(e)
+        })
+    })
+
+    test('[GET]: By Object with LIKE operator', (done) => {
+      void supertest(params.mutable.app)
+        .post(`${path}/get-filtered`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ byoperator: 'LIKE' })
+        .send(objToSearch)
+        .expect(200)
+        .then((res) => {
+          if (res?.body?.data) {
+            expect(Object.values(res?.body?.data ?? {})).toMatchObject([objToSearch])
+          }
+          expect(res.body.queryUsed).toBeTruthy()
+          done()
+        }).catch((e) => {
+          done(e)
+        })
+    })
+
+    test('[GET]: By Object with ILIKE operator', (done) => {
+      void supertest(params.mutable.app)
+        .post(`${path}/get-filtered`)
+        .set('Authorization', `Bearer ${params.mutable?.auth?.token ?? ''}`)
+        .query({ byoperator: 'ILIKE' })
+        .send(objToSearch)
+        .expect(200)
+        .then((res) => {
+          if (res?.body?.data) {
+            expect(Object.values(res?.body?.data ?? {})).toMatchObject([objToSearch])
+          }
+          expect(res.body.queryUsed).toBeTruthy()
+          done()
+        }).catch((e) => {
+          done(e)
+        })
+    })
   }
 
   if (!excludeGet?.all && !excludeGet?.withPagination) {

@@ -8,11 +8,14 @@ export enum EXPOSE_VERSIONS {
   CREATE = 2,
   FULL = 3,
   GET = 4,
-  CREATE_NESTED = 5,
-  DELETE = 6,
+  GET_OPERATOR = 5,
+  CREATE_NESTED = 6,
+  DELETE = 7,
 }
 
-type IdBy = string | object
+export type WithRequired<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]-?: T[P] }
+
+export type IdBy = string | object
 
 export interface CreateParams {
   data: object[] | object

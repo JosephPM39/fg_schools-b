@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import { jwtPAuth, checkRole } from './middlewares'
 import { BaseController } from '../core_db'
+import { IBaseModel } from '../models_school/base.model'
 
-interface options<Model extends {}> {
+interface options<Model extends IBaseModel> {
   router: Router
   controller: BaseController<Model>
   excludeEndpoints?: {
@@ -22,10 +23,11 @@ interface options<Model extends {}> {
 export const queryExtract = (req: Request): object => ({
   order: req.query.order,
   limit: req.query.limit,
-  offset: req.query.offset
+  offset: req.query.offset,
+  byoperator: req.query.byoperator
 })
 
-export const endpointsCrud = <Model extends {}>(params: options<Model>) => {
+export const endpointsCrud = <Model extends IBaseModel>(params: options<Model>) => {
   const { router, controller, excludeEndpoints, rolesForEndpoints: roles } = params
 
   const getAll = async (req: Request, res: Response, next: NextFunction) => {

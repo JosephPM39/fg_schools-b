@@ -1,9 +1,11 @@
-import { Repository, FindOptionsWhere, FindManyOptions } from 'typeorm'
+import { Repository, FindOptionsWhere } from 'typeorm'
+import { IBaseModel } from '../../models_school/base.model'
 import { Connection } from '../db/'
 import { CreateParams, DeleteParams, EXPOSE_VERSIONS as EV, IController, ModelClassType, ReadParams, UpdateParams } from '../types'
-import { validateDto, validateIdBy, validateQuery } from '../validations'
+import { validateDto, validateIdBy } from '../validations'
+import { makeFindOptions } from './read.controller.helper'
 
-export class BaseController<Model extends {}> implements IController<Model> {
+export class BaseController<Model extends IBaseModel> implements IController<Model> {
   protected repo: Repository<Model>
 
   constructor (
@@ -38,45 +40,23 @@ export class BaseController<Model extends {}> implements IController<Model> {
     const { query, idBy } = params
 
     if (!this.repo) await this.init()
-    const queryValid = await validateQuery(query)
-    const take = () => {
-      if (queryValid?.limit === 'NONE') return undefined
-      return queryValid?.limit ?? 10
-    }
 
-    const orderBy: object | undefined = queryValid ? { createdAt: queryValid.order } : undefined
-    const findOptions: FindManyOptions<Model> = {
-      order: orderBy,
-      take: take(),
-      skip: queryValid?.offset ?? 0
-    }
+    const findOptions = await makeFindOptions({
+      model: this.model,
+      idBy,
+      query
+    })
 
-    const validIdby = async ({ idBy }: Pick<ReadParams, 'idBy'>) => {
-      if (!idBy) return {}
-      return await validateIdBy<Model>({
-        idBy,
-        model: this.model,
-        version: EV.GET
-      })
-    }
-
-    const idByValid = await validIdby({ idBy })
-
-    const findOptionsWhere: FindOptionsWhere<Model> = {
-      ...idByValid
-    }
-
-    findOptions.where = findOptionsWhere
-
-    const res = await this.repo.find(findOptions)
-    const count = await this.repo.countBy(findOptionsWhere)
+    const res = await this.repo.find(findOptions.options)
+    const count = await this.repo.countBy(findOptions.options.where ?? {})
 
     return {
       data: res.length < 1 ? null : res,
       queryUsed: {
-        limit: findOptions.take,
-        offset: findOptions.skip,
-        order: queryValid?.order,
+        limit: findOptions.options.take ?? ('NONE' as const),
+        offset: findOptions.options.skip,
+        order: findOptions.order,
+        byoperator: findOptions.operator,
         count
       }
     }
@@ -101,12 +81,12 @@ export class BaseController<Model extends {}> implements IController<Model> {
     })
 
     const findOptions: FindOptionsWhere<Model> = {
-      ...idByValid
+      ...idByValid as {}
     }
 
     const res = await this.repo.update(
       findOptions,
-      dataValid
+      dataValid as {}
     )
 
     return (res.affected ?? 0) > 0
@@ -122,7 +102,7 @@ export class BaseController<Model extends {}> implements IController<Model> {
     })
 
     const findOptions: FindOptionsWhere<Model> = {
-      ...idByValid
+      ...idByValid as {}
     }
 
     let res

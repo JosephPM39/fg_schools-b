@@ -3,8 +3,9 @@ import { BorderFaker, ColorFaker, ModelFaker, ProductFaker, ProfileFaker, SizeFa
 import { EmployeeFaker, EmployeePositionFaker, GroupFaker, PositionFaker, SchoolFaker, SchoolPromFaker, SectionPromFaker, TitleFaker } from '../schools'
 import { ComboFaker, StudentFaker, ComboOrderFaker, OrderFaker, PaymentFaker, ProductOrderFaker, ProductComboFaker } from '../store'
 
-export type WithRequired<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]-?: T[P] }
 export type ArrayProperties<T> = { [P in keyof T]: Array<T[P]> }
+
+export type { WithRequired } from '../../../core_db/types'
 
 export type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends ReadonlyArray<(infer ElementType)> ? ElementType : never

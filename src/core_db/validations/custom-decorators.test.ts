@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { validateQuery } from '.'
-import { Query } from './query'
+import { Order, Query } from './query'
 
 const helper = async (query: Partial<Query>) => {
   try {
@@ -14,7 +14,7 @@ describe('Test customs decorators', () => {
   test('Test isIntOrIn', async () => {
     const query = new Query()
     query.limit = 'NONE'
-    query.order = 'DESC'
+    query.order = Order.desc
     query.offset = 2
 
     expect(await helper(query)).toMatchObject({ limit: 'NONE' })

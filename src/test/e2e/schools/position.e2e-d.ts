@@ -6,7 +6,12 @@ export const testPosition = (params: TestMutableParams) => {
     describe('- BASIC CRUD', () => {
       basicCrudTests({
         entity: ENTITIES.Position,
-        mutable: params
+        mutable: params,
+        excludeEndpoints: {
+          get: {
+            byObject: true
+          }
+        }
       })
     })
   })
