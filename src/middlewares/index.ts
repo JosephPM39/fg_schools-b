@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { isBoom } from '@hapi/boom'
 import passport from 'passport'
+import multer from 'multer'
 
 export const jwtPAuth = () => passport.authenticate('jwt', { session: false })
 
@@ -45,6 +46,17 @@ export const boomErrorHandler = (err: Error, req: Request, res: Response, next: 
   if (isBoom(err)) {
     const { output } = err
     return res.status(output.statusCode).json(output.payload)
+  }
+  next(err)
+}
+
+export const multerErrorHandler = (err: Error, _: Request, res: Response, next: NextFunction) => {
+  if (err instanceof multer.MulterError) {
+    const { message, field } = err
+    return res.status(400).json({
+      error: message,
+      field
+    })
   }
   next(err)
 }

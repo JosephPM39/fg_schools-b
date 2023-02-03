@@ -25,7 +25,8 @@ export const configSchool = (fakers: Fakers) => {
   fakers[ENTITIES.SchoolProm].makeFakesPackWithManyD({
     principal: fakers[ENTITIES.EmployeePosition].getFakes().manyWithId.filter((_, i) => i > 99),
     school: fakers[ENTITIES.School].getFakes().manyWithId,
-    year: fakers[ENTITIES.School].getFakes().manyWithId.map(() => ({ n: 2023 }))
+    year: fakers[ENTITIES.School].getFakes().manyWithId.map(() => ([2021, 2022, 2023, 2024, 2025]))
+
   })
 
   fakers[ENTITIES.SectionProm].makeFakesPackWithManyD({

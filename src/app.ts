@@ -2,7 +2,7 @@ import express, { Request, Response, Router } from 'express'
 import cors, { CorsOptions } from 'cors'
 import { getRoutes } from './components'
 import { Connection as DB } from './core_db/'
-import { boomErrorHandler, dbErrorHandler, errorHandler, logErrors } from './middlewares'
+import { boomErrorHandler, dbErrorHandler, errorHandler, logErrors, multerErrorHandler } from './middlewares'
 import passport from 'passport'
 import { JwtStrategy } from './auth'
 
@@ -45,6 +45,7 @@ export const createApp = (params: AppParams) => {
   getRoutes(router, connection)
 
   app.use(logErrors)
+  app.use(multerErrorHandler)
   app.use(boomErrorHandler)
   app.use(dbErrorHandler)
   app.use(errorHandler)

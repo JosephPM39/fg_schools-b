@@ -6,7 +6,17 @@ import { WithRequired } from '../types'
 export type ISchoolPromFakerD = {
   principal: WithRequired<Partial<IEmployeePosition>, 'id'>
   school: WithRequired<Partial<ISchool>, 'id'>
-  year?: { n: number }
+  year?: { n: number } | number[]
+}
+
+const getYear = (years: ISchoolPromFakerD['year']) => {
+  if (Array.isArray(years)) {
+    return faker.helpers.arrayElement(years)
+  }
+  if (years?.n) {
+    return years.n
+  }
+  return faker.datatype.number({ min: 1900, max: 9999 })
 }
 
 export class SchoolPromFaker extends BaseFaker<ISchoolProm, ISchoolPromFakerD> {
@@ -14,7 +24,7 @@ export class SchoolPromFaker extends BaseFaker<ISchoolProm, ISchoolPromFakerD> {
     const base: Partial<ISchoolProm> = {
       principalId: params.principal.id,
       schoolId: params.school.id,
-      year: params.year?.n ?? faker.datatype.number({ min: 1900, max: 9999 })
+      year: getYear(params.year)
     }
 
     return this.makeOneHelper(base, withId)
