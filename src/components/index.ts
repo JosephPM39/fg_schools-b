@@ -11,5 +11,5 @@ export const getRoutes = (router: Router, connection: DB) => {
   router.use('/products', ProductsRoutes(connection))
   router.use('/store', StoreRoutes(connection))
   router.use('/photos', PhotosRoutes(connection))
-  router.use('/files-storage', FilesRoutes())
+  router.use('/files', FilesRoutes())
 }

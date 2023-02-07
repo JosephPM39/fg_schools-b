@@ -30,6 +30,16 @@ const order = [
   Order.asc
 ]
 
+export enum FileName {
+  autoUuid = 'AUTO_UUID',
+  keepClientVersion = 'KEEP_CLIENT_VERSION'
+}
+
+const fileName = [
+  FileName.autoUuid,
+  FileName.keepClientVersion
+]
+
 @Exclude()
 export class Query {
   @Expose()
@@ -54,6 +64,21 @@ export class Query {
   @IsIn(order)
   @IsOptional()
     order: Order
+
+  @Expose()
+  @IsOptional()
+  @IsIn(fileName)
+    filename: FileName
+
+  @Expose()
+  @IsOptional()
+  @IsInt()
+    imgwidth: number
+
+  @Expose()
+  @IsOptional()
+  @IsInt()
+    imgheight: number
 }
 
 export interface IQuery extends Partial<Query> {}

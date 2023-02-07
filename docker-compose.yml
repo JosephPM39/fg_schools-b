@@ -8,14 +8,14 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
     ports:
-      - 5432:5432
+      - ${DB_PORT}:5432
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - ./storage/postgres_data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
     environment:
-      - PGADMIN_DEFAULT_EMAIL=test@test.com
-      - PGADMIN_DEFAULT_PASSWORD=test
+      - PGADMIN_DEFAULT_EMAIL=${DB_AD_USER}
+      - PGADMIN_DEFAULT_PASSWORD=${DB_AD_PASS}
     ports:
-      - 5050:80
+      - ${DB_AD_PORT}:80

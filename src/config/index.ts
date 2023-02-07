@@ -1,3 +1,4 @@
+import path from 'path'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
@@ -5,6 +6,9 @@ const config = {
   env: process.env.NODE_ENV,
   apiPort: process.env.API_PORT ?? 3000,
   appVersion: process.env.npm_package_version ?? '0.0.1',
+  appRootDir: path.join(__dirname, '../../'),
+  appStorageDir: path.join(__dirname, '../../storage'),
+  appSourceDir: path.join(__dirname, '../'),
   jwtSecret: process.env.JWT_SECRET,
   dbName: process.env.DB_NAME,
   dbUser: process.env.DB_USER ?? '',
