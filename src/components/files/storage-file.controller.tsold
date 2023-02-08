@@ -25,16 +25,8 @@ export class StorageFile implements StorageFileFunctions {
     destination: (_, __, cb) => {
       cb(null, this.dir)
     },
-    filename: (req, file, cb) => {
-      const { filename } = req.query as unknown as IQuery
-      console.log(filename, 'type filename')
-      if (filename === FileName.keepClientVersion) {
-        return cb(null, file.originalname)
-      }
-      if (filename === FileName.autoUuid || !filename) {
-        const ext = mime.extension(file.mimetype) || ''
-        return cb(null, `${uuidV4()}.${ext}`)
-      }
+    filename: (_, file, cb) => {
+      return cb(null, file.originalname)
     }
   })
 
@@ -90,46 +82,45 @@ export class StorageFile implements StorageFileFunctions {
     })
   }
 
-  upload = async (req: Request, res: Response, multiple?: boolean) => {
-    await validateQuery(req.query)
-    return await new Promise<true>((resolve, reject) => {
-      const uploader = multiple ? this.multer.array('files') : this.multer.single('file')
+  protected nameFile = (req: Request) => {
+    const { filename } = req.query as unknown as IQuery
+    const isUuidName = (filename === FileName.autoUuid || !filename)
+    console.log(filename, 'type filename')
+    const uuidName = (name: string) => {
+      const mimetype = mime.lookup(name)
+      const ext = mime.extension(mimetype || '') || ''
+      return `${uuidV4()}.${ext}`
+    }
+
+    if (req.file && isUuidName) {
+      req.file.originalname = uuidName(
+        req.file.mimetype
+      )
+    }
+  }
+
+  upload = async (req: Request, res: Response) => {
+    const query = await validateQuery(req.query)
+    const filename = query?.filename
+    if (req.file && (filename === FileName.autoUuid || !filename)) {
+      console.log(filename, 'type filename')
+      const mimetype = mime.lookup(req.file.originalname)
+      const ext = mime.extension(mimetype || '') || ''
+      req.file.originalname = `${uuidV4()}.${ext}`
+    }
+    return await new Promise<string>((resolve, reject) => {
+      if (!req.file && !req.files) return reject(boom.badRequest('Please upload a file'))
+      const uploader = req.file ? this.multer.single('file') : this.multer.array('files')
       uploader(req, res, (err) => {
-        console.log(err)
-        if (!req.file && !req.files) return reject(boom.badRequest('Please upload a file'))
-        if (req.files && !Array.isArray(req.files)) {
-          return reject(boom.badRequest('Please send a unique field with every files'))
-        }
         if (err) return reject(boom.conflict('Cloud not upload the file(s)'))
-        resolve(true)
+        resolve(req.file?.originalname ?? '')
       })
     })
   }
 
-  uploadSingleHandler = (req: Request, res: Response, next: NextFunction) => {
+  uploadHandler = (req: Request, res: Response, next: NextFunction) => {
     this.upload(req, res).then(
-      () => res.status(201).json({
-        message: 'File created successfully',
-        names: {
-          original: req.file?.originalname,
-          savedAs: req.file?.filename
-        }
-      })
-    ).catch((err) => next(err))
-  }
-
-  uploadManyHandler = (req: Request, res: Response, next: NextFunction) => {
-    this.upload(req, res, true).then(
-      () => {
-        const files = req.files as Express.Multer.File[]
-        return res.status(201).json({
-          message: 'Files created successfully',
-          names: files.map(file => ({
-            original: file.originalname,
-            savedAs: file.filename
-          }))
-        })
-      }
+      () => res.status(201).send('File created successfully')
     ).catch((err) => next(err))
   }
 

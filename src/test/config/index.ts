@@ -1,5 +1,8 @@
+import path from 'path'
+
 export const ENV_TEST_CONFIG = {
-  mode: process.env.MODE ?? 'TEST'
+  mode: process.env.MODE ?? 'TEST',
+  testPath: path.join(__dirname, '../')
 }
 
 export enum MODES {

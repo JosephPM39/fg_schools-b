@@ -1,5 +1,6 @@
 postgres_data
 storage
+src/test/fakers/files
 # Created by https://www.toptal.com/developers/gitignore/api/node,linux,windows,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,linux,windows,macos
 

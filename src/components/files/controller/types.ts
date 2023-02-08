@@ -7,7 +7,8 @@ export interface StorageFileFunctions {
   update: (req: Request, res: Response) => Promise<true>
   delete: (req: Request) => Promise<true>
   listHandler: Handler
-  uploadHandler: Handler
+  uploadSingleHandler: Handler
+  uploadManyHandler: Handler
   downloadHandler: Handler
   updateHandler: Handler
   deleteHandler: Handler

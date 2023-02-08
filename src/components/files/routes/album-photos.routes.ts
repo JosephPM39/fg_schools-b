@@ -14,7 +14,8 @@ export const AlbumPhotos = () => {
     return next()
   }
 
-  router.post('/:albumId', ...auth(roles.upload), loadAlbum, storage.uploadHandler)
+  router.post('/upload-single/:albumId', ...auth(roles.upload), loadAlbum, storage.uploadSingleHandler)
+  router.post('/upload-many/:albumId', ...auth(roles.upload), loadAlbum, storage.uploadManyHandler)
   router.get('/:albumId', loadAlbum, storage.listHandler)
   router.get('/:albumId/:name', loadAlbum, storage.downloadPreviewHandler)
   router.get('/download/:albumId/:name', loadAlbum, storage.downloadHandler)
