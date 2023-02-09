@@ -9,7 +9,7 @@ import mime from 'mime-types'
 import { FileName, IQuery } from '../../../core_db/validations/query'
 import { validateQuery } from '../../../core_db'
 import { StorageFileFunctions } from './types'
-import { pathIsFile } from './utils'
+import { pathIsFile, pathStat } from './utils'
 
 export class StorageFile implements StorageFileFunctions {
   protected dir = path.join(config.appStorageDir, '/files', this.subDir)
@@ -27,7 +27,6 @@ export class StorageFile implements StorageFileFunctions {
     },
     filename: (req, file, cb) => {
       const { filename } = req.query as unknown as IQuery
-      console.log(filename, 'type filename')
       if (filename === FileName.keepClientVersion) {
         return cb(null, file.originalname)
       }
@@ -44,7 +43,7 @@ export class StorageFile implements StorageFileFunctions {
   })
 
   protected readonly loadDir = (dir: string = this.dir) => {
-    fs.mkdir(dir, { recursive: true }, () => {})
+    fs.mkdirSync(dir, { recursive: true })
   }
 
   readonly appendDir = (dir: string) => {
@@ -95,7 +94,7 @@ export class StorageFile implements StorageFileFunctions {
     return await new Promise<true>((resolve, reject) => {
       const uploader = multiple ? this.multer.array('files') : this.multer.single('file')
       uploader(req, res, (err) => {
-        console.log(err)
+        if (err) reject(err)
         if (!req.file && !req.files) return reject(boom.badRequest('Please upload a file'))
         if (req.files && !Array.isArray(req.files)) {
           return reject(boom.badRequest('Please send a unique field with every files'))
@@ -140,42 +139,29 @@ export class StorageFile implements StorageFileFunctions {
       .catch((er) => next(er))
   }
 
-  downloadHandler = (req: Request, res: Response, next: NextFunction) => {
+  downloadHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.params
-    res.status(200).download(path.join(this.dir, name), name, (err) => {
+    const pathT = path.join(this.dir, name)
+    if (!await pathIsFile(pathT)) {
+      return next(boom.notFound(`${name} not found`))
+    }
+    res.status(200).download(pathT, name, (err) => {
       if (err) return next(boom.internal('Cloud not download the file'))
     })
-  }
-
-  update = async (req: Request, res: Response) => {
-    const { name } = req.params
-    await validateQuery(req.query)
-    req.query.filename = FileName.keepClientVersion
-    if (req.file) {
-      req.file.originalname = name
-    }
-
-    return await this.upload(req, res)
-  }
-
-  updateHandler = (req: Request, res: Response, next: NextFunction) => {
-    this.update(req, res).then(
-      () => res.status(201).send('File updated successfully')
-    ).catch((err) => next(err))
   }
 
   delete = async (req: Request) => {
     const { name } = req.params
     return await new Promise<true>((resolve, reject) => {
       fs.rm(path.join(this.dir, name), (err) => {
-        if (err) reject(err)
+        if (err) reject(boom.notFound(`${name} not found`))
         resolve(true)
       })
     })
   }
 
   deleteHandler = (req: Request, res: Response, next: NextFunction) => {
-    this.update(req, res).then(
+    this.delete(req).then(
       () => res.status(200).send('File deleted successfully')
     ).catch((err) => next(err))
   }

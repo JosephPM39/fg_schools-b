@@ -4,13 +4,11 @@ export type Handler = (req: Request, res: Response, next: NextFunction) => void
 
 export interface StorageFileFunctions {
   upload: (req: Request, res: Response) => Promise<true>
-  update: (req: Request, res: Response) => Promise<true>
   delete: (req: Request) => Promise<true>
   listHandler: Handler
   uploadSingleHandler: Handler
   uploadManyHandler: Handler
   downloadHandler: Handler
-  updateHandler: Handler
   deleteHandler: Handler
 }
 

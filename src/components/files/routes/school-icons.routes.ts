@@ -11,7 +11,6 @@ export const SchoolIcons = () => {
   router.get('/', ...auth(roles.download), StorageIcon.listHandler)
   router.get('/:name', ...auth(roles.preview), StorageIcon.downloadPreviewHandler)
   router.get('/download/:name', ...auth(roles.download), StorageIcon.downloadHandler)
-  router.put('/:name', ...auth(roles.update), StorageIcon.updateHandler)
   router.delete('/:name', ...auth(roles.delete), StorageIcon.deleteHandler)
 
   return router

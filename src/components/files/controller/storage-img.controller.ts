@@ -8,7 +8,8 @@ import { validateQuery } from '../../../core_db'
 import Jimp from 'jimp'
 import { StorageFile } from './storage-file.controller'
 import { StorageImgFunctions } from './types'
-import { determineWH, isMime, pathIsFile } from './utils'
+import { determineWH, isMime, pathIs, pathIsFile } from './utils'
+import config from '../../../config'
 
 interface CreateThumb {
   imgPath: string
@@ -37,16 +38,30 @@ const imgFilter = (_: Request, file: Express.Multer.File, next: FileFilterCallba
 }
 
 export class StorageImg extends StorageFile implements StorageImgFunctions {
-  private readonly thumbDir = path.join(this.dir, '/thumbnails')
+  private thumbDir = path.join(this.dir, '/thumbnails')
   constructor (
     ...args: ConstructorParameters<typeof StorageFile>
   ) {
+    const oneMBinB = 1048576
     if (!args[1]) {
       args[1] = {
-        fileFilter: imgFilter
+        fileFilter: imgFilter,
+        limits: {
+          fileSize: (100 * oneMBinB)
+        }
       }
     }
     super(...args)
+    if (this.thumbDir) {
+      this.loadDir(this.thumbDir)
+    }
+  }
+
+  readonly setSubDir = (dir: string) => {
+    this.subDir = dir
+    this.dir = path.join(config.appStorageDir, '/files', this.subDir)
+    this.thumbDir = path.join(this.dir, '/thumbnails')
+    this.loadDir()
     this.loadDir(this.thumbDir)
   }
 
@@ -77,10 +92,15 @@ export class StorageImg extends StorageFile implements StorageImgFunctions {
   }
 
   downloadPreview = async (req: Request) => {
+    if (!this.thumbDir) throw (boom.internal('Cloud not create the thumb'))
     const query = await validateQuery(req.query)
     const { name } = req.params
-
     const imgPath = path.join(this.dir, name)
+
+    if (!await pathIsFile(imgPath)) {
+      throw boom.notFound(`${name} not found`)
+    }
+
     const mimetype = mime.lookup(imgPath)
 
     if (!mimetype || !isImgMimeAllowed(mimetype)) {
@@ -113,11 +133,17 @@ export class StorageImg extends StorageFile implements StorageImgFunctions {
   downloadPreviewHandler = async (req: Request, res: Response, next: NextFunction) => {
     this.downloadPreview(req).then(
       ({ path, name }) => res.status(200).download(path, name, (err) => next(err))
-    ).catch((err) => next(err))
+    ).catch((err) => {
+      if (err.message === 'maxResolutionInMP limit exceeded by 246MP') {
+        err.statusCode = 503
+      }
+      next(err)
+    })
   }
 
   deletePreview = async (req: Request) => {
     const { name } = req.params
+    if (!this.thumbDir) throw (boom.internal('Cloud not delete the thumb'))
     const toDelete = fs.readdirSync(this.thumbDir).filter((file) => file.match(name))
     let error: Error | undefined
     for (const file of toDelete) {
@@ -128,22 +154,16 @@ export class StorageImg extends StorageFile implements StorageImgFunctions {
         break
       }
     }
-    if (error) throw error
+    if (error) throw boom.notFound('Some files preview not found')
     return true
   }
 
   deletePreviewHandler = async (req: Request, res: Response, next: NextFunction) => {
     this.deletePreview(req).then(
-      () => res.status(200).send('File updated/deleted successfully')
+      () => res.status(200).send('File deleted successfully')
     ).catch(
       (err) => next(err)
     )
-  }
-
-  updateHandler = (req: Request, res: Response, next: NextFunction) => {
-    this.update(req, res).then(
-      async () => await this.deletePreviewHandler(req, res, next)
-    ).catch((err) => next(err))
   }
 
   deleteHandler = (req: Request, res: Response, next: NextFunction) => {

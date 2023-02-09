@@ -6,7 +6,7 @@ import { auth } from '../middleware'
 export const AlbumPhotos = () => {
   const router = Router()
   const baseDir = '/photos/albums'
-  const storage = new StorageImg(baseDir)
+  const storage = new StorageImg(`${baseDir}/unknown`)
 
   const loadAlbum = (req: Request, _: Response, next: NextFunction) => {
     const { albumId } = req.params
@@ -19,7 +19,6 @@ export const AlbumPhotos = () => {
   router.get('/:albumId', loadAlbum, storage.listHandler)
   router.get('/:albumId/:name', loadAlbum, storage.downloadPreviewHandler)
   router.get('/download/:albumId/:name', loadAlbum, storage.downloadHandler)
-  router.put('/:albumId/:name', ...auth(roles.update), loadAlbum, storage.updateHandler)
   router.delete('/:albumId/:name', ...auth(roles.delete), loadAlbum, storage.deleteHandler)
 
   return router

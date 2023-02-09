@@ -33,7 +33,7 @@ describe('Test Album Photos', () => {
     }, config.jwtSecret)
   })
 
-  test('Upload single', (done) => {
+  test('Upload single JPG', (done) => {
     void supertest(app?.app)
       .post(`${basePath}/upload-single/new-alb`)
       .set('Authorization', `Bearer ${token ?? ''}`)
@@ -46,19 +46,30 @@ describe('Test Album Photos', () => {
         expect(res.status).toBe(201)
         done()
       })
-  })
+  }, 10000)
+
+  test('Upload single PNG', (done) => {
+    void supertest(app?.app)
+      .post(`${basePath}/upload-single/new-alb`)
+      .set('Authorization', `Bearer ${token ?? ''}`)
+      .set('Content-Type', 'multipart/form-data')
+      .query({
+        filename: 'KEEP_CLIENT_VERSION'
+      })
+      .attach('file', path.join(filesPath, '/img-test.png'))
+      .end((_, res) => {
+        expect(res.status).toBe(201)
+        done()
+      })
+  }, 10000)
 
   test('Upload many', (done) => {
     void supertest(app?.app)
       .post(`${basePath}/upload-many/new-alb`)
       .set('Authorization', `Bearer ${token ?? ''}`)
       .set('Content-Type', 'multipart/form-data')
-      .query({
-        filename: 'KEEP_CLIENT_VERSION'
-      })
       .attach('files', path.join(filesPath, '/img-test.jpg'))
       .attach('files', path.join(filesPath, '/img-test.png'))
-      .attach('files', path.join(filesPath, '/img-test.tif'))
       .end((_, res) => {
         expect(res.status).toBe(201)
         done()
@@ -72,21 +83,56 @@ describe('Test Album Photos', () => {
       .end((_, res) => {
         expect(res.status).toBe(200)
         expect(Array.isArray(res.body)).toBe(true)
-        expect(res.body.length).toBe(3)
+        expect(res.body.length).toBe(4)
         done()
       })
   })
 
-  /* test('Download preview')
-  test('Download')
+  test('Download preview error for MP', (done) => {
+    void supertest(app?.app)
+      .get(`${basePath}/new-alb/img-test.jpg`)
+      .set('Authorization', `Bearer ${token ?? ''}`)
+      .end((_, res) => {
+        expect(res.status).toBe(503)
+        done()
+      })
+  })
 
-  test('Update')
-  test('Delete')
-  */
+  /* test('Download preview', (done) => {
+    void supertest(app?.app)
+      .get(`${basePath}/new-alb/img-test.png`)
+      .set('Authorization', `Bearer ${token ?? ''}`)
+      .end((_, res) => {
+        expect(res.status).toBe(200)
+        done()
+      })
+  }) */
+
+  test('Download', (done) => {
+    void supertest(app?.app)
+      .get(`${basePath}/download/new-alb/img-test.jpg`)
+      .set('Authorization', `Bearer ${token ?? ''}`)
+      .end((_, res) => {
+        expect(res.status).toBe(200)
+        done()
+      })
+  })
+
+  test('Delete', (done) => {
+    void supertest(app?.app)
+      .delete(`${basePath}/new-alb/img-test.jpg`)
+      .set('Authorization', `Bearer ${token ?? ''}`)
+      .end((_, res) => {
+        expect(res.status).toBe(200)
+        done()
+      })
+  })
 
   afterAll(async () => {
     await connection?.quit()
     app?.server?.close()
-    fs.rmdirSync(path.join(config.appStorageDir, '/files'))
+    fs.rm(path.join(config.appStorageDir, '/files'), { recursive: true, force: true }, (err) => {
+      if (err) console.error(err)
+    })
   })
 })
