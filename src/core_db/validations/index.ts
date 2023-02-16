@@ -19,7 +19,13 @@ export const validateIdBy = async <Model extends {}>(params: ValidateIdOptions<M
 
   const propertiesAllowed = Object.keys(valid)
   const dtoProperties = Object.keys(dto)
-  const rejectedProperties = dtoProperties.filter((p) => !propertiesAllowed.includes(p))
+  const rejectedProperties = dtoProperties.filter((p) => {
+    // This is new form to avoid false alarm
+    // when a property's value is undefined, in this case, is innecesary reject it
+    const isAllowed = propertiesAllowed.includes(p)
+    const isDefined = typeof idBy[p as keyof typeof idBy] !== 'undefined'
+    return !isAllowed && isDefined
+  })
 
   if (rejectedProperties.length > 0) {
     const error = Boom.badRequest('Invalid Search Object or id')

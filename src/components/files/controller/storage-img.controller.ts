@@ -8,7 +8,7 @@ import { validateQuery } from '../../../core_db'
 import Jimp from 'jimp'
 import { StorageFile } from './storage-file.controller'
 import { StorageImgFunctions } from './types'
-import { determineWH, isMime, pathIs, pathIsFile } from './utils'
+import { determineWH, isMime, pathIsFile } from './utils'
 import config from '../../../config'
 
 interface CreateThumb {
@@ -32,7 +32,7 @@ const isImgMimeAllowed = (filemime: string) => {
 
 const imgFilter = (_: Request, file: Express.Multer.File, next: FileFilterCallback) => {
   if (!isImgMimeAllowed(file.mimetype)) {
-    return next(boom.badRequest('Only image file type are allowed'))
+    return next(boom.badRequest(`Only image file type are allowed, the ${file.mimetype} isn't allowed`))
   }
   return next(null, true)
 }
