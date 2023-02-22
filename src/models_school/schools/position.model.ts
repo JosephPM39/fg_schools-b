@@ -26,7 +26,7 @@ export class Position extends BaseModel {
 
   @Expose({
     since: EV.UPDATE,
-    until: EV.GET_OPERATOR
+    until: EV.CREATE_NESTED
   })
   @IsIn(positionTypes)
   @Column({ type: 'enum', enum: PositionType })
