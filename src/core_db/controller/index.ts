@@ -41,7 +41,7 @@ export class BaseController<Model extends IBaseModel> implements IController<Mod
 
     if (!this.repo) await this.init()
 
-    const findOptions = await makeFindOptions({
+    const { findOptions, idByValided } = await makeFindOptions({
       model: this.model,
       idBy,
       query
@@ -57,7 +57,8 @@ export class BaseController<Model extends IBaseModel> implements IController<Mod
         offset: findOptions.options.skip,
         order: findOptions.order,
         byoperator: findOptions.operator,
-        count
+        count,
+        payload: idByValided
       }
     }
   }

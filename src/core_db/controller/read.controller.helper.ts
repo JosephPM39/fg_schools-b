@@ -105,9 +105,13 @@ interface MakeFindOptionsParams<Model extends IBaseModel> {
 }
 
 export const makeFindOptions = async <Model extends IBaseModel>({ query, model, idBy }: MakeFindOptionsParams<Model>): Promise<{
-  options: FindManyOptions<Model>
-  operator: ByOperator
-  order?: Order
+  findOptions: {
+    options: FindManyOptions<Model>
+    operator: ByOperator
+    order?: Order
+  }
+  idByValided?: IdBy
+  queryValided?: IQuery
 }> => {
   const queryValid = await validateQuery(query)
   const idByValid = await validIdby({ idBy, model, operator: !!queryValid?.byoperator })
@@ -121,13 +125,17 @@ export const makeFindOptions = async <Model extends IBaseModel>({ query, model, 
   const { idBy: idByFinal, operator } = determineWhere({ query: queryValid, idBy: idByValid })
 
   return {
-    options: {
-      order: orderBy,
-      take: take(),
-      skip: queryValid?.offset ?? 0,
-      where: idByFinal as {}
+    findOptions: {
+      options: {
+        order: orderBy,
+        take: take(),
+        skip: queryValid?.offset ?? 0,
+        where: idByFinal as {}
+      },
+      operator,
+      order: queryValid?.order
     },
-    operator,
-    order: queryValid?.order
+    queryValided: queryValid,
+    idByValided: idByValid
   }
 }
