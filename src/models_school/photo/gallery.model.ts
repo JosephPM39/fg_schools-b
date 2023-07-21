@@ -5,7 +5,6 @@ import { EXPOSE_VERSIONS as EV } from '../../core_db'
 import { IsBoolean, IsOptional, IsUUID, ValidateNested } from 'class-validator'
 import { IOrder, Order } from '../store'
 import { Qr } from './qr.model'
-import { PhotoProduct } from './photo-product.model'
 import { ISectionProm, SectionProm } from '../schools/section-prom.model'
 import { GalleryAlbum } from './gallery-album.model'
 

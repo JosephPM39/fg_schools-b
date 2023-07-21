@@ -11,6 +11,12 @@ import { GalleryAlbum } from './gallery-album.model'
 export class Album extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsString()
+  @Length(1, 30)
+  @Column('varchar', { length: 30 })
+    name: string
+
+  @Expose({ since: EV.UPDATE, until: EV.DELETE })
+  @IsString()
   @Length(1, 100)
   @Column('varchar', { length: 100 })
     url: string
