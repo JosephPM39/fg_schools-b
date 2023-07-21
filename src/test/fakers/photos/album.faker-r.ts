@@ -8,13 +8,11 @@ const fake = (): Partial<IAlbum> => {
   if (ENV_TEST_CONFIG.mode === MODES.seeder) {
     return {
       name: findWithLength({ faker: faker.name.jobType, lessThan: 30 }),
-      url: findWithLength({ faker: faker.internet.url, lessThan: 100 }),
       available: faker.datatype.boolean()
     }
   }
   return {
     name: faker.datatype.string(30),
-    url: faker.datatype.string(100),
     available: faker.datatype.boolean()
   }
 }

@@ -16,12 +16,6 @@ export class Album extends BaseModel {
     name: string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
-  @IsString()
-  @Length(1, 100)
-  @Column('varchar', { length: 100 })
-    url: string
-
-  @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsBoolean()
   @Column('boolean')
     available: boolean
