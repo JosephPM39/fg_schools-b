@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
 import { BaseModel, baseRelationOptions } from '../base.model'
 import { EXPOSE_VERSIONS as EV } from '../../core_db'
-import { IsUUID, ValidateNested } from 'class-validator'
+import { IsBoolean, IsUUID, ValidateNested } from 'class-validator'
 import { Gallery, IGallery } from './gallery.model'
 import { Album, IAlbum } from './album.model'
 
@@ -18,6 +18,11 @@ export class GalleryAlbum extends BaseModel {
   @IsUUID()
   @Column()
     albumId: IAlbum['id']
+
+  @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })
+  @IsBoolean()
+  @Column()
+    public: boolean
 
   // RELATIONS
 

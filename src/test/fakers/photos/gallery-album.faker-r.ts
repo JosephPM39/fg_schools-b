@@ -1,6 +1,7 @@
 import { IGalleryAlbum, IGallery, IAlbum } from '../../../models_school'
 import type { WithRequired } from '../types'
 import { BaseFaker, Fake, WithId } from '../model.faker'
+import { faker } from '@faker-js/faker'
 
 export type IGalleryAlbumD = {
   gallery: WithRequired<IGallery, 'id'>
@@ -12,7 +13,8 @@ export class GalleryAlbumFaker extends BaseFaker<IGalleryAlbum, IGalleryAlbumD> 
     const { gallery, album } = params
     const base: Partial<IGalleryAlbum> = {
       galleryId: gallery.id,
-      albumId: album.id
+      albumId: album.id,
+      public: faker.datatype.boolean()
     }
 
     return this.makeOneHelper(base, withId)
