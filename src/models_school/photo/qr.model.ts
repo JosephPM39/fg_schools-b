@@ -9,15 +9,14 @@ import { Gallery, IGallery } from './gallery.model'
 @Exclude()
 export class Qr extends BaseModel {
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
-  @IsString()
-  @Length(1, 20)
-  @Column('varchar', { length: 20, unique: true })
+  @IsUUID()
+  @Column({ type: 'uuid', unique: true })
     code: string
 
   @Expose({ since: EV.UPDATE, until: EV.DELETE })
   @IsString()
-  @Length(1, 100)
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Length(1, 255)
+  @Column({ type: 'varchar', length: 255, unique: true })
     url: string
 
   @Expose({ since: EV.UPDATE, until: EV.CREATE_NESTED })

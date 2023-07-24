@@ -12,8 +12,8 @@ export class QrFaker extends BaseFaker<IQr, IQrD> {
     const { gallery } = params
     const base: Partial<IQr> = {
       galleryId: gallery.id,
-      code: faker.helpers.unique(faker.datatype.string, [20]),
-      url: faker.helpers.unique(faker.datatype.string, [100]),
+      code: faker.datatype.uuid(),
+      url: faker.helpers.unique(faker.datatype.string, [255]),
       available: faker.datatype.boolean()
     }
 
